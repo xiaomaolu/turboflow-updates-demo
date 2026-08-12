@@ -268,6 +268,7 @@ function articleStructuredData(article, localeKey) {
         articleSection: copy.category,
         author: { "@id": site.organizationId },
         publisher: { "@id": site.organizationId },
+        isBasedOn: article.primarySource,
         citation: article.sources.map((source) => source.url)
       },
       {
@@ -408,6 +409,21 @@ function renderSources(article, localeKey) {
   </section>`;
 }
 
+function resolvePrimarySource(article) {
+  const matches = article.sources.filter((candidate) => candidate.url === article.primarySource);
+  assertBuild(matches.length === 1, `${article.slug}: primarySource must match exactly one article source`);
+  return matches[0];
+}
+
+function renderPrimarySource(article, localeKey) {
+  const locale = site.locales[localeKey];
+  const source = resolvePrimarySource(article);
+  return `<p class="primary-source">
+    <span class="primary-source__label">${escapeHtml(locale.sourcePrefix)}</span>
+    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a>
+  </p>`;
+}
+
 function renderRelated(article, localeKey) {
   const locale = site.locales[localeKey];
   const related = (article.relatedSlugs || [])
@@ -474,6 +490,7 @@ function renderArticlePage(article, localeKey) {
         <div class="meta">
           ${metaItems}
         </div>
+        ${renderPrimarySource(article, localeKey)}
       </header>
       ${renderFacts(copy.facts, locale)}
       ${copy.blocks.map(renderArticleBlock).join("\n      ")}
@@ -606,10 +623,19 @@ export function validateBuildInput() {
     slugs.add(article.slug);
     assertBuild(!Number.isNaN(Date.parse(article.publishedAt)), `${article.slug}: invalid publishedAt`);
     assertBuild(!Number.isNaN(Date.parse(article.modifiedAt)), `${article.slug}: invalid modifiedAt`);
+    assertBuild(
+      typeof article.primarySource === "string" && /^https:\/\//.test(article.primarySource),
+      `${article.slug}: primarySource must use HTTPS`
+    );
+    assertBuild(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
+    const sourceUrls = article.sources.map((source) => source.url);
+    assertBuild(new Set(sourceUrls).size === sourceUrls.length, `${article.slug}: source URLs must be unique`);
+    resolvePrimarySource(article);
   }
 
   for (const [localeKey, locale] of localeEntries) {
     assertBuild(/^[a-z]{2}(?:-[A-Z]{2})?$/.test(locale.htmlLang), `invalid htmlLang for ${localeKey}`);
+    assertBuild(typeof locale.sourcePrefix === "string" && locale.sourcePrefix.length > 0, `sourcePrefix is required for ${localeKey}`);
     assertBuild(
       locale.pathPrefix === "" || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(locale.pathPrefix),
       `invalid pathPrefix for ${localeKey}`

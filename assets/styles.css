@@ -454,11 +454,30 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 18px;
-  margin: 0 0 44px;
+  margin: 0;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-size: 14px;
+}
+
+.update-article .primary-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 18px 0 40px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.primary-source__label {
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.primary-source a {
+  font-weight: 650;
 }
 
 .fact-card {
@@ -671,7 +690,7 @@ html[lang="zh-CN"] .update-card__meta {
     margin-top: 24px;
   }
 
-  .meta {
+  .update-article .primary-source {
     margin-bottom: 32px;
   }
 
