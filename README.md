@@ -64,9 +64,9 @@ shared assets, or the generator and rebuild.
 Add one object to `articles` in `content/articles.mjs`. Each article requires:
 
 - a unique lowercase slug;
-- the actual TurboFlow page publication and modification dates (not the date of
-  the event being covered), using full timestamps with time-zone offsets when
-  the page's exact release time is known;
+- the original public release time of the news item as `publishedAt`, using a
+  full timestamp and time-zone offset when a primary source exposes one;
+- the actual date of the latest substantive page revision as `modifiedAt`;
 - English and Chinese titles, summaries, fact blocks, body blocks, and risk
   notices;
 - descriptive English and Chinese labels for every HTTPS source;
