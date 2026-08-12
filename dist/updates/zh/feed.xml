@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TurboFlow 最新动态</title>
+    <link>https://www.tf.xyz/updates/zh/</link>
+    <description>TurboFlow 公司公告与产品更新。</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://www.tf.xyz/updates/zh/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TurboFlow 完成 600 万美元种子轮融资，Pantera Capital 领投</title>
+      <link>https://www.tf.xyz/updates/zh/turboflow-raises-6m-seed-round/</link>
+      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/turboflow-raises-6m-seed-round/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>TurboFlow 完成 600 万美元种子轮融资，由 Pantera Capital 领投，Susquehanna Crypto 与 Digital Currency Group 参投。</description>
+    </item>
+    <item>
+      <title>Pantera Capital 为什么投资 TurboFlow？官方投资文章释放的五个信号</title>
+      <link>https://www.tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</link>
+      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Pantera Capital 在《Investing in TurboFlow》中从品类融合、亚太本地化、市场基础设施、团队与早期采用五个方面解释其投资判断。</description>
+    </item>
+    <item>
+      <title>TurboFlow 接入 Chainlink：短周期事件合约为何更依赖价格基础设施</title>
+      <link>https://www.tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</link>
+      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>TurboFlow 接入 Chainlink，为黄金、比特币和以太坊连续预测市场提供支持。本文说明已确认范围、事件合约机制与尚未披露的技术细节。</description>
+    </item>
+    <item>
+      <title>TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作</title>
+      <link>https://www.tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</link>
+      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <description>TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作，重点覆盖成交质量、流动性深度、定价效率与市场结构。</description>
+    </item>
+  </channel>
+</rss>
