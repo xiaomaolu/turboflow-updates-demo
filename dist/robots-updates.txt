@@ -1,0 +1,5 @@
+# Merge these directives into the production origin's /robots.txt.
+User-agent: *
+Allow: /updates/
+
+Sitemap: https://www.tf.xyz/sitemap-updates.xml
