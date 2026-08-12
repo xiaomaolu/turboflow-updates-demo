@@ -166,7 +166,7 @@ export const articles = [
       "turboflow-chainlink-price-infrastructure",
       "turboflow-susquehanna-crypto-liquidity-collaboration"
     ],
-    publishedAt: "2026-08-12",
+    publishedAt: "2026-06-22T20:05:00-04:00",
     modifiedAt: "2026-08-12",
     author: "TurboFlow",
     sources: [
@@ -330,7 +330,7 @@ export const articles = [
       "turboflow-chainlink-price-infrastructure",
       "turboflow-susquehanna-crypto-liquidity-collaboration"
     ],
-    publishedAt: "2026-08-12",
+    publishedAt: "2026-06-30T19:04:41-07:00",
     modifiedAt: "2026-08-12",
     author: "TurboFlow",
     sources: [
@@ -526,7 +526,7 @@ export const articles = [
       "why-pantera-invested-in-turboflow",
       "turboflow-raises-6m-seed-round"
     ],
-    publishedAt: "2026-08-12",
+    publishedAt: "2026-06-11T18:00:00.000Z",
     modifiedAt: "2026-08-12",
     author: "TurboFlow",
     sources: [
@@ -723,7 +723,7 @@ export const articles = [
       "turboflow-raises-6m-seed-round",
       "why-pantera-invested-in-turboflow"
     ],
-    publishedAt: "2026-08-12",
+    publishedAt: "2026-05-13T10:00:00.000Z",
     modifiedAt: "2026-08-12",
     author: "TurboFlow",
     sources: [

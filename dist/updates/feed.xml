@@ -8,31 +8,31 @@
     <lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://www.tf.xyz/updates/feed.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>TurboFlow Raises $6 Million Seed Round Led by Pantera Capital</title>
-      <link>https://www.tf.xyz/updates/turboflow-raises-6m-seed-round/</link>
-      <guid isPermaLink="true">https://www.tf.xyz/updates/turboflow-raises-6m-seed-round/</guid>
-      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
-      <description>TurboFlow has raised $6 million in seed funding led by Pantera Capital, with participation from Susquehanna Crypto and Digital Currency Group.</description>
-    </item>
-    <item>
       <title>Why Pantera Capital Invested in TurboFlow: Five Signals in Its Published Thesis</title>
       <link>https://www.tf.xyz/updates/why-pantera-invested-in-turboflow/</link>
       <guid isPermaLink="true">https://www.tf.xyz/updates/why-pantera-invested-in-turboflow/</guid>
-      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <pubDate>Wed, 01 Jul 2026 02:04:41 GMT</pubDate>
       <description>Pantera Capital&#39;s Investing in TurboFlow article explains its thesis around product convergence, APAC localization, market infrastructure, the team, and early traction.</description>
+    </item>
+    <item>
+      <title>TurboFlow Raises $6 Million Seed Round Led by Pantera Capital</title>
+      <link>https://www.tf.xyz/updates/turboflow-raises-6m-seed-round/</link>
+      <guid isPermaLink="true">https://www.tf.xyz/updates/turboflow-raises-6m-seed-round/</guid>
+      <pubDate>Tue, 23 Jun 2026 00:05:00 GMT</pubDate>
+      <description>TurboFlow has raised $6 million in seed funding led by Pantera Capital, with participation from Susquehanna Crypto and Digital Currency Group.</description>
     </item>
     <item>
       <title>TurboFlow Adopts Chainlink: Why Short-Cycle Event Contracts Depend on Price Infrastructure</title>
       <link>https://www.tf.xyz/updates/turboflow-chainlink-price-infrastructure/</link>
       <guid isPermaLink="true">https://www.tf.xyz/updates/turboflow-chainlink-price-infrastructure/</guid>
-      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <pubDate>Thu, 11 Jun 2026 18:00:00 GMT</pubDate>
       <description>TurboFlow adopted Chainlink to support continuous prediction markets for XAU, BTC, and ETH. This update explains the confirmed scope and the infrastructure questions that remain open.</description>
     </item>
     <item>
       <title>TurboFlow Announces Strategic Liquidity Collaboration with Susquehanna Crypto</title>
       <link>https://www.tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/</link>
       <guid isPermaLink="true">https://www.tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/</guid>
-      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <pubDate>Wed, 13 May 2026 10:00:00 GMT</pubDate>
       <description>TurboFlow announced a strategic liquidity collaboration with Susquehanna Crypto focused on execution quality, liquidity depth, pricing efficiency, and market structure.</description>
     </item>
   </channel>
