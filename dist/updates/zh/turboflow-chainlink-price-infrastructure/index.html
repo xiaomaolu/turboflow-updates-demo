@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TurboFlow 接入 Chainlink：短周期事件合约为何更依赖价格基础设施</title>
-  <meta name="description" content="TurboFlow 接入 Chainlink，为黄金、比特币和以太坊连续预测市场提供支持。本文说明已确认范围、事件合约机制与尚未披露的技术细节。">
+  <title>TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场</title>
+  <meta name="description" content="TurboFlow 与 Chainlink 宣布，TurboFlow 已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://www.tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/">
@@ -15,15 +15,15 @@
 
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="TurboFlow">
-  <meta property="og:title" content="TurboFlow 接入 Chainlink：短周期事件合约为何更依赖价格基础设施">
-  <meta property="og:description" content="拆解 TurboFlow 接入 Chainlink 的确认范围、事件合约关联与公开信息边界。">
+  <meta property="og:title" content="TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场">
+  <meta property="og:description" content="TurboFlow 接入 Chainlink，支持覆盖 XAU、BTC 与 ETH 的连续预测市场。">
   <meta property="og:url" content="https://www.tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/">
   <meta property="article:published_time" content="2026-06-11T18:00:00.000Z">
   <meta property="article:modified_time" content="2026-08-12">
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 市场">
-  <meta name="twitter:description" content="拆解 TurboFlow 接入 Chainlink 的确认范围、事件合约关联与公开信息边界。">
+  <meta name="twitter:description" content="TurboFlow 接入 Chainlink，支持覆盖 XAU、BTC 与 ETH 的连续预测市场。">
 
   <link rel="stylesheet" href="../../assets/styles.css">
   <script type="application/ld+json">{
@@ -57,8 +57,8 @@
       "isPartOf": {
         "@id": "https://www.tf.xyz/updates/zh/#collection"
       },
-      "headline": "TurboFlow 接入 Chainlink：短周期事件合约为何更依赖价格基础设施",
-      "description": "TurboFlow 接入 Chainlink，为黄金、比特币和以太坊连续预测市场提供支持。本文说明已确认范围、事件合约机制与尚未披露的技术细节。",
+      "headline": "TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场",
+      "description": "TurboFlow 与 Chainlink 宣布，TurboFlow 已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。",
       "datePublished": "2026-06-11T18:00:00.000Z",
       "dateModified": "2026-08-12",
       "inLanguage": "zh-CN",
@@ -69,11 +69,11 @@
       "publisher": {
         "@id": "https://www.tf.xyz/#organization"
       },
+      "isBasedOn": "https://x.com/TurboFlow_xyz/status/2065131952802234386",
       "citation": [
-        "https://x.com/chainlink/status/2065132282780774419",
         "https://x.com/TurboFlow_xyz/status/2065131952802234386",
-        "https://turboflow.gitbook.io/whitepaper/turboflow/products/event-contracts",
-        "https://www.chainlinkecosystem.com/ecosystem/turboflow"
+        "https://x.com/chainlink/status/2065132282780774419",
+        "https://turboflow.gitbook.io/whitepaper/turboflow/products/event-contracts"
       ]
     },
     {
@@ -128,57 +128,50 @@
     <article class="update-article">
       <header>
         <p class="eyebrow">基础设施更新</p>
-        <h1>TurboFlow 接入 Chainlink：短周期事件合约为何更依赖价格基础设施</h1>
-        <p class="dek">Chainlink 与 TurboFlow 宣布为黄金、比特币和以太坊连续预测市场提供支持。所引双方官方公告未说明具体 Chainlink 服务、Feed 标识或部署细节。</p>
+        <h1>TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场</h1>
+        <p class="dek">TurboFlow 与 Chainlink 宣布，TurboFlow 已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。双方官方公告确认了接入关系和覆盖市场，但没有点名具体 Chainlink 服务或部署配置。</p>
         <div class="meta">
           <span>发布于 <time datetime="2026-06-11T18:00:00.000Z">2026年6月11日</time></span>
           <span>更新于 <time datetime="2026-08-12">2026年8月12日</time></span>
           <span>作者：TurboFlow</span>
-          <span>价格基础设施</span>
         </div>
+        <p class="primary-source">
+    <span class="primary-source__label">来源：</span>
+    <a href="https://x.com/TurboFlow_xyz/status/2065131952802234386" rel="noopener noreferrer">TurboFlow 官方 X 公告（2026 年 6 月 11 日）</a>
+  </p>
       </header>
       <section class="fact-card" aria-labelledby="key-facts-title">
     <h2 id="key-facts-title">核心信息</h2>
     <dl>
       <dt>公布时间</dt><dd>2026 年 6 月 11 日</dd>
-      <dt>确认范围</dt><dd>连续预测市场</dd>
-      <dt>覆盖市场</dt><dd>XAU、BTC 与 ETH</dd>
-      <dt>文档对应产品</dt><dd>事件合约；公告未直接点名</dd>
-      <dt>文档所列最短期限</dt><dd>30 秒</dd>
+      <dt>确认方</dt><dd>TurboFlow 与 Chainlink</dd>
+      <dt>接入关系</dt><dd>TurboFlow 接入 Chainlink</dd>
+      <dt>公告范围</dt><dd>面向 XAU、BTC 与 ETH 的连续预测市场</dd>
+      <dt>产品用语</dt><dd>公告未直接点名事件合约</dd>
     </dl>
   </section>
-      <p>2026 年 6 月 11 日，<a href="https://x.com/chainlink/status/2065132282780774419" rel="noopener noreferrer">Chainlink</a> 与 <a href="https://x.com/TurboFlow_xyz/status/2065131952802234386" rel="noopener noreferrer">TurboFlow</a> 分别发布官方消息，确认 TurboFlow 接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。</p>
-      <p>公告确认了接入关系与三个市场，没有披露具体采用哪一项 Chainlink 服务，也没有公布 Feed 标识、部署链、数据源配置或验证合约。本文不把这些未公开细节写成既定事实。</p>
-      <h2>官方公告如何对应 TurboFlow 事件合约</h2>
-      <p>Chainlink 公告使用“连续预测市场”这一表述。TurboFlow 当前产品文档在 2026 年 8 月 12 日核验时，将事件合约（Event Contracts）定义为固定时间窗口内的看涨或看跌交易：用户选择市场、期限、投入金额与方向，倒计时结束后自动结算。</p>
-      <p>同一份文档列出 BTC、ETH 与 XAU，合约期限从 30 秒起，并说明结果取决于入场价和到期退出价的比较。本文按照来源分别使用两个术语：介绍公告时沿用“连续预测市场”，解释 TurboFlow 产品时使用“事件合约”。</p>
-      <h2>30 秒窗口为何提高了价格基础设施要求</h2>
-      <p>时间窗口缩短后，价格记录时点对结果的影响更加直接。一笔合约可以在 30 秒后结算，入场价何时记录、退出价何时取得、两次观察采用什么一致规则，都可能直接决定最终方向。这是产品结构带来的分析结论，不代表任何数据系统能够消除市场不确定性。</p>
-      <p>价格基础设施因此需要支持及时、定义一致的价格观察。用户还需要清楚了解权威价格、平价处理，以及数据中断或系统异常时采用的规则。</p>
-      <div class="callout"><p>在短周期市场中，参考价格的记录时点属于合约结果的一部分。</p></div>
-      <h2>价格数据只是结算链路中的一层</h2>
-      <p>市场数据或预言机层向应用提供参考信息。合约期限、入场价规则、退出价规则、平价处理、订单接受和余额更新，分别属于完整结算流程的其他环节。流动性和动态回报定价又是独立的市场结构问题。</p>
-      <p>评估这次接入时应保留这些边界。Chainlink 支持无法单独证明完整结算流程、成交质量、市场深度或技术系统不存在风险，每一层都需要对应文档与可观察记录。</p>
-      <h2>公开公告仍留下哪些技术问题</h2>
-      <p>双方官方公告都没有点名 Chainlink Data Streams、Chainlink Data Feeds、具体数据流或 Feed 标识、部署链、数据聚合阈值与链上验证合约。Chainlink 通用文档或 TurboFlow 其他功能所支持的网络，不能替代本次接入的具体说明。</p>
-      <p>后续技术文档可以把每个市场对应到参考数据源、时间戳策略、验证路径和异常处理。在这些信息公布前，当前可核验结论保持明确：TurboFlow 已接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场。</p>
-      <h2>用户可以如何复核一笔事件合约</h2>
-      <p>确认合约前，用户可以核对市场、期限、投入金额、方向、页面回报率与入场价定义；到期后，应通过订单记录理解退出价、结算结果和余额变化。这些检查覆盖用户可见的完整流程，也避免把单一基础设施提供方理解为所有结果的保证方。</p>
+      <p>2026 年 6 月 11 日，<a href="https://x.com/TurboFlow_xyz/status/2065131952802234386" rel="noopener noreferrer">TurboFlow</a> 宣布已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。<a href="https://x.com/chainlink/status/2065132282780774419" rel="noopener noreferrer">Chainlink</a> 也通过官方 X 账号确认了这次接入。</p>
+      <h2>公告确认的内容</h2>
+      <p>TurboFlow 将这次接入描述为支持快速、准确、连续预测市场的基础设施，并把扩大散户参与作为目标。这是 TurboFlow 对接入目标的项目方表述，不构成独立性能测量或交易结果保证。</p>
+      <p>双方公告以 XAU、BTC 与 ETH 分别指向黄金、比特币和以太坊。两则官方消息均未点名 Chainlink Data Streams、Chainlink Data Feeds、Feed 标识、部署网络或验证合约。</p>
+      <h2>TurboFlow 产品背景</h2>
+      <p>双方公告使用“连续预测市场”这一表述。TurboFlow 当前文档则将事件合约定义为固定时间窗口内的看涨或看跌交易，并把 BTC、ETH 与 XAU 列为支持市场。公告没有直接点名事件合约，因此本文保留两种来源用语之间的区别。</p>
+      <p>对于事件合约，TurboFlow 文档说明用户选择市场、期限、投入金额和方向，固定时间窗口结束后完成结算。这些产品机制用于补充背景，不代表本次 Chainlink 接入披露了更多技术细节。</p>
+      <div class="callout"><p>已确认范围：TurboFlow 接入 Chainlink，支持覆盖 XAU、BTC 与 ETH 的连续预测市场。</p></div>
       <section class="sources" aria-labelledby="sources-title">
     <h2 id="sources-title">来源</h2>
     <ul>
-      <li><a href="https://x.com/chainlink/status/2065132282780774419" rel="noopener noreferrer">Chainlink 官方 X 公告</a></li>
-      <li><a href="https://x.com/TurboFlow_xyz/status/2065131952802234386" rel="noopener noreferrer">TurboFlow 官方 Chainlink 接入公告</a></li>
-      <li><a href="https://turboflow.gitbook.io/whitepaper/turboflow/products/event-contracts" rel="noopener noreferrer">TurboFlow 文档：事件合约</a></li>
-      <li><a href="https://www.chainlinkecosystem.com/ecosystem/turboflow" rel="noopener noreferrer">社区运营的 Chainlink Ecosystem：TurboFlow 条目</a></li>
+      <li><a href="https://x.com/TurboFlow_xyz/status/2065131952802234386" rel="noopener noreferrer">TurboFlow 官方 X 公告（2026 年 6 月 11 日）</a></li>
+      <li><a href="https://x.com/chainlink/status/2065132282780774419" rel="noopener noreferrer">Chainlink 官方 X 确认（2026 年 6 月 11 日）</a></li>
+      <li><a href="https://turboflow.gitbook.io/whitepaper/turboflow/products/event-contracts" rel="noopener noreferrer">TurboFlow 事件合约文档（产品背景）</a></li>
     </ul>
   </section>
-      <aside class="risk-note" aria-label="风险提示">事件合约属于短周期固定时间窗口产品。方向判断错误可能导致投入金额损失，较短期限会让入场时点与快速价格变化更加重要。Chainlink 接入不构成盈利、系统持续可用或避免损失的保证。</aside>
+      <aside class="risk-note" aria-label="风险提示">本次公告涉及基础设施支持，不构成价格准确性、系统持续运行、成交质量或交易结果的保证。事件合约属于短周期产品，方向判断错误可能导致投入金额损失。</aside>
       <nav class="related-updates" aria-labelledby="related-updates-title">
     <h2 id="related-updates-title">相关动态</h2>
     <ul>
       <li><a href="../turboflow-susquehanna-crypto-liquidity-collaboration/">TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作</a></li>
-      <li><a href="../why-pantera-invested-in-turboflow/">Pantera Capital 为什么投资 TurboFlow？官方投资文章释放的五个信号</a></li>
+      <li><a href="../why-pantera-invested-in-turboflow/">Pantera Capital 发布《Investing in TurboFlow》投资文章</a></li>
       <li><a href="../turboflow-raises-6m-seed-round/">TurboFlow 完成 600 万美元种子轮融资，Pantera Capital 领投</a></li>
     </ul>
   </nav>

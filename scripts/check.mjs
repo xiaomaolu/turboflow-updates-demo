@@ -119,6 +119,9 @@ function validateEditorialData() {
   assert.match(site.productionOrigin, /^https:\/\//, "productionOrigin must use HTTPS");
   assert.equal(site.updatesPath, "/updates", "updatesPath must remain /updates");
   assert(articles.length > 0, "at least one reviewed article is required");
+  for (const [localeKey, locale] of localeEntries) {
+    assert(locale.sourcePrefix, `sourcePrefix is required for ${localeKey}`);
+  }
 
   const slugs = new Set();
   for (const article of articles) {
@@ -132,6 +135,14 @@ function validateEditorialData() {
       `${article.slug}: modifiedAt precedes publishedAt`
     );
     assert(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
+    assert.match(article.primarySource, /^https:\/\//, `${article.slug}: primarySource must use HTTPS`);
+    const sourceUrls = article.sources.map((source) => source.url);
+    assert.equal(new Set(sourceUrls).size, sourceUrls.length, `${article.slug}: source URLs must be unique`);
+    assert.equal(
+      article.sources.filter((source) => source.url === article.primarySource).length,
+      1,
+      `${article.slug}: primarySource must match exactly one article source`
+    );
     assert(Array.isArray(article.relatedSlugs), `${article.slug}: relatedSlugs must be an array`);
 
     for (const relatedSlug of article.relatedSlugs) {
@@ -223,6 +234,23 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     assert(main.includes(escapeHtml(copy.headline)), `${relativePath}: visible HTML does not contain the headline`);
     assert(main.includes(escapeHtml(copy.dek)), `${relativePath}: visible HTML does not contain the dek`);
     assert(main.includes(escapeHtml(copy.riskNotice)), `${relativePath}: visible HTML does not contain the risk notice`);
+    const headerMatch = main.match(/<header>([\s\S]*?)<\/header>/);
+    assert(headerMatch, `${relativePath}: article header is missing`);
+    const articleHeader = headerMatch[1];
+    const primaryMatches = [...articleHeader.matchAll(/<p class="primary-source">([\s\S]*?)<\/p>/g)];
+    assert.equal(primaryMatches.length, 1, `${relativePath}: expected one primary source in article header`);
+    const primarySourceHtml = primaryMatches[0][1];
+    const primarySource = article.sources.find((source) => source.url === article.primarySource);
+    assert(primarySourceHtml.includes(escapeHtml(locale.sourcePrefix)), `${relativePath}: primary source label is missing`);
+    assert(primarySourceHtml.includes(article.primarySource), `${relativePath}: primary source URL is missing`);
+    assert(primarySourceHtml.includes(escapeHtml(primarySource.label[localeKey])), `${relativePath}: primary source name is missing`);
+    assert(
+      articleHeader.indexOf('class="meta"') < articleHeader.indexOf('class="primary-source"'),
+      `${relativePath}: primary source must follow article metadata`
+    );
+    const sourcesMatch = main.match(/<section class="sources"[\s\S]*?<\/section>/);
+    assert(sourcesMatch, `${relativePath}: bottom sources section is missing`);
+    const sourcesHtml = sourcesMatch[0];
     for (const fact of copy.facts) {
       assert(main.includes(escapeHtml(fact.label)), `${relativePath}: visible fact label missing: ${fact.label}`);
       assert(main.includes(escapeHtml(fact.value)), `${relativePath}: visible fact value missing: ${fact.value}`);
@@ -236,8 +264,8 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       }
     }
     for (const source of article.sources) {
-      assert(main.includes(source.url), `${relativePath}: visible source URL missing: ${source.url}`);
-      assert(main.includes(escapeHtml(source.label[localeKey])), `${relativePath}: visible source label missing: ${source.label[localeKey]}`);
+      assert(sourcesHtml.includes(source.url), `${relativePath}: bottom source URL missing: ${source.url}`);
+      assert(sourcesHtml.includes(escapeHtml(source.label[localeKey])), `${relativePath}: bottom source label missing: ${source.label[localeKey]}`);
     }
     for (const relatedSlug of article.relatedSlugs) {
       assert(main.includes(`../${relatedSlug}/`), `${relativePath}: visible related link missing: ${relatedSlug}`);
@@ -246,6 +274,12 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     assert(articleSchema, `${relativePath}: Article schema is required`);
     assert.equal(articleSchema.datePublished, article.publishedAt, `${relativePath}: schema published date drift`);
     assert.equal(articleSchema.dateModified, article.modifiedAt, `${relativePath}: schema modified date drift`);
+    assert.equal(articleSchema.isBasedOn, article.primarySource, `${relativePath}: schema primary source drift`);
+    assert.deepEqual(
+      articleSchema.citation,
+      article.sources.map((source) => source.url),
+      `${relativePath}: schema citations drift`
+    );
   } else {
     assert(html.includes("data-memo-drawer"), `${relativePath}: publishing notes drawer is required on indexes`);
     assert(!html.includes("data-i18n"), `${relativePath}: list should be independently localized`);
