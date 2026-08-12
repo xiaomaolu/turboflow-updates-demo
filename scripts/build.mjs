@@ -246,6 +246,7 @@ function articleStructuredData(article, localeKey) {
   const copy = article.translations[localeKey];
   const articleUrl = canonicalUrl(localeKey, article.slug);
   const collectionUrl = canonicalUrl(localeKey);
+  const faqId = `${articleUrl}#faq`;
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -269,7 +270,24 @@ function articleStructuredData(article, localeKey) {
         author: { "@id": site.organizationId },
         publisher: { "@id": site.organizationId },
         isBasedOn: article.primarySource,
-        citation: article.sources.map((source) => source.url)
+        citation: article.sources.map((source) => source.url),
+        hasPart: { "@id": faqId }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": faqId,
+        url: faqId,
+        inLanguage: locale.htmlLang,
+        isPartOf: { "@id": `${articleUrl}#article` },
+        mainEntity: copy.faqs.map((faq, index) => ({
+          "@type": "Question",
+          "@id": `${articleUrl}#faq-${index + 1}`,
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer
+          }
+        }))
       },
       {
         "@type": "BreadcrumbList",
@@ -325,7 +343,7 @@ function articleListItem(article, localeKey) {
   const locale = site.locales[localeKey];
   const copy = article.translations[localeKey];
   return `<article class="update-card">
-    <p class="update-card__meta">${escapeHtml(copy.category)} · <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></p>
+    <p class="update-card__meta">${escapeHtml(locale.listDatePrefix)} · <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></p>
     <h2><a href="./${escapeHtml(article.slug)}/">${escapeHtml(copy.headline)}</a></h2>
     <p>${escapeHtml(copy.pageDescription)}</p>
     <a class="update-card__link" href="./${escapeHtml(article.slug)}/">${escapeHtml(locale.readArticle)}<span aria-hidden="true"> →</span></a>
@@ -381,7 +399,7 @@ function renderArticleBlock(block) {
     return `<h2>${escapeHtml(block.text)}</h2>`;
   }
   if (block.type === "callout") {
-    return `<div class="callout"><p>${escapeHtml(block.text)}</p></div>`;
+    return `<aside class="callout"><p>${escapeHtml(block.text)}</p></aside>`;
   }
   if (block.type === "paragraph") {
     const content = block.segments ? renderSegments(block.segments) : escapeHtml(block.text);
@@ -390,12 +408,34 @@ function renderArticleBlock(block) {
   throw new Error(`Unsupported article block type: ${block.type}`);
 }
 
-function renderFacts(facts, locale) {
-  return `<section class="fact-card" aria-labelledby="key-facts-title">
-    <h2 id="key-facts-title">${escapeHtml(locale.keyFacts)}</h2>
-    <dl>
-      ${facts.map((fact) => `<dt>${escapeHtml(fact.label)}</dt><dd>${escapeHtml(fact.value)}</dd>`).join("\n      ")}
-    </dl>
+function renderSourceContent(copy, locale) {
+  return `<section class="source-content" aria-labelledby="source-content-title">
+    <h2 id="source-content-title">${escapeHtml(locale.sourceContentTitle)}</h2>
+    <p class="source-content__note">${escapeHtml(locale.sourceContentNote)}</p>
+    <div class="source-content__body">
+      ${copy.sourceBlocks.map(renderArticleBlock).join("\n      ")}
+    </div>
+  </section>`;
+}
+
+function renderSummary(summaryItems, locale) {
+  return `<section class="content-summary" aria-labelledby="content-summary-title">
+    <h2 id="content-summary-title">${escapeHtml(locale.summaryTitle)}</h2>
+    <ul>
+      ${summaryItems.map((item) => `<li><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span></li>`).join("\n      ")}
+    </ul>
+  </section>`;
+}
+
+function renderFaq(faqs, locale) {
+  return `<section class="faq" id="faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">${escapeHtml(locale.faqTitle)}</h2>
+    <div class="faq__list">
+      ${faqs.map((faq, index) => `<article class="faq__item" aria-labelledby="faq-${index + 1}">
+        <h3 id="faq-${index + 1}">${escapeHtml(faq.question)}</h3>
+        <p>${escapeHtml(faq.answer)}</p>
+      </article>`).join("\n      ")}
+    </div>
   </section>`;
 }
 
@@ -420,7 +460,7 @@ function renderPrimarySource(article, localeKey) {
   const source = resolvePrimarySource(article);
   return `<p class="primary-source">
     <span class="primary-source__label">${escapeHtml(locale.sourcePrefix)}</span>
-    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a>
+    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.platform[localeKey])}</a>
   </p>`;
 }
 
@@ -492,10 +532,11 @@ function renderArticlePage(article, localeKey) {
         </div>
         ${renderPrimarySource(article, localeKey)}
       </header>
-      ${renderFacts(copy.facts, locale)}
-      ${copy.blocks.map(renderArticleBlock).join("\n      ")}
-      ${renderSources(article, localeKey)}
+      ${renderSourceContent(copy, locale)}
+      ${renderSummary(copy.summaryItems, locale)}
+      ${renderFaq(copy.faqs, locale)}
       <aside class="risk-note" aria-label="${escapeHtml(locale.riskAria)}">${escapeHtml(copy.riskNotice)}</aside>
+      ${renderSources(article, localeKey)}
       ${renderRelated(article, localeKey)}
     </article>
   </main>
@@ -630,12 +671,29 @@ export function validateBuildInput() {
     assertBuild(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     const sourceUrls = article.sources.map((source) => source.url);
     assertBuild(new Set(sourceUrls).size === sourceUrls.length, `${article.slug}: source URLs must be unique`);
-    resolvePrimarySource(article);
+    const primarySource = resolvePrimarySource(article);
+    for (const [localeKey] of localeEntries) {
+      assertBuild(
+        typeof primarySource.platform?.[localeKey] === "string" && primarySource.platform[localeKey].length > 0,
+        `${article.slug}: primary source platform is required for ${localeKey}`
+      );
+      const copy = article.translations?.[localeKey];
+      assertBuild(copy && typeof copy === "object", `${article.slug}: translation is required for ${localeKey}`);
+      assertBuild(!Object.hasOwn(copy, "facts") && !Object.hasOwn(copy, "blocks"), `${article.slug}/${localeKey}: legacy facts and blocks are forbidden`);
+      assertBuild(Array.isArray(copy.sourceBlocks) && copy.sourceBlocks.length > 0, `${article.slug}/${localeKey}: sourceBlocks are required`);
+      assertBuild(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
+      assertBuild(Array.isArray(copy.faqs) && copy.faqs.length > 0, `${article.slug}/${localeKey}: faqs are required`);
+    }
   }
 
   for (const [localeKey, locale] of localeEntries) {
     assertBuild(/^[a-z]{2}(?:-[A-Z]{2})?$/.test(locale.htmlLang), `invalid htmlLang for ${localeKey}`);
+    assertBuild(typeof locale.listDatePrefix === "string" && locale.listDatePrefix.length > 0, `listDatePrefix is required for ${localeKey}`);
     assertBuild(typeof locale.sourcePrefix === "string" && locale.sourcePrefix.length > 0, `sourcePrefix is required for ${localeKey}`);
+    assertBuild(typeof locale.sourceContentTitle === "string" && locale.sourceContentTitle.length > 0, `sourceContentTitle is required for ${localeKey}`);
+    assertBuild(typeof locale.sourceContentNote === "string" && locale.sourceContentNote.length > 0, `sourceContentNote is required for ${localeKey}`);
+    assertBuild(typeof locale.summaryTitle === "string" && locale.summaryTitle.length > 0, `summaryTitle is required for ${localeKey}`);
+    assertBuild(typeof locale.faqTitle === "string" && locale.faqTitle.length > 0, `faqTitle is required for ${localeKey}`);
     assertBuild(
       locale.pathPrefix === "" || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(locale.pathPrefix),
       `invalid pathPrefix for ${localeKey}`

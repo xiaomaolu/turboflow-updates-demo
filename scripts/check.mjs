@@ -32,6 +32,20 @@ function countMatches(text, expression) {
   return [...text.matchAll(expression)].length;
 }
 
+function normalizeMarkup(value) {
+  return value.replace(/>\s+</g, "><").trim();
+}
+
+function displayDate(dateTime, localeKey) {
+  const [year, month, day] = dateTime.slice(0, 10).split("-").map(Number);
+  return new Intl.DateTimeFormat(site.locales[localeKey].locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC"
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+}
+
 function parseJsonLd(html, relativePath) {
   const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   assert(match, `${relativePath}: missing JSON-LD`);
@@ -121,6 +135,11 @@ function validateEditorialData() {
   assert(articles.length > 0, "at least one reviewed article is required");
   for (const [localeKey, locale] of localeEntries) {
     assert(locale.sourcePrefix, `sourcePrefix is required for ${localeKey}`);
+    assert(locale.listDatePrefix, `listDatePrefix is required for ${localeKey}`);
+    assert(locale.sourceContentTitle, `sourceContentTitle is required for ${localeKey}`);
+    assert(locale.sourceContentNote, `sourceContentNote is required for ${localeKey}`);
+    assert(locale.summaryTitle, `summaryTitle is required for ${localeKey}`);
+    assert(locale.faqTitle, `faqTitle is required for ${localeKey}`);
   }
 
   const slugs = new Set();
@@ -143,6 +162,10 @@ function validateEditorialData() {
       1,
       `${article.slug}: primarySource must match exactly one article source`
     );
+    const primarySource = article.sources.find((source) => source.url === article.primarySource);
+    for (const [localeKey] of localeEntries) {
+      assert(primarySource.platform?.[localeKey], `${article.slug}: primary source platform missing for ${localeKey}`);
+    }
     assert(Array.isArray(article.relatedSlugs), `${article.slug}: relatedSlugs must be an array`);
 
     for (const relatedSlug of article.relatedSlugs) {
@@ -173,10 +196,24 @@ function validateEditorialData() {
       ]) {
         assert(copy[field], `${article.slug}/${localeKey}: missing ${field}`);
       }
-      assert(Array.isArray(copy.facts) && copy.facts.length > 0, `${article.slug}/${localeKey}: facts are required`);
-      assert(Array.isArray(copy.blocks) && copy.blocks.length > 0, `${article.slug}/${localeKey}: body blocks are required`);
+      assert(!Object.hasOwn(copy, "facts"), `${article.slug}/${localeKey}: legacy facts are forbidden`);
+      assert(!Object.hasOwn(copy, "blocks"), `${article.slug}/${localeKey}: legacy blocks are forbidden`);
+      assert(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
+      assert(Array.isArray(copy.sourceBlocks) && copy.sourceBlocks.length > 0, `${article.slug}/${localeKey}: sourceBlocks are required`);
+      assert(Array.isArray(copy.faqs) && copy.faqs.length > 0, `${article.slug}/${localeKey}: faqs are required`);
 
-      for (const block of copy.blocks) {
+      for (const item of copy.summaryItems) {
+        assert(item.title && item.text, `${article.slug}/${localeKey}: summary items require title and text`);
+      }
+
+      const questions = new Set();
+      for (const faq of copy.faqs) {
+        assert(faq.question && faq.answer, `${article.slug}/${localeKey}: FAQ items require question and answer`);
+        assert(!questions.has(faq.question), `${article.slug}/${localeKey}: FAQ questions must be unique`);
+        questions.add(faq.question);
+      }
+
+      for (const block of copy.sourceBlocks) {
         assert(["paragraph", "heading", "callout"].includes(block.type), `${article.slug}/${localeKey}: unsupported block ${block.type}`);
         if (block.type === "paragraph") {
           assert(
@@ -233,40 +270,98 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     const main = mainMatch[1];
     assert(main.includes(escapeHtml(copy.headline)), `${relativePath}: visible HTML does not contain the headline`);
     assert(main.includes(escapeHtml(copy.dek)), `${relativePath}: visible HTML does not contain the dek`);
-    assert(main.includes(escapeHtml(copy.riskNotice)), `${relativePath}: visible HTML does not contain the risk notice`);
     const headerMatch = main.match(/<header>([\s\S]*?)<\/header>/);
     assert(headerMatch, `${relativePath}: article header is missing`);
     const articleHeader = headerMatch[1];
+    const metaMatch = articleHeader.match(/<div class="meta">([\s\S]*?)<\/div>/);
+    assert(metaMatch, `${relativePath}: article metadata is missing`);
+    assert(
+      metaMatch[1].includes(`<span>${escapeHtml(locale.publishedPrefix)} <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></span>`),
+      `${relativePath}: article publication metadata drift`
+    );
     const primaryMatches = [...articleHeader.matchAll(/<p class="primary-source">([\s\S]*?)<\/p>/g)];
     assert.equal(primaryMatches.length, 1, `${relativePath}: expected one primary source in article header`);
     const primarySourceHtml = primaryMatches[0][1];
     const primarySource = article.sources.find((source) => source.url === article.primarySource);
-    assert(primarySourceHtml.includes(escapeHtml(locale.sourcePrefix)), `${relativePath}: primary source label is missing`);
-    assert(primarySourceHtml.includes(article.primarySource), `${relativePath}: primary source URL is missing`);
-    assert(primarySourceHtml.includes(escapeHtml(primarySource.label[localeKey])), `${relativePath}: primary source name is missing`);
+    const primaryLabelMatch = primarySourceHtml.match(/<span class="primary-source__label">([\s\S]*?)<\/span>/);
+    const primaryLinkMatch = primarySourceHtml.match(/<a href="([^"]+)" rel="noopener noreferrer">([\s\S]*?)<\/a>/);
+    assert(primaryLabelMatch, `${relativePath}: primary source label is missing`);
+    assert(primaryLinkMatch, `${relativePath}: primary source link is missing`);
+    assert.equal(primaryLabelMatch[1], escapeHtml(locale.sourcePrefix), `${relativePath}: primary source label drift`);
+    assert.equal(primaryLinkMatch[1], article.primarySource, `${relativePath}: primary source URL drift`);
+    assert.equal(primaryLinkMatch[2], escapeHtml(primarySource.platform[localeKey]), `${relativePath}: primary source must show only the platform name`);
     assert(
       articleHeader.indexOf('class="meta"') < articleHeader.indexOf('class="primary-source"'),
       `${relativePath}: primary source must follow article metadata`
     );
-    const sourcesMatch = main.match(/<section class="sources"[\s\S]*?<\/section>/);
-    assert(sourcesMatch, `${relativePath}: bottom sources section is missing`);
-    const sourcesHtml = sourcesMatch[0];
-    for (const fact of copy.facts) {
-      assert(main.includes(escapeHtml(fact.label)), `${relativePath}: visible fact label missing: ${fact.label}`);
-      assert(main.includes(escapeHtml(fact.value)), `${relativePath}: visible fact value missing: ${fact.value}`);
-    }
-    for (const block of copy.blocks) {
-      if (block.text) {
-        assert(main.includes(escapeHtml(block.text)), `${relativePath}: visible article block is missing`);
-      }
-      for (const segment of block.segments || []) {
-        assert(main.includes(escapeHtml(segment.text)), `${relativePath}: visible article segment is missing`);
-      }
-    }
-    for (const source of article.sources) {
-      assert(sourcesHtml.includes(source.url), `${relativePath}: bottom source URL missing: ${source.url}`);
-      assert(sourcesHtml.includes(escapeHtml(source.label[localeKey])), `${relativePath}: bottom source label missing: ${source.label[localeKey]}`);
-    }
+    const sourceContentMatches = [...main.matchAll(/<section class="source-content"[\s\S]*?<\/section>/g)];
+    const summaryMatches = [...main.matchAll(/<section class="content-summary"[\s\S]*?<\/section>/g)];
+    const faqMatches = [...main.matchAll(/<section class="faq"[\s\S]*?<\/section>/g)];
+    const riskMatches = [...main.matchAll(/<aside class="risk-note" aria-label="([^"]+)">([\s\S]*?)<\/aside>/g)];
+    const sourcesMatches = [...main.matchAll(/<section class="sources"[\s\S]*?<\/section>/g)];
+    assert.equal(sourceContentMatches.length, 1, `${relativePath}: expected one source-content section`);
+    assert.equal(summaryMatches.length, 1, `${relativePath}: expected one content-summary section`);
+    assert.equal(faqMatches.length, 1, `${relativePath}: expected one FAQ section`);
+    assert.equal(riskMatches.length, 1, `${relativePath}: expected one risk notice`);
+    assert.equal(riskMatches[0][1], escapeHtml(locale.riskAria), `${relativePath}: risk notice label drift`);
+    assert.equal(riskMatches[0][2], escapeHtml(copy.riskNotice), `${relativePath}: risk notice drift`);
+    assert.equal(sourcesMatches.length, 1, `${relativePath}: expected one bottom sources section`);
+    assert(
+      main.indexOf('class="source-content"') < main.indexOf('class="content-summary"') &&
+        main.indexOf('class="content-summary"') < main.indexOf('class="faq"') &&
+        main.indexOf('class="faq"') < main.indexOf('class="risk-note"') &&
+        main.indexOf('class="risk-note"') < main.indexOf('class="sources"'),
+      `${relativePath}: editorial sections are out of order`
+    );
+    assert(!main.includes('class="fact-card"'), `${relativePath}: legacy fact card must not render`);
+    const sourcesHtml = sourcesMatches[0][0];
+    const sourceContentHtml = sourceContentMatches[0][0];
+    assert(sourceContentHtml.includes(`<h2 id="source-content-title">${escapeHtml(locale.sourceContentTitle)}</h2>`), `${relativePath}: source-content heading drift`);
+    assert(sourceContentHtml.includes(`<p class="source-content__note">${escapeHtml(locale.sourceContentNote)}</p>`), `${relativePath}: source-content disclosure drift`);
+    const sourceBodyMatches = [...sourceContentHtml.matchAll(/<div class="source-content__body">([\s\S]*?)<\/div>/g)];
+    assert.equal(sourceBodyMatches.length, 1, `${relativePath}: expected one source-content body`);
+    const expectedSourceBody = copy.sourceBlocks.map((block) => {
+      const body = block.segments
+        ? block.segments.map((segment) => segment.href
+          ? `<a href="${escapeHtml(segment.href)}" rel="noopener noreferrer">${escapeHtml(segment.text)}</a>`
+          : escapeHtml(segment.text)).join("")
+        : escapeHtml(block.text);
+      if (block.type === "heading") return `<h2>${body}</h2>`;
+      if (block.type === "paragraph") return `<p>${body}</p>`;
+      if (block.type === "callout") return `<aside class="callout"><p>${body}</p></aside>`;
+      throw new Error(`${relativePath}: unsupported source block type ${block.type}`);
+    }).join("\n      ");
+    assert.equal(normalizeMarkup(sourceBodyMatches[0][1]), normalizeMarkup(expectedSourceBody), `${relativePath}: source block structure or order drift`);
+    const summaryHtml = summaryMatches[0][0];
+    const renderedSummaryItems = [...summaryHtml.matchAll(/<li><strong>([\s\S]*?)<\/strong><span>([\s\S]*?)<\/span><\/li>/g)]
+      .map((match) => ({ title: match[1], text: match[2] }));
+    assert.deepEqual(
+      renderedSummaryItems,
+      copy.summaryItems.map((item) => ({ title: escapeHtml(item.title), text: escapeHtml(item.text) })),
+      `${relativePath}: visible summary drift`
+    );
+    const faqHtml = faqMatches[0][0];
+    const renderedFaqs = [...faqHtml.matchAll(/<article class="faq__item" aria-labelledby="faq-(\d+)">\s*<h3 id="faq-\1">([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>\s*<\/article>/g)]
+      .map((match) => ({ question: match[2], answer: match[3] }));
+    assert.deepEqual(
+      renderedFaqs,
+      copy.faqs.map((faq) => ({ question: escapeHtml(faq.question), answer: escapeHtml(faq.answer) })),
+      `${relativePath}: visible FAQ drift`
+    );
+    const renderedSources = [...sourcesHtml.matchAll(/<li><a href="([^"]+)" rel="noopener noreferrer">([\s\S]*?)<\/a><\/li>/g)]
+      .map((match) => ({ url: match[1], label: match[2] }));
+    assert.deepEqual(
+      renderedSources,
+      article.sources.map((source) => ({ url: source.url, label: escapeHtml(source.label[localeKey]) })),
+      `${relativePath}: bottom sources drift`
+    );
+    const expectedSourcesHtml = `<section class="sources" aria-labelledby="sources-title">
+    <h2 id="sources-title">${escapeHtml(locale.sourcesTitle)}</h2>
+    <ul>
+      ${article.sources.map((source) => `<li><a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a></li>`).join("\n      ")}
+    </ul>
+  </section>`;
+    assert.equal(normalizeMarkup(sourcesHtml), normalizeMarkup(expectedSourcesHtml), `${relativePath}: bottom sources markup drift`);
     for (const relatedSlug of article.relatedSlugs) {
       assert(main.includes(`../${relatedSlug}/`), `${relativePath}: visible related link missing: ${relatedSlug}`);
     }
@@ -280,18 +375,46 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       article.sources.map((source) => source.url),
       `${relativePath}: schema citations drift`
     );
+    const faqSchemas = jsonLd["@graph"].filter((item) => item["@type"] === "FAQPage");
+    assert.equal(faqSchemas.length, 1, `${relativePath}: expected one FAQPage schema node`);
+    const faqSchema = faqSchemas[0];
+    assert.equal(faqSchema["@id"], `${expectedCanonical}#faq`, `${relativePath}: FAQ schema id drift`);
+    assert.equal(faqSchema.url, `${expectedCanonical}#faq`, `${relativePath}: FAQ schema URL drift`);
+    assert.equal(faqSchema.inLanguage, locale.htmlLang, `${relativePath}: FAQ schema language drift`);
+    assert.deepEqual(articleSchema.hasPart, { "@id": `${expectedCanonical}#faq` }, `${relativePath}: Article FAQ relationship drift`);
+    assert.deepEqual(faqSchema.isPartOf, { "@id": `${expectedCanonical}#article` }, `${relativePath}: FAQ Article relationship drift`);
+    assert.deepEqual(
+      faqSchema.mainEntity,
+      copy.faqs.map((faq, index) => ({
+        "@type": "Question",
+        "@id": `${expectedCanonical}#faq-${index + 1}`,
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer }
+      })),
+      `${relativePath}: FAQ schema and visible copy drift`
+    );
   } else {
     assert(html.includes("data-memo-drawer"), `${relativePath}: publishing notes drawer is required on indexes`);
     assert(!html.includes("data-i18n"), `${relativePath}: list should be independently localized`);
     const collection = jsonLd["@graph"].find((item) => item["@type"] === "CollectionPage");
     assert(collection, `${relativePath}: CollectionPage schema is required`);
 
+    const cards = [...html.matchAll(/<article class="update-card">([\s\S]*?)<\/article>/g)].map((match) => match[1]);
     let previousPosition = -1;
     for (const article of [...articles].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))) {
       const position = html.indexOf(`./${article.slug}/`);
       assert(position >= 0, `${relativePath}: missing article link ${article.slug}`);
       assert(position > previousPosition, `${relativePath}: article list is not newest first`);
       previousPosition = position;
+      const card = cards.find((candidate) => candidate.includes(`./${article.slug}/`));
+      assert(card, `${relativePath}: missing article card ${article.slug}`);
+      const cardMetaMatches = [...card.matchAll(/<p class="update-card__meta">([\s\S]*?)<\/p>/g)];
+      assert.equal(cardMetaMatches.length, 1, `${relativePath}: expected one metadata row for ${article.slug}`);
+      assert.equal(
+        cardMetaMatches[0][1],
+        `${escapeHtml(locale.listDatePrefix)} · <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time>`,
+        `${relativePath}: article card publication metadata drift for ${article.slug}`
+      );
     }
   }
 
