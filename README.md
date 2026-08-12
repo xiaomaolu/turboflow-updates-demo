@@ -69,14 +69,20 @@ Add one object to `articles` in `content/articles.mjs`. Each article requires:
 - the actual date of the latest substantive page revision as `modifiedAt`;
 - a `primarySource` URL that matches exactly one entry in `sources`; it is shown beneath
   the article metadata and emitted as JSON-LD `isBasedOn`;
-- English and Chinese titles, summaries, fact blocks, body blocks, and risk
-  notices;
-- descriptive English and Chinese labels for every HTTPS source;
+- English and Chinese header copy, `sourceBlocks`, `summaryItems`, FAQs, and risk notices;
+- descriptive English and Chinese labels for every HTTPS source, plus a compact
+  localized platform name on the primary source for the article header;
 - an explicit `relatedSlugs` array (it may be empty).
 
 Material product, financing, partnership, infrastructure, and performance
 claims must be reviewed against current official or primary sources before the
 article is added. Keep Event Contracts and Turbo Perps mechanics separate.
+`sourceBlocks` must preserve the source's facts, attribution, and narrative
+order. They are faithful editorial adaptations, not verbatim reproductions.
+Editorial summaries and FAQs live in their own sections after the source-led
+body and must not introduce facts or causal claims that the cited sources do
+not support. The build rejects the retired `facts` and `blocks` fields, and the
+checker verifies that visible FAQ copy and `FAQPage` JSON-LD stay identical.
 
 ## Preview
 
