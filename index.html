@@ -20,7 +20,7 @@
   <meta name="twitter:title" content="TurboFlow Raises $6 Million Seed Round">
   <meta name="twitter:description" content="Pantera Capital led the round, with participation from Susquehanna Crypto and Digital Currency Group.">
 
-  <script type="application/ld+json">
+  <script id="structured-data" type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
@@ -103,6 +103,9 @@
       --brand-dark: #0d2f91;
       --accent: #c6921a;
       --max: 760px;
+      --header-height: 72px;
+      --memo-width: 388px;
+      --memo-rail: 52px;
     }
 
     * {
@@ -124,6 +127,22 @@
       text-rendering: optimizeLegibility;
     }
 
+    button {
+      font: inherit;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     a {
       color: var(--brand);
       text-decoration-thickness: 1px;
@@ -141,8 +160,12 @@
     }
 
     .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
       border-bottom: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
     }
 
     .site-header__inner {
@@ -163,6 +186,53 @@
       text-decoration: none;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .language-switch {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+    }
+
+    .language-switch__button {
+      min-width: 42px;
+      min-height: 32px;
+      padding: 5px 10px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1;
+      transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .language-switch__button:hover {
+      color: var(--ink);
+    }
+
+    .language-switch__button[aria-pressed="true"] {
+      background: var(--ink);
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(16, 22, 36, 0.18);
+    }
+
+    .language-switch__button:focus-visible,
+    .memo-handle:focus-visible,
+    .memo-close:focus-visible {
+      outline: 3px solid rgba(21, 73, 216, 0.25);
+      outline-offset: 3px;
+    }
+
     .app-link {
       display: inline-flex;
       min-height: 40px;
@@ -175,6 +245,173 @@
       font-size: 14px;
       font-weight: 700;
       text-decoration: none;
+    }
+
+    .memo-backdrop {
+      position: fixed;
+      inset: var(--header-height) 0 0;
+      z-index: 38;
+      background: rgba(16, 22, 36, 0.22);
+      border: 0;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+
+    .memo-backdrop.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .memo-drawer {
+      position: fixed;
+      top: var(--header-height);
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      width: min(var(--memo-width), calc(100vw - 16px));
+      border-left: 1px solid var(--line);
+      background: #f8f9fc;
+      box-shadow: -18px 0 44px rgba(16, 22, 36, 0);
+      transform: translateX(calc(100% - var(--memo-rail)));
+      transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 240ms ease;
+    }
+
+    .memo-drawer.is-open {
+      box-shadow: -18px 0 44px rgba(16, 22, 36, 0.12);
+      transform: translateX(0);
+    }
+
+    .memo-handle {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--memo-rail);
+      padding: 24px 0;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-orientation: mixed;
+      writing-mode: vertical-rl;
+    }
+
+    .memo-handle:hover {
+      background: var(--soft);
+      color: var(--brand);
+    }
+
+    .memo-panel {
+      height: 100%;
+      margin-left: var(--memo-rail);
+      padding: 30px 28px 36px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .memo-panel__topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .memo-panel__eyebrow {
+      margin: 0;
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .memo-close {
+      padding: 5px 0;
+      border: 0;
+      border-bottom: 1px solid #aeb7c7;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .memo-close:hover {
+      border-bottom-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .memo-panel h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 31px;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+    }
+
+    .memo-intro {
+      margin: 16px 0 26px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .memo-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: memo-item;
+    }
+
+    .memo-list li {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      counter-increment: memo-item;
+    }
+
+    .memo-list li::before {
+      color: var(--brand);
+      content: counter(memo-item, decimal-leading-zero);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.55;
+    }
+
+    .memo-list h3 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .memo-list p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.62;
+    }
+
+    .memo-panel__footer {
+      display: inline-flex;
+      margin-top: 24px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
 
     main {
@@ -344,9 +581,36 @@
       font-size: 14px;
     }
 
+    html[lang="zh-CN"] body {
+      line-height: 1.8;
+    }
+
+    html[lang="zh-CN"] h1,
+    html[lang="zh-CN"] article h2,
+    html[lang="zh-CN"] .callout p,
+    html[lang="zh-CN"] .memo-panel h2 {
+      font-family: "Songti SC", STSong, "Noto Serif CJK SC", Georgia, serif;
+      letter-spacing: -0.025em;
+    }
+
+    @media (min-width: 1361px) {
+      .memo-backdrop {
+        display: none;
+      }
+    }
+
     @media (max-width: 620px) {
+      :root {
+        --header-height: 64px;
+        --memo-rail: 48px;
+      }
+
       body {
         font-size: 16px;
+      }
+
+      body.memo-open {
+        overflow: hidden;
       }
 
       .site-header__inner,
@@ -357,6 +621,32 @@
 
       .site-header__inner {
         min-height: 64px;
+        gap: 10px;
+      }
+
+      .brand {
+        font-size: 19px;
+      }
+
+      .header-actions {
+        gap: 7px;
+      }
+
+      .language-switch {
+        padding: 2px;
+      }
+
+      .language-switch__button {
+        min-width: 35px;
+        min-height: 30px;
+        padding: 5px 7px;
+        font-size: 12px;
+      }
+
+      .app-link {
+        min-height: 36px;
+        padding: 7px 11px;
+        font-size: 12px;
       }
 
       .breadcrumbs {
@@ -391,6 +681,26 @@
       .callout p {
         font-size: 22px;
       }
+
+      .memo-panel {
+        padding: 24px 22px 32px;
+      }
+
+      .memo-panel h2 {
+        font-size: 28px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .memo-backdrop,
+      .memo-drawer,
+      .language-switch__button {
+        transition: none;
+      }
     }
   </style>
 </head>
@@ -398,137 +708,217 @@
 <body>
   <header class="site-header">
     <div class="site-header__inner">
-      <a class="brand" href="https://www.tf.xyz/" aria-label="TurboFlow home">TurboFlow</a>
-      <a class="app-link" href="https://app.tf.xyz/">Open App</a>
+      <a class="brand" href="https://www.tf.xyz/" aria-label="TurboFlow home" data-i18n-aria-label="brandAria">TurboFlow</a>
+      <div class="header-actions">
+        <div class="language-switch" role="group" aria-label="Language" data-i18n-aria-label="languageGroupLabel">
+          <button class="language-switch__button" type="button" data-language="zh" aria-pressed="false" lang="zh-CN">中文</button>
+          <button class="language-switch__button" type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
+        </div>
+        <a class="app-link" href="https://app.tf.xyz/" data-i18n="openApp">Open App</a>
+      </div>
     </div>
   </header>
 
-  <main>
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="memo-backdrop" data-memo-backdrop aria-hidden="true"></div>
+
+  <aside class="memo-drawer" data-memo-drawer aria-label="Publishing notes" data-i18n-aria-label="memoAsideAria">
+    <button
+      class="memo-handle"
+      type="button"
+      data-memo-toggle
+      aria-controls="publishing-memo"
+      aria-expanded="false"
+      aria-label="Open publishing notes"
+      data-i18n-aria-label="memoOpenAria"
+    >
+      <span data-i18n="memoHandle">Notes</span>
+    </button>
+
+    <div class="memo-panel" id="publishing-memo" data-memo-panel aria-hidden="true" inert>
+      <div class="memo-panel__topline">
+        <p class="memo-panel__eyebrow" data-i18n="memoEyebrow">Publishing memo</p>
+        <button class="memo-close" type="button" data-memo-close data-i18n="memoClose">Close</button>
+      </div>
+
+      <h2 data-i18n="memoTitle">Why this page is built this way</h2>
+      <p class="memo-intro" data-i18n="memoIntro">
+        A compact rationale for the editorial, GEO, and localization choices behind this update.
+      </p>
+
+      <ol class="memo-list">
+        <li>
+          <div>
+            <h3 data-i18n="memoItem1Title">First-party source of record</h3>
+            <p data-i18n="memoItem1Body">
+              An official Updates page gives search engines, AI systems, journalists, and partners one canonical page to cite.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3 data-i18n="memoItem2Title">Structured facts are easier to quote</h3>
+            <p data-i18n="memoItem2Body">
+              The summary and key-facts block expose entities, dates, funding details, and participants without forcing readers to infer them from prose.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3 data-i18n="memoItem3Title">Citations strengthen trust</h3>
+            <p data-i18n="memoItem3Body">
+              Official and independent sources make the announcement verifiable and connect TurboFlow to consistent entity signals across the web.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3 data-i18n="memoItem4Title">Bilingual access expands discovery</h3>
+            <p data-i18n="memoItem4Body">
+              English supports global investors and media; Chinese helps APAC users and Chinese-language AI search understand the same verified facts.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3 data-i18n="memoItem5Title">Production note</h3>
+            <p data-i18n="memoItem5Body">
+              This demo switches language in the browser. For production SEO, publish separate indexable English and Chinese URLs and connect them with hreflang.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <span class="memo-panel__footer" data-i18n="memoFooter">Internal publishing note</span>
+    </div>
+  </aside>
+
+  <div class="sr-only" id="language-status" aria-live="polite"></div>
+
+  <main id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb" data-i18n-aria-label="breadcrumbAria">
       <ol>
-        <li><a href="https://www.tf.xyz/">Home</a></li>
-        <li><a href="https://www.tf.xyz/updates/">Updates</a></li>
-        <li aria-current="page">Funding Announcement</li>
+        <li><a href="https://www.tf.xyz/" data-i18n="breadcrumbHome">Home</a></li>
+        <li><a href="https://www.tf.xyz/updates/" data-i18n="breadcrumbUpdates">Updates</a></li>
+        <li aria-current="page" data-i18n="breadcrumbCurrent">Funding Announcement</li>
       </ol>
     </nav>
 
     <article>
       <header>
-        <p class="eyebrow">Company Update</p>
-        <h1>TurboFlow Raises $6 Million Seed Round Led by Pantera Capital</h1>
-        <p class="dek">
+        <p class="eyebrow" data-i18n="eyebrow">Company Update</p>
+        <h1 data-i18n="headline">TurboFlow Raises $6 Million Seed Round Led by Pantera Capital</h1>
+        <p class="dek" data-i18n="dek">
           Susquehanna Crypto and Digital Currency Group also participated in the round,
           supporting TurboFlow as it expands product development, liquidity infrastructure,
           and access for everyday traders.
         </p>
         <div class="meta">
-          <span>Published June 22, 2026</span>
-          <span>By TurboFlow</span>
-          <span>Singapore</span>
+          <span data-i18n="published">Published June 22, 2026</span>
+          <span data-i18n="byline">By TurboFlow</span>
+          <span data-i18n="location">Singapore</span>
         </div>
       </header>
 
       <section class="fact-card" aria-labelledby="key-facts-title">
-        <h2 id="key-facts-title">Key facts</h2>
+        <h2 id="key-facts-title" data-i18n="keyFacts">Key facts</h2>
         <dl>
-          <dt>Funding</dt>
-          <dd>$6 million</dd>
+          <dt data-i18n="factFundingLabel">Funding</dt>
+          <dd data-i18n="factFundingValue">$6 million</dd>
 
-          <dt>Round</dt>
-          <dd>Seed</dd>
+          <dt data-i18n="factRoundLabel">Round</dt>
+          <dd data-i18n="factRoundValue">Seed</dd>
 
-          <dt>Lead investor</dt>
+          <dt data-i18n="factLeadLabel">Lead investor</dt>
           <dd>Pantera Capital</dd>
 
-          <dt>Participants</dt>
-          <dd>Susquehanna Crypto and Digital Currency Group</dd>
+          <dt data-i18n="factParticipantsLabel">Participants</dt>
+          <dd data-i18n="factParticipantsValue">Susquehanna Crypto and Digital Currency Group</dd>
 
-          <dt>Announced</dt>
-          <dd>June 22, 2026</dd>
+          <dt data-i18n="factAnnouncedLabel">Announced</dt>
+          <dd data-i18n="factAnnouncedValue">June 22, 2026</dd>
         </dl>
       </section>
 
       <p>
-        TurboFlow has closed a $6 million seed funding round led by
-        <a href="https://panteracapital.com/investing-in-turboflow/" rel="noopener noreferrer">Pantera Capital</a>,
-        with participation from Susquehanna Crypto and Digital Currency Group.
+        <span data-i18n="body1Before">TurboFlow has closed a $6 million seed funding round led by</span>
+        <a href="https://panteracapital.com/investing-in-turboflow/" rel="noopener noreferrer">Pantera Capital</a><span data-i18n="body1Separator">, </span><span data-i18n="body1After">with participation from Susquehanna Crypto and Digital Currency Group.</span>
       </p>
 
-      <p>
+      <p data-i18n="body2">
         The capital will support the next phase of TurboFlow's development, including
         product expansion, stronger liquidity infrastructure, and continued growth
         across global markets.
       </p>
 
-      <h2>Building market infrastructure for everyday traders</h2>
+      <h2 data-i18n="section1Title">Building market infrastructure for everyday traders</h2>
 
-      <p>
+      <p data-i18n="section1Body1">
         TurboFlow is an on-chain trading ecosystem at the intersection of prediction
         markets and perpetual contracts. The platform is designed to make advanced
         market participation simpler, more transparent, and more accessible to
         everyday users.
       </p>
 
-      <p>
+      <p data-i18n="section1Body2">
         Pantera's investment thesis highlights the growing convergence between
         prediction markets and perpetual futures, along with the opportunity to bring
         professional market infrastructure to a broader audience across Asia.
       </p>
 
       <div class="callout">
-        <p>Trading, made simple. Everyone gets a seat at TurboFlow.</p>
+        <p data-i18n="callout">Trading, made simple. Everyone gets a seat at TurboFlow.</p>
       </div>
 
-      <h2>What the funding supports</h2>
+      <h2 data-i18n="section2Title">What the funding supports</h2>
 
-      <p>
+      <p data-i18n="section2Body1">
         TurboFlow plans to use the funding across three priorities: expanding its
         product offering, strengthening the liquidity and execution infrastructure
         behind its markets, and accelerating responsible global user growth.
       </p>
 
-      <p>
+      <p data-i18n="section2Body2">
         These priorities support a single objective: creating an open trading
         ecosystem where users can access prediction markets and perpetual contracts
         through a clear, consumer-focused experience.
       </p>
 
-      <h2>The next phase for TurboFlow</h2>
+      <h2 data-i18n="section3Title">The next phase for TurboFlow</h2>
 
-      <p>
+      <p data-i18n="section3Body1">
         The seed round gives TurboFlow additional resources to develop its technology,
         deepen market quality, and expand the ecosystem around traders, liquidity
         providers, market makers, and partners.
       </p>
 
-      <p>
+      <p data-i18n="section3Body2">
         With Pantera Capital, Susquehanna Crypto, and Digital Currency Group supporting
         the company, TurboFlow will continue building toward a more accessible and
         participatory future for on-chain markets.
       </p>
 
       <section class="sources" aria-labelledby="sources-title">
-        <h2 id="sources-title">Sources</h2>
+        <h2 id="sources-title" data-i18n="sourcesTitle">Sources</h2>
         <ul>
           <li>
-            <a href="https://www.prnewswire.com/news-releases/turboflow-raises-6-million-seed-led-by-pantera-capital-to-bring-institutional-trading-infrastructure-to-everyday-users-302806950.html" rel="noopener noreferrer">
+            <a href="https://www.prnewswire.com/news-releases/turboflow-raises-6-million-seed-led-by-pantera-capital-to-bring-institutional-trading-infrastructure-to-everyday-users-302806950.html" rel="noopener noreferrer" data-i18n="source1">
               TurboFlow funding announcement on PR Newswire
             </a>
           </li>
           <li>
-            <a href="https://panteracapital.com/investing-in-turboflow/" rel="noopener noreferrer">
+            <a href="https://panteracapital.com/investing-in-turboflow/" rel="noopener noreferrer" data-i18n="source2">
               Pantera Capital investment announcement
             </a>
           </li>
           <li>
-            <a href="https://www.theblock.co/news/deals/2026-06-22-turboflow-funding-crypto-pantera-capital-405706" rel="noopener noreferrer">
+            <a href="https://www.theblock.co/news/deals/2026-06-22-turboflow-funding-crypto-pantera-capital-405706" rel="noopener noreferrer" data-i18n="source3">
               Independent coverage from The Block
             </a>
           </li>
         </ul>
       </section>
 
-      <aside class="risk-note" aria-label="Risk notice">
+      <aside class="risk-note" aria-label="Risk notice" data-i18n-aria-label="riskAria" data-i18n="riskNote">
         Perpetual contracts and leveraged trading involve substantial risk. Market
         volatility, liquidity conditions, funding costs, price gaps, and liquidation
         mechanics can affect trading outcomes. TurboFlow does not guarantee profits
@@ -538,12 +928,317 @@
   </main>
 
   <footer class="site-footer">
-    <div class="site-footer__inner">
+    <div class="site-footer__inner" data-i18n="footer">
       © 2026 TurboFlow. This update is provided for informational purposes.
     </div>
   </footer>
+
+  <script>
+    (() => {
+      const translations = {
+        en: {
+          pageTitle: "TurboFlow Raises $6 Million Seed Round Led by Pantera Capital",
+          pageDescription: "TurboFlow has raised $6 million in seed funding led by Pantera Capital, with participation from Susquehanna Crypto and Digital Currency Group.",
+          socialDescription: "The funding will support product development, liquidity infrastructure, and global user growth.",
+          twitterTitle: "TurboFlow Raises $6 Million Seed Round",
+          twitterDescription: "Pantera Capital led the round, with participation from Susquehanna Crypto and Digital Currency Group.",
+          collectionName: "TurboFlow Updates",
+          articleSection: "Company Update",
+          brandAria: "TurboFlow home",
+          languageGroupLabel: "Language",
+          openApp: "Open App",
+          memoAsideAria: "Publishing notes",
+          memoOpenAria: "Open publishing notes",
+          memoCloseAria: "Close publishing notes",
+          memoHandle: "Notes",
+          memoEyebrow: "Publishing memo",
+          memoClose: "Close",
+          memoTitle: "Why this page is built this way",
+          memoIntro: "A compact rationale for the editorial, GEO, and localization choices behind this update.",
+          memoItem1Title: "First-party source of record",
+          memoItem1Body: "An official Updates page gives search engines, AI systems, journalists, and partners one canonical page to cite.",
+          memoItem2Title: "Structured facts are easier to quote",
+          memoItem2Body: "The summary and key-facts block expose entities, dates, funding details, and participants without forcing readers to infer them from prose.",
+          memoItem3Title: "Citations strengthen trust",
+          memoItem3Body: "Official and independent sources make the announcement verifiable and connect TurboFlow to consistent entity signals across the web.",
+          memoItem4Title: "Bilingual access expands discovery",
+          memoItem4Body: "English supports global investors and media; Chinese helps APAC users and Chinese-language AI search understand the same verified facts.",
+          memoItem5Title: "Production note",
+          memoItem5Body: "This demo switches language in the browser. For production SEO, publish separate indexable English and Chinese URLs and connect them with hreflang.",
+          memoFooter: "Internal publishing note",
+          breadcrumbAria: "Breadcrumb",
+          breadcrumbHome: "Home",
+          breadcrumbUpdates: "Updates",
+          breadcrumbCurrent: "Funding Announcement",
+          eyebrow: "Company Update",
+          headline: "TurboFlow Raises $6 Million Seed Round Led by Pantera Capital",
+          dek: "Susquehanna Crypto and Digital Currency Group also participated in the round, supporting TurboFlow as it expands product development, liquidity infrastructure, and access for everyday traders.",
+          published: "Published June 22, 2026",
+          byline: "By TurboFlow",
+          location: "Singapore",
+          keyFacts: "Key facts",
+          factFundingLabel: "Funding",
+          factFundingValue: "$6 million",
+          factRoundLabel: "Round",
+          factRoundValue: "Seed",
+          factLeadLabel: "Lead investor",
+          factParticipantsLabel: "Participants",
+          factParticipantsValue: "Susquehanna Crypto and Digital Currency Group",
+          factAnnouncedLabel: "Announced",
+          factAnnouncedValue: "June 22, 2026",
+          body1Before: "TurboFlow has closed a $6 million seed funding round led by",
+          body1Separator: ", ",
+          body1After: "with participation from Susquehanna Crypto and Digital Currency Group.",
+          body2: "The capital will support the next phase of TurboFlow's development, including product expansion, stronger liquidity infrastructure, and continued growth across global markets.",
+          section1Title: "Building market infrastructure for everyday traders",
+          section1Body1: "TurboFlow is an on-chain trading ecosystem at the intersection of prediction markets and perpetual contracts. The platform is designed to make advanced market participation simpler, more transparent, and more accessible to everyday users.",
+          section1Body2: "Pantera's investment thesis highlights the growing convergence between prediction markets and perpetual futures, along with the opportunity to bring professional market infrastructure to a broader audience across Asia.",
+          callout: "Trading, made simple. Everyone gets a seat at TurboFlow.",
+          section2Title: "What the funding supports",
+          section2Body1: "TurboFlow plans to use the funding across three priorities: expanding its product offering, strengthening the liquidity and execution infrastructure behind its markets, and accelerating responsible global user growth.",
+          section2Body2: "These priorities support a single objective: creating an open trading ecosystem where users can access prediction markets and perpetual contracts through a clear, consumer-focused experience.",
+          section3Title: "The next phase for TurboFlow",
+          section3Body1: "The seed round gives TurboFlow additional resources to develop its technology, deepen market quality, and expand the ecosystem around traders, liquidity providers, market makers, and partners.",
+          section3Body2: "With Pantera Capital, Susquehanna Crypto, and Digital Currency Group supporting the company, TurboFlow will continue building toward a more accessible and participatory future for on-chain markets.",
+          sourcesTitle: "Sources",
+          source1: "TurboFlow funding announcement on PR Newswire",
+          source2: "Pantera Capital investment announcement",
+          source3: "Independent coverage from The Block",
+          riskAria: "Risk notice",
+          riskNote: "Perpetual contracts and leveraged trading involve substantial risk. Market volatility, liquidity conditions, funding costs, price gaps, and liquidation mechanics can affect trading outcomes. TurboFlow does not guarantee profits or protection from losses.",
+          footer: "© 2026 TurboFlow. This update is provided for informational purposes.",
+          languageStatus: "English version selected"
+        },
+        zh: {
+          pageTitle: "TurboFlow 完成 600 万美元种子轮融资，Pantera Capital 领投",
+          pageDescription: "TurboFlow 完成 600 万美元种子轮融资，由 Pantera Capital 领投，Susquehanna Crypto 与 Digital Currency Group 参投。",
+          socialDescription: "本轮融资将支持 TurboFlow 推进产品研发、流动性基础设施与全球用户增长。",
+          twitterTitle: "TurboFlow 完成 600 万美元种子轮融资",
+          twitterDescription: "Pantera Capital 领投，Susquehanna Crypto 与 Digital Currency Group 参投。",
+          collectionName: "TurboFlow 最新动态",
+          articleSection: "公司动态",
+          brandAria: "TurboFlow 首页",
+          languageGroupLabel: "语言",
+          openApp: "打开应用",
+          memoAsideAria: "发布说明",
+          memoOpenAria: "展开发布说明",
+          memoCloseAria: "收起发布说明",
+          memoHandle: "说明",
+          memoEyebrow: "发布备忘",
+          memoClose: "收起",
+          memoTitle: "为什么这样设计这个页面",
+          memoIntro: "这里简要说明这篇更新在编辑结构、GEO 与多语言呈现上的设计理由。",
+          memoItem1Title: "建立第一方事实源",
+          memoItem1Body: "官网 Updates 页面为搜索引擎、AI 系统、媒体与合作方提供一个可统一引用的权威页面。",
+          memoItem2Title: "结构化事实更容易被引用",
+          memoItem2Body: "摘要与核心信息模块直接呈现实体、日期、融资金额和参与方，减少读者与 AI 从长段文字中推断事实的成本。",
+          memoItem3Title: "来源链接增强可信度",
+          memoItem3Body: "官方来源与独立媒体报道让公告可核验，并帮助 TurboFlow 在不同网站之间形成一致的品牌实体信号。",
+          memoItem4Title: "双语扩大内容发现范围",
+          memoItem4Body: "英文服务全球投资者与媒体；中文帮助亚太用户及中文 AI 搜索准确理解同一组已经核验的事实。",
+          memoItem5Title: "正式上线建议",
+          memoItem5Body: "当前演示在浏览器内切换语言。正式上线时建议为中英文提供独立、可索引的 URL，并通过 hreflang 建立对应关系。",
+          memoFooter: "内部发布备忘",
+          breadcrumbAria: "面包屑导航",
+          breadcrumbHome: "首页",
+          breadcrumbUpdates: "最新动态",
+          breadcrumbCurrent: "融资公告",
+          eyebrow: "公司动态",
+          headline: "TurboFlow 完成 600 万美元种子轮融资，Pantera Capital 领投",
+          dek: "Susquehanna Crypto 与 Digital Currency Group 共同参投。本轮融资将支持 TurboFlow 持续推进产品研发、流动性基础设施建设，并让更多日常交易者便捷地参与市场。",
+          published: "发布于 2026 年 6 月 22 日",
+          byline: "作者：TurboFlow",
+          location: "新加坡",
+          keyFacts: "核心信息",
+          factFundingLabel: "融资金额",
+          factFundingValue: "600 万美元",
+          factRoundLabel: "融资轮次",
+          factRoundValue: "种子轮",
+          factLeadLabel: "领投方",
+          factParticipantsLabel: "参投方",
+          factParticipantsValue: "Susquehanna Crypto 与 Digital Currency Group",
+          factAnnouncedLabel: "公布时间",
+          factAnnouncedValue: "2026 年 6 月 22 日",
+          body1Before: "TurboFlow 已完成 600 万美元种子轮融资，由",
+          body1Separator: " 领投，",
+          body1After: "Susquehanna Crypto 与 Digital Currency Group 共同参投。",
+          body2: "本轮资金将用于支持 TurboFlow 下一阶段发展，包括扩展产品能力、强化流动性基础设施，以及持续推进全球市场增长。",
+          section1Title: "为日常交易者构建市场基础设施",
+          section1Body1: "TurboFlow 是一个处于预测市场与永续合约交汇处的链上交易生态。平台希望通过更清晰的产品体验，让专业市场参与变得更简单、更透明，也更容易被日常用户使用。",
+          section1Body2: "Pantera Capital 的投资观点强调了预测市场与永续期货日益融合的趋势，也看到了将专业级市场基础设施带给亚洲更广泛用户群体的机会。",
+          callout: "让交易更简单。每个人都能在 TurboFlow 获得参与市场的机会。",
+          section2Title: "本轮融资将支持什么",
+          section2Body1: "TurboFlow 计划围绕三项重点使用本轮资金：扩展产品组合，强化市场背后的流动性与交易执行基础设施，以及以负责任的方式加快全球用户增长。",
+          section2Body2: "这些投入共同服务于一个目标：建设一个开放的交易生态，让用户能够通过清晰、以消费者为中心的体验参与预测市场与永续合约交易。",
+          section3Title: "TurboFlow 的下一阶段",
+          section3Body1: "本轮种子融资为 TurboFlow 提供了更多资源，用于持续研发技术、提升市场质量，并拓展由交易者、流动性提供者、做市商与合作伙伴共同参与的生态。",
+          section3Body2: "在 Pantera Capital、Susquehanna Crypto 与 Digital Currency Group 的支持下，TurboFlow 将继续推动链上市场走向更开放、更易参与的未来。",
+          sourcesTitle: "来源",
+          source1: "PR Newswire：TurboFlow 融资公告",
+          source2: "Pantera Capital：投资 TurboFlow 公告",
+          source3: "The Block：独立媒体报道",
+          riskAria: "风险提示",
+          riskNote: "永续合约与杠杆交易具有较高风险。市场波动、流动性状况、资金成本、价格跳空与强平机制都可能影响交易结果。TurboFlow 不保证盈利，也不承诺避免损失。",
+          footer: "© 2026 TurboFlow。本页面信息仅供参考。",
+          languageStatus: "已切换为中文版本"
+        }
+      };
+
+      const memoDrawer = document.querySelector("[data-memo-drawer]");
+      const memoPanel = document.querySelector("[data-memo-panel]");
+      const memoToggle = document.querySelector("[data-memo-toggle]");
+      const memoClose = document.querySelector("[data-memo-close]");
+      const memoBackdrop = document.querySelector("[data-memo-backdrop]");
+      const languageStatus = document.querySelector("#language-status");
+      const mobileQuery = window.matchMedia("(max-width: 620px)");
+      let currentLanguage = "en";
+      let memoFocusFrame = null;
+
+      function setMeta(selector, content) {
+        const element = document.querySelector(selector);
+        if (element) element.setAttribute("content", content);
+      }
+
+      function updateStructuredData(language, copy) {
+        const script = document.querySelector("#structured-data");
+        if (!script) return;
+
+        try {
+          const schema = JSON.parse(script.textContent);
+          const collection = schema["@graph"].find((item) => item["@type"] === "CollectionPage");
+          const article = schema["@graph"].find((item) => item["@type"] === "Article");
+          const breadcrumb = schema["@graph"].find((item) => item["@type"] === "BreadcrumbList");
+
+          if (collection) collection.name = copy.collectionName;
+          if (article) {
+            article.headline = copy.headline;
+            article.description = copy.pageDescription;
+            article.inLanguage = language === "zh" ? "zh-CN" : "en";
+            article.articleSection = copy.articleSection;
+          }
+          if (breadcrumb) {
+            breadcrumb.itemListElement[0].name = copy.breadcrumbHome;
+            breadcrumb.itemListElement[1].name = copy.breadcrumbUpdates;
+            breadcrumb.itemListElement[2].name = copy.twitterTitle;
+          }
+
+          script.textContent = JSON.stringify(schema, null, 2);
+        } catch (error) {
+          console.warn("Unable to update structured data.", error);
+        }
+      }
+
+      function setLanguage(language, options = {}) {
+        const normalized = language === "zh" ? "zh" : "en";
+        const copy = translations[normalized];
+        currentLanguage = normalized;
+
+        document.documentElement.lang = normalized === "zh" ? "zh-CN" : "en";
+        document.body.dataset.language = normalized;
+        document.title = copy.pageTitle;
+        setMeta('meta[name="description"]', copy.pageDescription);
+        setMeta('meta[property="og:title"]', copy.pageTitle);
+        setMeta('meta[property="og:description"]', copy.socialDescription);
+        setMeta('meta[name="twitter:title"]', copy.twitterTitle);
+        setMeta('meta[name="twitter:description"]', copy.twitterDescription);
+
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const value = copy[element.dataset.i18n];
+          if (typeof value === "string") element.textContent = value;
+        });
+
+        document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+          const value = copy[element.dataset.i18nAriaLabel];
+          if (typeof value === "string") element.setAttribute("aria-label", value);
+        });
+
+        document.querySelectorAll("[data-language]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.language === normalized));
+        });
+
+        if (memoToggle.getAttribute("aria-expanded") === "true") {
+          memoToggle.setAttribute("aria-label", copy.memoCloseAria);
+        }
+
+        updateStructuredData(normalized, copy);
+
+        if (options.persist !== false) {
+          try {
+            window.localStorage.setItem("turboflow-language", normalized);
+          } catch (error) {
+            console.warn("Language preference could not be saved.", error);
+          }
+
+          const url = new URL(window.location.href);
+          url.searchParams.set("lang", normalized);
+          window.history.replaceState({}, "", url);
+        }
+
+        if (options.announce !== false) {
+          languageStatus.textContent = copy.languageStatus;
+        }
+      }
+
+      function setMemoOpen(open) {
+        const copy = translations[currentLanguage];
+        if (memoFocusFrame !== null) {
+          window.cancelAnimationFrame(memoFocusFrame);
+          memoFocusFrame = null;
+        }
+        memoDrawer.classList.toggle("is-open", open);
+        memoBackdrop.classList.toggle("is-visible", open);
+        memoToggle.setAttribute("aria-expanded", String(open));
+        memoToggle.setAttribute("aria-label", open ? copy.memoCloseAria : copy.memoOpenAria);
+        memoPanel.setAttribute("aria-hidden", String(!open));
+        memoPanel.toggleAttribute("inert", !open);
+        document.body.classList.toggle("memo-open", open && mobileQuery.matches);
+
+        if (open) {
+          memoFocusFrame = window.requestAnimationFrame(() => {
+            memoClose.focus();
+            memoFocusFrame = null;
+          });
+        } else {
+          memoToggle.focus();
+        }
+      }
+
+      document.querySelectorAll("[data-language]").forEach((button) => {
+        button.addEventListener("click", () => setLanguage(button.dataset.language));
+      });
+
+      memoToggle.addEventListener("click", () => {
+        setMemoOpen(memoToggle.getAttribute("aria-expanded") !== "true");
+      });
+      memoClose.addEventListener("click", () => setMemoOpen(false));
+      memoBackdrop.addEventListener("click", () => setMemoOpen(false));
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && memoToggle.getAttribute("aria-expanded") === "true") {
+          setMemoOpen(false);
+        }
+      });
+
+      mobileQuery.addEventListener("change", () => {
+        document.body.classList.toggle(
+          "memo-open",
+          mobileQuery.matches && memoToggle.getAttribute("aria-expanded") === "true"
+        );
+      });
+
+      const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+      let savedLanguage = null;
+      try {
+        savedLanguage = window.localStorage.getItem("turboflow-language");
+      } catch (error) {
+        console.warn("Language preference could not be read.", error);
+      }
+
+      setLanguage(requestedLanguage || savedLanguage || "en", {
+        persist: false,
+        announce: false
+      });
+    })();
+  </script>
 </body>
 </html>
-
-
-
