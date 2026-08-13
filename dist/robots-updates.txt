@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /updates/
 
-Sitemap: https://www.tf.xyz/sitemap-updates.xml
+Sitemap: https://tf.xyz/sitemap-updates.xml

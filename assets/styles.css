@@ -508,22 +508,31 @@ h1 {
   line-height: 1.42;
 }
 
-.source-content {
+.article-body {
   margin-bottom: 56px;
 }
 
-.update-article .source-content > h2 {
+.update-article .article-body > h2 {
   margin-top: 0;
 }
 
-.update-article .source-content__note {
+.update-article .original-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
   margin: -4px 0 34px;
-  padding: 13px 16px;
-  border-left: 3px solid var(--accent);
-  background: var(--soft);
   color: var(--muted);
   font-size: 14px;
   line-height: 1.65;
+}
+
+.original-source__label {
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.original-source a {
+  font-weight: 650;
 }
 
 .content-summary {
@@ -626,12 +635,49 @@ h1 {
 }
 
 .risk-note {
+  display: grid;
+  gap: 7px;
   margin: 34px 0 60px;
   padding: 18px 20px;
   border: 1px solid var(--line);
   border-radius: 10px;
   color: var(--muted);
   font-size: 14px;
+}
+
+.risk-note strong {
+  color: var(--ink);
+}
+
+.about-turboflow {
+  margin: 64px 0 0;
+  padding: 28px;
+  border-radius: 12px;
+  background: #102a67;
+  color: #ffffff;
+}
+
+.update-article .about-turboflow h2 {
+  margin: 0 0 14px;
+  color: #ffffff;
+  font-size: 28px;
+}
+
+.update-article .about-turboflow p {
+  margin: 0;
+  color: #e7edff;
+}
+
+.about-turboflow nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  margin-top: 20px;
+}
+
+.about-turboflow a {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .site-footer {

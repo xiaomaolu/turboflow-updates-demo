@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
@@ -7,6 +8,10 @@ import { distDir, generateArtifacts, rootDir } from "./build.mjs";
 
 const localeEntries = Object.entries(site.locales);
 const checkedFiles = new Set();
+
+function bodyIntegrity(bodyBlocks) {
+  return createHash("sha256").update(JSON.stringify(bodyBlocks)).digest("hex");
+}
 
 function canonicalUrl(localeKey, slug = "") {
   const locale = site.locales[localeKey];
@@ -130,16 +135,23 @@ async function assertLocalReferencesExist(html, relativePath) {
 }
 
 function validateEditorialData() {
+  assert.equal(site.productionOrigin, "https://tf.xyz", "productionOrigin must remain the apex https://tf.xyz host");
+  assert.equal(site.homeUrl, `${site.productionOrigin}/`, "homeUrl must use the production apex host");
+  assert.equal(site.organizationId, `${site.productionOrigin}/#organization`, "organizationId must use the production apex host");
+  assert.equal(site.sitemapUrl, `${site.productionOrigin}/sitemap-updates.xml`, "sitemapUrl must use the production apex host");
+  assert(site.socialImageUrl.startsWith(`${site.productionOrigin}/`), "socialImageUrl must use the production apex host");
   assert.match(site.productionOrigin, /^https:\/\//, "productionOrigin must use HTTPS");
   assert.equal(site.updatesPath, "/updates", "updatesPath must remain /updates");
   assert(articles.length > 0, "at least one reviewed article is required");
   for (const [localeKey, locale] of localeEntries) {
     assert(locale.sourcePrefix, `sourcePrefix is required for ${localeKey}`);
     assert(locale.listDatePrefix, `listDatePrefix is required for ${localeKey}`);
-    assert(locale.sourceContentTitle, `sourceContentTitle is required for ${localeKey}`);
-    assert(locale.sourceContentNote, `sourceContentNote is required for ${localeKey}`);
+    assert(locale.bodyTitle, `bodyTitle is required for ${localeKey}`);
+    assert(locale.originalSourcePrefix, `originalSourcePrefix is required for ${localeKey}`);
+    assert(locale.sourceAuthorPrefix, `sourceAuthorPrefix is required for ${localeKey}`);
     assert(locale.summaryTitle, `summaryTitle is required for ${localeKey}`);
     assert(locale.faqTitle, `faqTitle is required for ${localeKey}`);
+    assert(locale.aboutTurboFlow?.title, `aboutTurboFlow is required for ${localeKey}`);
   }
 
   const slugs = new Set();
@@ -155,6 +167,12 @@ function validateEditorialData() {
     );
     assert(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     assert.match(article.primarySource, /^https:\/\//, `${article.slug}: primarySource must use HTTPS`);
+    assert(article.sourceDocument?.author, `${article.slug}: sourceDocument author is required`);
+    assert(!Number.isNaN(Date.parse(article.sourceDocument?.publishedAt)), `${article.slug}: sourceDocument publishedAt is invalid`);
+    assert(
+      ["owned-release", "attributed-adaptation", "licensed-republication"].includes(article.sourceDocument?.rightsMode),
+      `${article.slug}: sourceDocument rightsMode is invalid`
+    );
     const sourceUrls = article.sources.map((source) => source.url);
     assert.equal(new Set(sourceUrls).size, sourceUrls.length, `${article.slug}: source URLs must be unique`);
     assert.equal(
@@ -198,8 +216,14 @@ function validateEditorialData() {
       }
       assert(!Object.hasOwn(copy, "facts"), `${article.slug}/${localeKey}: legacy facts are forbidden`);
       assert(!Object.hasOwn(copy, "blocks"), `${article.slug}/${localeKey}: legacy blocks are forbidden`);
+      assert(!Object.hasOwn(copy, "sourceBlocks"), `${article.slug}/${localeKey}: legacy sourceBlocks are forbidden`);
       assert(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
-      assert(Array.isArray(copy.sourceBlocks) && copy.sourceBlocks.length > 0, `${article.slug}/${localeKey}: sourceBlocks are required`);
+      assert(Array.isArray(copy.bodyBlocks) && copy.bodyBlocks.length > 0, `${article.slug}/${localeKey}: bodyBlocks are required`);
+      assert.equal(
+        article.sourceDocument.bodyIntegrity?.[localeKey],
+        bodyIntegrity(copy.bodyBlocks),
+        `${article.slug}/${localeKey}: locked body integrity mismatch`
+      );
       assert(Array.isArray(copy.faqs) && copy.faqs.length > 0, `${article.slug}/${localeKey}: faqs are required`);
 
       for (const item of copy.summaryItems) {
@@ -213,7 +237,7 @@ function validateEditorialData() {
         questions.add(faq.question);
       }
 
-      for (const block of copy.sourceBlocks) {
+      for (const block of copy.bodyBlocks) {
         assert(["paragraph", "heading", "callout"].includes(block.type), `${article.slug}/${localeKey}: unsupported block ${block.type}`);
         if (block.type === "paragraph") {
           assert(
@@ -226,6 +250,9 @@ function validateEditorialData() {
             typeof block.text === "string" && block.text.length > 0,
             `${article.slug}/${localeKey}: ${block.type} blocks require text`
           );
+        }
+        for (const segment of block.segments || []) {
+          assert(!segment.href || sourceUrls.includes(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources`);
         }
       }
     }
@@ -251,6 +278,9 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
   assert(html.includes(`<link rel="canonical" href="${expectedCanonical}">`), `${relativePath}: wrong canonical URL`);
   assert(html.includes('<meta name="robots" content="index,follow,max-image-preview:large">'), `${relativePath}: missing index directive`);
   assert(html.includes(`<meta property="og:type" content="${expectedType}">`), `${relativePath}: wrong Open Graph type`);
+  assert(html.includes(`<meta property="og:image" content="${site.socialImageUrl}">`), `${relativePath}: missing Open Graph image`);
+  assert(html.includes('<meta name="twitter:card" content="summary_large_image">'), `${relativePath}: wrong Twitter card type`);
+  assert(html.includes(`<meta name="twitter:image" content="${site.socialImageUrl}">`), `${relativePath}: missing Twitter image`);
   assert(html.includes('hreflang="en"'), `${relativePath}: missing English alternate`);
   assert(html.includes('hreflang="zh-CN"'), `${relativePath}: missing Chinese alternate`);
   assert(html.includes('hreflang="x-default"'), `${relativePath}: missing x-default alternate`);
@@ -294,33 +324,56 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       articleHeader.indexOf('class="meta"') < articleHeader.indexOf('class="primary-source"'),
       `${relativePath}: primary source must follow article metadata`
     );
-    const sourceContentMatches = [...main.matchAll(/<section class="source-content"[\s\S]*?<\/section>/g)];
+    const articleBodyMatches = [...main.matchAll(/<section class="article-body"[\s\S]*?<\/section>/g)];
     const summaryMatches = [...main.matchAll(/<section class="content-summary"[\s\S]*?<\/section>/g)];
     const faqMatches = [...main.matchAll(/<section class="faq"[\s\S]*?<\/section>/g)];
-    const riskMatches = [...main.matchAll(/<aside class="risk-note" aria-label="([^"]+)">([\s\S]*?)<\/aside>/g)];
+    const riskMatches = [...main.matchAll(/<aside class="risk-note" aria-label="([^"]+)"><strong>([\s\S]*?)<\/strong><span>([\s\S]*?)<\/span><\/aside>/g)];
     const sourcesMatches = [...main.matchAll(/<section class="sources"[\s\S]*?<\/section>/g)];
-    assert.equal(sourceContentMatches.length, 1, `${relativePath}: expected one source-content section`);
+    const aboutMatches = [...main.matchAll(/<section class="about-turboflow"[\s\S]*?<\/section>/g)];
+    assert.equal(articleBodyMatches.length, 1, `${relativePath}: expected one article body`);
     assert.equal(summaryMatches.length, 1, `${relativePath}: expected one content-summary section`);
     assert.equal(faqMatches.length, 1, `${relativePath}: expected one FAQ section`);
     assert.equal(riskMatches.length, 1, `${relativePath}: expected one risk notice`);
     assert.equal(riskMatches[0][1], escapeHtml(locale.riskAria), `${relativePath}: risk notice label drift`);
-    assert.equal(riskMatches[0][2], escapeHtml(copy.riskNotice), `${relativePath}: risk notice drift`);
+    assert.equal(riskMatches[0][2], escapeHtml(locale.riskAria), `${relativePath}: visible risk notice label drift`);
+    assert.equal(riskMatches[0][3], escapeHtml(copy.riskNotice), `${relativePath}: risk notice drift`);
     assert.equal(sourcesMatches.length, 1, `${relativePath}: expected one bottom sources section`);
+    assert.equal(aboutMatches.length, 1, `${relativePath}: expected one About TurboFlow section`);
     assert(
-      main.indexOf('class="source-content"') < main.indexOf('class="content-summary"') &&
+      main.indexOf('class="article-body"') < main.indexOf('class="content-summary"') &&
         main.indexOf('class="content-summary"') < main.indexOf('class="faq"') &&
         main.indexOf('class="faq"') < main.indexOf('class="risk-note"') &&
-        main.indexOf('class="risk-note"') < main.indexOf('class="sources"'),
+        main.indexOf('class="risk-note"') < main.indexOf('class="sources"') &&
+        main.indexOf('class="sources"') < main.indexOf('class="about-turboflow"'),
       `${relativePath}: editorial sections are out of order`
     );
+    if (article.relatedSlugs.length) {
+      assert(
+        main.indexOf('class="sources"') < main.indexOf('class="related-updates"') &&
+          main.indexOf('class="related-updates"') < main.indexOf('class="about-turboflow"'),
+        `${relativePath}: About TurboFlow must remain the final article section`
+      );
+    }
     assert(!main.includes('class="fact-card"'), `${relativePath}: legacy fact card must not render`);
+    assert(!main.includes('class="source-content__note"'), `${relativePath}: retired source disclosure must not render`);
+    assert(!main.includes("This section preserves the source's facts"), `${relativePath}: retired English disclosure must not render`);
+    assert(!main.includes("以下正文依照所链接来源的事实"), `${relativePath}: retired Chinese disclosure must not render`);
     const sourcesHtml = sourcesMatches[0][0];
-    const sourceContentHtml = sourceContentMatches[0][0];
-    assert(sourceContentHtml.includes(`<h2 id="source-content-title">${escapeHtml(locale.sourceContentTitle)}</h2>`), `${relativePath}: source-content heading drift`);
-    assert(sourceContentHtml.includes(`<p class="source-content__note">${escapeHtml(locale.sourceContentNote)}</p>`), `${relativePath}: source-content disclosure drift`);
-    const sourceBodyMatches = [...sourceContentHtml.matchAll(/<div class="source-content__body">([\s\S]*?)<\/div>/g)];
-    assert.equal(sourceBodyMatches.length, 1, `${relativePath}: expected one source-content body`);
-    const expectedSourceBody = copy.sourceBlocks.map((block) => {
+    const articleBodyHtml = articleBodyMatches[0][0];
+    assert(articleBodyHtml.includes(`<h2 id="article-body-title">${escapeHtml(locale.bodyTitle)}</h2>`), `${relativePath}: article body heading drift`);
+    const originalSourceMatches = [...articleBodyHtml.matchAll(/<p class="original-source">([\s\S]*?)<\/p>/g)];
+    assert.equal(originalSourceMatches.length, 1, `${relativePath}: expected one original source reference`);
+    const sourceByline = localeKey === "zh"
+      ? `${locale.sourceAuthorPrefix}${article.sourceDocument.author}`
+      : `${locale.sourceAuthorPrefix} ${article.sourceDocument.author}`;
+    const expectedOriginalSource = `<span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
+    <a href="${escapeHtml(primarySource.url)}" rel="noopener noreferrer">${escapeHtml(primarySource.label[localeKey])}</a>
+    <span>· ${escapeHtml(sourceByline)}</span>
+    <span>· <time datetime="${escapeHtml(article.sourceDocument.publishedAt)}">${escapeHtml(displayDate(article.sourceDocument.publishedAt, localeKey))}</time></span>`;
+    assert.equal(normalizeMarkup(originalSourceMatches[0][1]), normalizeMarkup(expectedOriginalSource), `${relativePath}: original source reference drift`);
+    const bodyContentMatches = [...articleBodyHtml.matchAll(/<div class="article-body__content">([\s\S]*?)<\/div>/g)];
+    assert.equal(bodyContentMatches.length, 1, `${relativePath}: expected one article body content container`);
+    const expectedBodyContent = copy.bodyBlocks.map((block) => {
       const body = block.segments
         ? block.segments.map((segment) => segment.href
           ? `<a href="${escapeHtml(segment.href)}" rel="noopener noreferrer">${escapeHtml(segment.text)}</a>`
@@ -329,9 +382,9 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       if (block.type === "heading") return `<h2>${body}</h2>`;
       if (block.type === "paragraph") return `<p>${body}</p>`;
       if (block.type === "callout") return `<aside class="callout"><p>${body}</p></aside>`;
-      throw new Error(`${relativePath}: unsupported source block type ${block.type}`);
+      throw new Error(`${relativePath}: unsupported body block type ${block.type}`);
     }).join("\n      ");
-    assert.equal(normalizeMarkup(sourceBodyMatches[0][1]), normalizeMarkup(expectedSourceBody), `${relativePath}: source block structure or order drift`);
+    assert.equal(normalizeMarkup(bodyContentMatches[0][1]), normalizeMarkup(expectedBodyContent), `${relativePath}: body block structure or order drift`);
     const summaryHtml = summaryMatches[0][0];
     const renderedSummaryItems = [...summaryHtml.matchAll(/<li><strong>([\s\S]*?)<\/strong><span>([\s\S]*?)<\/span><\/li>/g)]
       .map((match) => ({ title: match[1], text: match[2] }));
@@ -362,6 +415,17 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     </ul>
   </section>`;
     assert.equal(normalizeMarkup(sourcesHtml), normalizeMarkup(expectedSourcesHtml), `${relativePath}: bottom sources markup drift`);
+    const about = locale.aboutTurboFlow;
+    const expectedAboutHtml = `<section class="about-turboflow" aria-labelledby="about-turboflow-title">
+    <h2 id="about-turboflow-title">${escapeHtml(about.title)}</h2>
+    <p>${escapeHtml(about.body)}</p>
+    <nav aria-label="${escapeHtml(about.title)}">
+      <a href="${escapeHtml(site.homeUrl)}">${escapeHtml(about.homeLabel)}</a>
+      <a href="${escapeHtml(site.appUrl)}">${escapeHtml(about.appLabel)}</a>
+      <a href="${escapeHtml(site.docsUrl)}" rel="noopener noreferrer">${escapeHtml(about.docsLabel)}</a>
+    </nav>
+  </section>`;
+    assert.equal(normalizeMarkup(aboutMatches[0][0]), normalizeMarkup(expectedAboutHtml), `${relativePath}: About TurboFlow markup drift`);
     for (const relatedSlug of article.relatedSlugs) {
       assert(main.includes(`../${relatedSlug}/`), `${relativePath}: visible related link missing: ${relatedSlug}`);
     }
@@ -369,6 +433,8 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     assert(articleSchema, `${relativePath}: Article schema is required`);
     assert.equal(articleSchema.datePublished, article.publishedAt, `${relativePath}: schema published date drift`);
     assert.equal(articleSchema.dateModified, article.modifiedAt, `${relativePath}: schema modified date drift`);
+    assert.equal(articleSchema.image, site.socialImageUrl, `${relativePath}: schema image drift`);
+    assert.deepEqual(articleSchema.about, { "@id": site.organizationId }, `${relativePath}: schema About TurboFlow relationship drift`);
     assert.equal(articleSchema.isBasedOn, article.primarySource, `${relativePath}: schema primary source drift`);
     assert.deepEqual(
       articleSchema.citation,

@@ -1,4 +1,5 @@
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,6 +11,10 @@ const localeEntries = Object.entries(site.locales);
 const updatesBaseUrl = `${site.productionOrigin}${site.updatesPath}`;
 const updatesOutputPrefix = site.updatesPath.replace(/^\/+|\/+$/g, "");
 const publishedArticles = [...articles].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
+
+function bodyIntegrity(bodyBlocks) {
+  return createHash("sha256").update(JSON.stringify(bodyBlocks)).digest("hex");
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -165,11 +170,14 @@ function renderHead({
   <meta property="og:site_name" content="${escapeHtml(site.brandName)}">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(socialDescription)}">
-  <meta property="og:url" content="${escapeHtml(canonical)}">${articleMeta}
+  <meta property="og:url" content="${escapeHtml(canonical)}">
+  <meta property="og:image" content="${escapeHtml(site.socialImageUrl)}">
+  <meta property="og:image:alt" content="${escapeHtml(site.brandName)}">${articleMeta}
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(twitterTitle)}">
   <meta name="twitter:description" content="${escapeHtml(socialDescription)}">
+  <meta name="twitter:image" content="${escapeHtml(site.socialImageUrl)}">
 
   <link rel="stylesheet" href="${escapeHtml(paths.assetPrefix)}styles.css">
   <script type="application/ld+json">${safeJson(structuredData)}</script>
@@ -263,12 +271,14 @@ function articleStructuredData(article, localeKey) {
         isPartOf: { "@id": `${collectionUrl}#collection` },
         headline: copy.headline,
         description: copy.pageDescription,
+        image: site.socialImageUrl,
         datePublished: article.publishedAt,
         dateModified: article.modifiedAt,
         inLanguage: locale.htmlLang,
         articleSection: copy.category,
         author: { "@id": site.organizationId },
         publisher: { "@id": site.organizationId },
+        about: { "@id": site.organizationId },
         isBasedOn: article.primarySource,
         citation: article.sources.map((source) => source.url),
         hasPart: { "@id": faqId }
@@ -408,12 +418,28 @@ function renderArticleBlock(block) {
   throw new Error(`Unsupported article block type: ${block.type}`);
 }
 
-function renderSourceContent(copy, locale) {
-  return `<section class="source-content" aria-labelledby="source-content-title">
-    <h2 id="source-content-title">${escapeHtml(locale.sourceContentTitle)}</h2>
-    <p class="source-content__note">${escapeHtml(locale.sourceContentNote)}</p>
-    <div class="source-content__body">
-      ${copy.sourceBlocks.map(renderArticleBlock).join("\n      ")}
+function renderOriginalSource(article, localeKey) {
+  const locale = site.locales[localeKey];
+  const source = resolvePrimarySource(article);
+  const sourceDate = displayDate(article.sourceDocument.publishedAt, localeKey);
+  const sourceByline = localeKey === "zh"
+    ? `${locale.sourceAuthorPrefix}${article.sourceDocument.author}`
+    : `${locale.sourceAuthorPrefix} ${article.sourceDocument.author}`;
+  return `<p class="original-source">
+    <span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
+    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a>
+    <span>· ${escapeHtml(sourceByline)}</span>
+    <span>· <time datetime="${escapeHtml(article.sourceDocument.publishedAt)}">${escapeHtml(sourceDate)}</time></span>
+  </p>`;
+}
+
+function renderArticleBody(article, copy, localeKey) {
+  const locale = site.locales[localeKey];
+  return `<section class="article-body" aria-labelledby="article-body-title">
+    <h2 id="article-body-title">${escapeHtml(locale.bodyTitle)}</h2>
+    ${renderOriginalSource(article, localeKey)}
+    <div class="article-body__content">
+      ${copy.bodyBlocks.map(renderArticleBlock).join("\n      ")}
     </div>
   </section>`;
 }
@@ -478,6 +504,20 @@ function renderRelated(article, localeKey) {
   </nav>`;
 }
 
+function renderAboutTurboFlow(localeKey) {
+  const locale = site.locales[localeKey];
+  const about = locale.aboutTurboFlow;
+  return `<section class="about-turboflow" aria-labelledby="about-turboflow-title">
+    <h2 id="about-turboflow-title">${escapeHtml(about.title)}</h2>
+    <p>${escapeHtml(about.body)}</p>
+    <nav aria-label="${escapeHtml(about.title)}">
+      <a href="${escapeHtml(site.homeUrl)}">${escapeHtml(about.homeLabel)}</a>
+      <a href="${escapeHtml(site.appUrl)}">${escapeHtml(about.appLabel)}</a>
+      <a href="${escapeHtml(site.docsUrl)}" rel="noopener noreferrer">${escapeHtml(about.docsLabel)}</a>
+    </nav>
+  </section>`;
+}
+
 function renderArticlePage(article, localeKey) {
   const locale = site.locales[localeKey];
   const copy = article.translations[localeKey];
@@ -532,12 +572,13 @@ function renderArticlePage(article, localeKey) {
         </div>
         ${renderPrimarySource(article, localeKey)}
       </header>
-      ${renderSourceContent(copy, locale)}
+      ${renderArticleBody(article, copy, localeKey)}
       ${renderSummary(copy.summaryItems, locale)}
       ${renderFaq(copy.faqs, locale)}
-      <aside class="risk-note" aria-label="${escapeHtml(locale.riskAria)}">${escapeHtml(copy.riskNotice)}</aside>
+      <aside class="risk-note" aria-label="${escapeHtml(locale.riskAria)}"><strong>${escapeHtml(locale.riskAria)}</strong><span>${escapeHtml(copy.riskNotice)}</span></aside>
       ${renderSources(article, localeKey)}
       ${renderRelated(article, localeKey)}
+      ${renderAboutTurboFlow(localeKey)}
     </article>
   </main>
   ${renderFooter(localeKey)}
@@ -649,7 +690,11 @@ function assertBuild(condition, message) {
 }
 
 export function validateBuildInput() {
-  assertBuild(site.productionOrigin.startsWith("https://"), "productionOrigin must use HTTPS");
+  assertBuild(site.productionOrigin === "https://tf.xyz", "productionOrigin must remain the apex https://tf.xyz host");
+  assertBuild(site.homeUrl === `${site.productionOrigin}/`, "homeUrl must use the production apex host");
+  assertBuild(site.organizationId === `${site.productionOrigin}/#organization`, "organizationId must use the production apex host");
+  assertBuild(site.sitemapUrl === `${site.productionOrigin}/sitemap-updates.xml`, "sitemapUrl must use the production apex host");
+  assertBuild(site.socialImageUrl.startsWith(`${site.productionOrigin}/`), "socialImageUrl must use the production apex host");
   assertBuild(site.updatesPath === "/updates", "updatesPath must remain /updates");
   assertBuild(updatesOutputPrefix === "updates", "updatesPath must map to the updates output directory");
   assertBuild(articles.length > 0, "at least one reviewed article is required");
@@ -668,6 +713,15 @@ export function validateBuildInput() {
       typeof article.primarySource === "string" && /^https:\/\//.test(article.primarySource),
       `${article.slug}: primarySource must use HTTPS`
     );
+    assertBuild(
+      article.sourceDocument && typeof article.sourceDocument.author === "string" && article.sourceDocument.author.length > 0,
+      `${article.slug}: sourceDocument author is required`
+    );
+    assertBuild(!Number.isNaN(Date.parse(article.sourceDocument.publishedAt)), `${article.slug}: invalid sourceDocument publishedAt`);
+    assertBuild(
+      ["owned-release", "attributed-adaptation", "licensed-republication"].includes(article.sourceDocument.rightsMode),
+      `${article.slug}: invalid sourceDocument rightsMode`
+    );
     assertBuild(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     const sourceUrls = article.sources.map((source) => source.url);
     assertBuild(new Set(sourceUrls).size === sourceUrls.length, `${article.slug}: source URLs must be unique`);
@@ -679,10 +733,23 @@ export function validateBuildInput() {
       );
       const copy = article.translations?.[localeKey];
       assertBuild(copy && typeof copy === "object", `${article.slug}: translation is required for ${localeKey}`);
-      assertBuild(!Object.hasOwn(copy, "facts") && !Object.hasOwn(copy, "blocks"), `${article.slug}/${localeKey}: legacy facts and blocks are forbidden`);
-      assertBuild(Array.isArray(copy.sourceBlocks) && copy.sourceBlocks.length > 0, `${article.slug}/${localeKey}: sourceBlocks are required`);
+      assertBuild(
+        !Object.hasOwn(copy, "facts") && !Object.hasOwn(copy, "blocks") && !Object.hasOwn(copy, "sourceBlocks"),
+        `${article.slug}/${localeKey}: legacy facts, blocks, and sourceBlocks are forbidden`
+      );
+      assertBuild(Array.isArray(copy.bodyBlocks) && copy.bodyBlocks.length > 0, `${article.slug}/${localeKey}: bodyBlocks are required`);
+      assertBuild(
+        article.sourceDocument.bodyIntegrity?.[localeKey] === bodyIntegrity(copy.bodyBlocks),
+        `${article.slug}/${localeKey}: locked body changed; review the source and update bodyIntegrity deliberately`
+      );
       assertBuild(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
       assertBuild(Array.isArray(copy.faqs) && copy.faqs.length > 0, `${article.slug}/${localeKey}: faqs are required`);
+      for (const block of copy.bodyBlocks) {
+        if (!Array.isArray(block.segments)) continue;
+        for (const segment of block.segments) {
+          assertBuild(!segment.href || sourceUrls.includes(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources`);
+        }
+      }
     }
   }
 
@@ -690,10 +757,15 @@ export function validateBuildInput() {
     assertBuild(/^[a-z]{2}(?:-[A-Z]{2})?$/.test(locale.htmlLang), `invalid htmlLang for ${localeKey}`);
     assertBuild(typeof locale.listDatePrefix === "string" && locale.listDatePrefix.length > 0, `listDatePrefix is required for ${localeKey}`);
     assertBuild(typeof locale.sourcePrefix === "string" && locale.sourcePrefix.length > 0, `sourcePrefix is required for ${localeKey}`);
-    assertBuild(typeof locale.sourceContentTitle === "string" && locale.sourceContentTitle.length > 0, `sourceContentTitle is required for ${localeKey}`);
-    assertBuild(typeof locale.sourceContentNote === "string" && locale.sourceContentNote.length > 0, `sourceContentNote is required for ${localeKey}`);
+    assertBuild(typeof locale.bodyTitle === "string" && locale.bodyTitle.length > 0, `bodyTitle is required for ${localeKey}`);
+    assertBuild(typeof locale.originalSourcePrefix === "string" && locale.originalSourcePrefix.length > 0, `originalSourcePrefix is required for ${localeKey}`);
+    assertBuild(typeof locale.sourceAuthorPrefix === "string" && locale.sourceAuthorPrefix.length > 0, `sourceAuthorPrefix is required for ${localeKey}`);
     assertBuild(typeof locale.summaryTitle === "string" && locale.summaryTitle.length > 0, `summaryTitle is required for ${localeKey}`);
     assertBuild(typeof locale.faqTitle === "string" && locale.faqTitle.length > 0, `faqTitle is required for ${localeKey}`);
+    assertBuild(
+      locale.aboutTurboFlow && ["title", "body", "homeLabel", "appLabel", "docsLabel"].every((key) => typeof locale.aboutTurboFlow[key] === "string" && locale.aboutTurboFlow[key].length > 0),
+      `aboutTurboFlow copy is required for ${localeKey}`
+    );
     assertBuild(
       locale.pathPrefix === "" || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(locale.pathPrefix),
       `invalid pathPrefix for ${localeKey}`

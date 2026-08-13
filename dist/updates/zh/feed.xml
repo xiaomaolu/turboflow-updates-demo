@@ -2,36 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>TurboFlow 最新动态</title>
-    <link>https://www.tf.xyz/updates/zh/</link>
+    <link>https://tf.xyz/updates/zh/</link>
     <description>TurboFlow 公司公告与产品更新。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
-    <atom:link href="https://www.tf.xyz/updates/zh/feed.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://tf.xyz/updates/zh/feed.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Pantera Capital 发布《Investing in TurboFlow》投资文章</title>
-      <link>https://www.tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</link>
-      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</guid>
+      <title>Pantera Capital 发文解释为何投资 TurboFlow</title>
+      <link>https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</link>
+      <guid isPermaLink="true">https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</guid>
       <pubDate>Wed, 01 Jul 2026 02:04:41 GMT</pubDate>
       <description>Pantera Capital 在官方文章《Investing in TurboFlow》中解释其为何领投 TurboFlow 的 600 万美元种子轮融资。</description>
     </item>
     <item>
       <title>TurboFlow 完成 600 万美元种子轮融资，Pantera Capital 领投</title>
-      <link>https://www.tf.xyz/updates/zh/turboflow-raises-6m-seed-round/</link>
-      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/turboflow-raises-6m-seed-round/</guid>
+      <link>https://tf.xyz/updates/zh/turboflow-raises-6m-seed-round/</link>
+      <guid isPermaLink="true">https://tf.xyz/updates/zh/turboflow-raises-6m-seed-round/</guid>
       <pubDate>Tue, 23 Jun 2026 00:05:00 GMT</pubDate>
       <description>TurboFlow 完成 600 万美元种子轮融资，由 Pantera Capital 领投，Susquehanna Crypto 与 Digital Currency Group 参投。</description>
     </item>
     <item>
       <title>TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场</title>
-      <link>https://www.tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</link>
-      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</guid>
+      <link>https://tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</link>
+      <guid isPermaLink="true">https://tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</guid>
       <pubDate>Thu, 11 Jun 2026 18:00:00 GMT</pubDate>
       <description>TurboFlow 与 Chainlink 宣布，TurboFlow 已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。</description>
     </item>
     <item>
       <title>TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作</title>
-      <link>https://www.tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</link>
-      <guid isPermaLink="true">https://www.tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</guid>
+      <link>https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</link>
+      <guid isPermaLink="true">https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</guid>
       <pubDate>Wed, 13 May 2026 10:00:00 GMT</pubDate>
       <description>TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作，重点覆盖成交质量、流动性深度、定价效率与市场结构。</description>
     </item>
