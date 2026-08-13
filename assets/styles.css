@@ -461,25 +461,6 @@ h1 {
   font-size: 14px;
 }
 
-.update-article .primary-source {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  margin: 18px 0 40px;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.primary-source__label {
-  color: var(--ink);
-  font-weight: 750;
-}
-
-.primary-source a {
-  font-weight: 650;
-}
-
 .update-article h2 {
   margin: 54px 0 16px;
   font-family: Georgia, "Times New Roman", serif;
@@ -512,15 +493,11 @@ h1 {
   margin-bottom: 56px;
 }
 
-.update-article .article-body > h2 {
-  margin-top: 0;
-}
-
 .update-article .original-source {
   display: flex;
   flex-wrap: wrap;
   gap: 3px 8px;
-  margin: -4px 0 34px;
+  margin: 28px 0 34px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.65;
@@ -794,10 +771,6 @@ html[lang="zh-CN"] .update-card__meta {
 
   .eyebrow {
     margin-top: 24px;
-  }
-
-  .update-article .primary-source {
-    margin-bottom: 32px;
   }
 
   .content-summary {

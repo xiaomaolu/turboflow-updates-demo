@@ -144,9 +144,7 @@ function validateEditorialData() {
   assert.equal(site.updatesPath, "/updates", "updatesPath must remain /updates");
   assert(articles.length > 0, "at least one reviewed article is required");
   for (const [localeKey, locale] of localeEntries) {
-    assert(locale.sourcePrefix, `sourcePrefix is required for ${localeKey}`);
     assert(locale.listDatePrefix, `listDatePrefix is required for ${localeKey}`);
-    assert(locale.bodyTitle, `bodyTitle is required for ${localeKey}`);
     assert(locale.originalSourcePrefix, `originalSourcePrefix is required for ${localeKey}`);
     assert(locale.sourceAuthorPrefix, `sourceAuthorPrefix is required for ${localeKey}`);
     assert(locale.summaryTitle, `summaryTitle is required for ${localeKey}`);
@@ -180,10 +178,6 @@ function validateEditorialData() {
       1,
       `${article.slug}: primarySource must match exactly one article source`
     );
-    const primarySource = article.sources.find((source) => source.url === article.primarySource);
-    for (const [localeKey] of localeEntries) {
-      assert(primarySource.platform?.[localeKey], `${article.slug}: primary source platform missing for ${localeKey}`);
-    }
     assert(Array.isArray(article.relatedSlugs), `${article.slug}: relatedSlugs must be an array`);
 
     for (const relatedSlug of article.relatedSlugs) {
@@ -309,28 +303,15 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       metaMatch[1].includes(`<span>${escapeHtml(locale.publishedPrefix)} <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></span>`),
       `${relativePath}: article publication metadata drift`
     );
-    const primaryMatches = [...articleHeader.matchAll(/<p class="primary-source">([\s\S]*?)<\/p>/g)];
-    assert.equal(primaryMatches.length, 1, `${relativePath}: expected one primary source in article header`);
-    const primarySourceHtml = primaryMatches[0][1];
-    const primarySource = article.sources.find((source) => source.url === article.primarySource);
-    const primaryLabelMatch = primarySourceHtml.match(/<span class="primary-source__label">([\s\S]*?)<\/span>/);
-    const primaryLinkMatch = primarySourceHtml.match(/<a href="([^"]+)" rel="noopener noreferrer">([\s\S]*?)<\/a>/);
-    assert(primaryLabelMatch, `${relativePath}: primary source label is missing`);
-    assert(primaryLinkMatch, `${relativePath}: primary source link is missing`);
-    assert.equal(primaryLabelMatch[1], escapeHtml(locale.sourcePrefix), `${relativePath}: primary source label drift`);
-    assert.equal(primaryLinkMatch[1], article.primarySource, `${relativePath}: primary source URL drift`);
-    assert.equal(primaryLinkMatch[2], escapeHtml(primarySource.platform[localeKey]), `${relativePath}: primary source must show only the platform name`);
-    assert(
-      articleHeader.indexOf('class="meta"') < articleHeader.indexOf('class="primary-source"'),
-      `${relativePath}: primary source must follow article metadata`
-    );
-    const articleBodyMatches = [...main.matchAll(/<section class="article-body"[\s\S]*?<\/section>/g)];
+    assert.equal(countMatches(articleHeader, /class="primary-source"/g), 0, `${relativePath}: duplicate header source must not render`);
+    const articleBodyMatches = [...main.matchAll(/<section class="article-body" aria-label="([^"]+)">[\s\S]*?<\/section>/g)];
     const summaryMatches = [...main.matchAll(/<section class="content-summary"[\s\S]*?<\/section>/g)];
     const faqMatches = [...main.matchAll(/<section class="faq"[\s\S]*?<\/section>/g)];
     const riskMatches = [...main.matchAll(/<aside class="risk-note" aria-label="([^"]+)"><strong>([\s\S]*?)<\/strong><span>([\s\S]*?)<\/span><\/aside>/g)];
     const sourcesMatches = [...main.matchAll(/<section class="sources"[\s\S]*?<\/section>/g)];
     const aboutMatches = [...main.matchAll(/<section class="about-turboflow"[\s\S]*?<\/section>/g)];
     assert.equal(articleBodyMatches.length, 1, `${relativePath}: expected one article body`);
+    assert.equal(articleBodyMatches[0][1], escapeHtml(copy.headline), `${relativePath}: article body accessible label drift`);
     assert.equal(summaryMatches.length, 1, `${relativePath}: expected one content-summary section`);
     assert.equal(faqMatches.length, 1, `${relativePath}: expected one FAQ section`);
     assert.equal(riskMatches.length, 1, `${relativePath}: expected one risk notice`);
@@ -360,7 +341,8 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     assert(!main.includes("以下正文依照所链接来源的事实"), `${relativePath}: retired Chinese disclosure must not render`);
     const sourcesHtml = sourcesMatches[0][0];
     const articleBodyHtml = articleBodyMatches[0][0];
-    assert(articleBodyHtml.includes(`<h2 id="article-body-title">${escapeHtml(locale.bodyTitle)}</h2>`), `${relativePath}: article body heading drift`);
+    assert(!articleBodyHtml.includes('id="article-body-title"'), `${relativePath}: visible article body title must not render`);
+    const primarySource = article.sources.find((source) => source.url === article.primarySource);
     const originalSourceMatches = [...articleBodyHtml.matchAll(/<p class="original-source">([\s\S]*?)<\/p>/g)];
     assert.equal(originalSourceMatches.length, 1, `${relativePath}: expected one original source reference`);
     const sourceByline = localeKey === "zh"
