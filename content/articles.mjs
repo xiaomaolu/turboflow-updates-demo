@@ -33,10 +33,7 @@ export const site = {
       homeLabel: "Home",
       updatesLabel: "Updates",
       readArticle: "Read update",
-      publishedPrefix: "Published",
       listDatePrefix: "Published",
-      updatedPrefix: "Updated",
-      bylinePrefix: "By",
       originalSourcePrefix: "Original source:",
       sourceAuthorPrefix: "By",
       summaryTitle: "Summary",
@@ -106,10 +103,7 @@ export const site = {
       homeLabel: "首页",
       updatesLabel: "最新动态",
       readArticle: "阅读更新",
-      publishedPrefix: "发布于",
       listDatePrefix: "发布时间",
-      updatedPrefix: "更新于",
-      bylinePrefix: "作者：",
       originalSourcePrefix: "原文：",
       sourceAuthorPrefix: "作者：",
       summaryTitle: "内容总结",
@@ -184,11 +178,9 @@ export const articles = [
     ],
     publishedAt: "2026-06-22T20:05:00-04:00",
     modifiedAt: "2026-08-13",
-    author: "TurboFlow",
     primarySource: fundingAnnouncementUrl,
     sourceDocument: {
       author: "TurboFlow",
-      publishedAt: "2026-06-22T20:05:00-04:00",
       rightsMode: "owned-release",
       bodyIntegrity: {
         en: "4d5ce874e64d3db80e0a1a047c3e5e0ba5ef01fa50d2927a664e72e637e63b0d",
@@ -330,11 +322,9 @@ export const articles = [
     ],
     publishedAt: "2026-06-30T19:04:41-07:00",
     modifiedAt: "2026-08-13",
-    author: "TurboFlow",
     primarySource: panteraUrl,
     sourceDocument: {
       author: "Jay Yu",
-      publishedAt: "2026-06-30T19:04:41-07:00",
       rightsMode: "attributed-adaptation",
       bodyIntegrity: {
         en: "695912f0c6721a205b1bcf9def5ada17802ca9a23afa3311bf92d47162b8dac5",
@@ -514,11 +504,9 @@ export const articles = [
     ],
     publishedAt: "2026-06-11T18:00:00.000Z",
     modifiedAt: "2026-08-13",
-    author: "TurboFlow",
     primarySource: turboFlowChainlinkAnnouncementUrl,
     sourceDocument: {
       author: "TurboFlow",
-      publishedAt: "2026-06-11T18:00:00.000Z",
       rightsMode: "owned-release",
       bodyIntegrity: {
         en: "4194c826b05d731c2609f6698aa0247cb1af8cf1189ff053c951a7edf5ee45b9",
@@ -529,8 +517,8 @@ export const articles = [
       {
         url: turboFlowChainlinkAnnouncementUrl,
         label: {
-          en: "TurboFlow official X announcement (June 11, 2026)",
-          zh: "TurboFlow 官方 X 公告（2026 年 6 月 11 日）"
+          en: "TurboFlow official X announcement",
+          zh: "TurboFlow 官方 X 公告"
         }
       },
       {
@@ -637,11 +625,9 @@ export const articles = [
     ],
     publishedAt: "2026-05-13T10:00:00.000Z",
     modifiedAt: "2026-08-13",
-    author: "TurboFlow",
     primarySource: chainCatcherPartnershipUrl,
     sourceDocument: {
       author: "TurboFlow",
-      publishedAt: "2026-05-13T10:00:00.000Z",
       rightsMode: "owned-release",
       bodyIntegrity: {
         en: "68b2bb04f0799a971c68ac6dd001da12272853f7b5dfe60930ecb51fb96d9bcb",
@@ -652,8 +638,8 @@ export const articles = [
       {
         url: chainCatcherPartnershipUrl,
         label: {
-          en: "ChainCatcher-hosted TurboFlow collaboration release (project wording, May 13, 2026)",
-          zh: "ChainCatcher 收录的 TurboFlow 合作通稿（项目方表述，2026 年 5 月 13 日）"
+          en: "ChainCatcher-hosted TurboFlow collaboration release (project wording)",
+          zh: "ChainCatcher 收录的 TurboFlow 合作通稿（项目方表述）"
         }
       }
     ],
