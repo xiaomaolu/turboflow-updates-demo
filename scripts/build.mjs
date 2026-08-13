@@ -421,7 +421,6 @@ function renderArticleBlock(block) {
 function renderOriginalSource(article, localeKey) {
   const locale = site.locales[localeKey];
   const source = resolvePrimarySource(article);
-  const sourceDate = displayDate(article.sourceDocument.publishedAt, localeKey);
   const sourceByline = localeKey === "zh"
     ? `${locale.sourceAuthorPrefix}${article.sourceDocument.author}`
     : `${locale.sourceAuthorPrefix} ${article.sourceDocument.author}`;
@@ -429,8 +428,15 @@ function renderOriginalSource(article, localeKey) {
     <span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
     <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a>
     <span>· ${escapeHtml(sourceByline)}</span>
-    <span>· <time datetime="${escapeHtml(article.sourceDocument.publishedAt)}">${escapeHtml(sourceDate)}</time></span>
   </p>`;
+}
+
+function renderArticleKicker(article, copy, localeKey) {
+  return `<div class="article-kicker">
+    <p class="eyebrow">${escapeHtml(copy.category)}</p>
+    <span class="article-kicker__separator" aria-hidden="true">·</span>
+    <p class="article-date"><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></p>
+  </div>`;
 }
 
 function renderArticleBody(article, copy, localeKey) {
@@ -512,20 +518,6 @@ function renderArticlePage(article, localeKey) {
   const copy = article.translations[localeKey];
   const paths = pagePaths(localeKey, article.slug);
   const canonical = canonicalUrl(localeKey, article.slug);
-  const published = displayDate(article.publishedAt, localeKey);
-  const modified = displayDate(article.modifiedAt, localeKey);
-  const showModified = article.modifiedAt.slice(0, 10) !== article.publishedAt.slice(0, 10);
-  const byline = localeKey === "zh"
-    ? `${locale.bylinePrefix}${article.author}`
-    : `${locale.bylinePrefix} ${article.author}`;
-  const metaItems = [
-    `<span>${escapeHtml(locale.publishedPrefix)} <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(published)}</time></span>`,
-    showModified
-      ? `<span>${escapeHtml(locale.updatedPrefix)} <time datetime="${escapeHtml(article.modifiedAt)}">${escapeHtml(modified)}</time></span>`
-      : null,
-    `<span>${escapeHtml(byline)}</span>`,
-    copy.metaNote ? `<span>${escapeHtml(copy.metaNote)}</span>` : null
-  ].filter(Boolean).join("\n          ");
 
   return `${renderHead({
     localeKey,
@@ -553,12 +545,9 @@ function renderArticlePage(article, localeKey) {
     </nav>
     <article class="update-article">
       <header>
-        <p class="eyebrow">${escapeHtml(copy.category)}</p>
+        ${renderArticleKicker(article, copy, localeKey)}
         <h1>${escapeHtml(copy.headline)}</h1>
         <p class="dek">${escapeHtml(copy.dek)}</p>
-        <div class="meta">
-          ${metaItems}
-        </div>
       </header>
       ${renderArticleBody(article, copy, localeKey)}
       ${renderSummary(copy.summaryItems, locale)}
@@ -695,6 +684,7 @@ export function validateBuildInput() {
     );
     assertBuild(!slugs.has(article.slug), `duplicate article slug: ${article.slug}`);
     slugs.add(article.slug);
+    assertBuild(!Object.hasOwn(article, "author"), `${article.slug}: top-level author is retired; use sourceDocument.author for the original source author`);
     assertBuild(!Number.isNaN(Date.parse(article.publishedAt)), `${article.slug}: invalid publishedAt`);
     assertBuild(!Number.isNaN(Date.parse(article.modifiedAt)), `${article.slug}: invalid modifiedAt`);
     assertBuild(
@@ -705,7 +695,6 @@ export function validateBuildInput() {
       article.sourceDocument && typeof article.sourceDocument.author === "string" && article.sourceDocument.author.length > 0,
       `${article.slug}: sourceDocument author is required`
     );
-    assertBuild(!Number.isNaN(Date.parse(article.sourceDocument.publishedAt)), `${article.slug}: invalid sourceDocument publishedAt`);
     assertBuild(
       ["owned-release", "attributed-adaptation", "licensed-republication"].includes(article.sourceDocument.rightsMode),
       `${article.slug}: invalid sourceDocument rightsMode`

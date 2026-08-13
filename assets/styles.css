@@ -441,6 +441,18 @@ h1 {
   color: inherit;
 }
 
+.article-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 38px 0 14px;
+}
+
+.article-kicker .eyebrow {
+  margin: 0;
+}
+
 .eyebrow {
   margin: 38px 0 14px;
   color: var(--brand);
@@ -450,15 +462,24 @@ h1 {
   text-transform: uppercase;
 }
 
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
+.article-kicker__separator,
+.article-date {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.article-kicker .article-date {
   margin: 0;
+}
+
+.update-article > header {
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 14px;
+}
+
+.update-article > header .dek {
+  margin-bottom: 0;
 }
 
 .update-article h2 {

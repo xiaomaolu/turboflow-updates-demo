@@ -157,6 +157,7 @@ function validateEditorialData() {
     assert.match(article.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/, `invalid slug: ${article.slug}`);
     assert(!slugs.has(article.slug), `duplicate slug: ${article.slug}`);
     slugs.add(article.slug);
+    assert(!Object.hasOwn(article, "author"), `${article.slug}: top-level author is retired`);
     assert(!Number.isNaN(Date.parse(article.publishedAt)), `${article.slug}: invalid publishedAt`);
     assert(!Number.isNaN(Date.parse(article.modifiedAt)), `${article.slug}: invalid modifiedAt`);
     assert(
@@ -166,7 +167,6 @@ function validateEditorialData() {
     assert(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     assert.match(article.primarySource, /^https:\/\//, `${article.slug}: primarySource must use HTTPS`);
     assert(article.sourceDocument?.author, `${article.slug}: sourceDocument author is required`);
-    assert(!Number.isNaN(Date.parse(article.sourceDocument?.publishedAt)), `${article.slug}: sourceDocument publishedAt is invalid`);
     assert(
       ["owned-release", "attributed-adaptation", "licensed-republication"].includes(article.sourceDocument?.rightsMode),
       `${article.slug}: sourceDocument rightsMode is invalid`
@@ -297,13 +297,23 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     const headerMatch = main.match(/<header>([\s\S]*?)<\/header>/);
     assert(headerMatch, `${relativePath}: article header is missing`);
     const articleHeader = headerMatch[1];
-    const metaMatch = articleHeader.match(/<div class="meta">([\s\S]*?)<\/div>/);
-    assert(metaMatch, `${relativePath}: article metadata is missing`);
-    assert(
-      metaMatch[1].includes(`<span>${escapeHtml(locale.publishedPrefix)} <time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></span>`),
-      `${relativePath}: article publication metadata drift`
-    );
+    assert.equal(countMatches(articleHeader, /class="meta"/g), 0, `${relativePath}: retired article metadata row must not render`);
+    const kickerMatches = [...articleHeader.matchAll(/<div class="article-kicker">([\s\S]*?)<\/div>/g)];
+    assert.equal(kickerMatches.length, 1, `${relativePath}: expected one article kicker`);
+    const expectedKicker = `<p class="eyebrow">${escapeHtml(copy.category)}</p>
+    <span class="article-kicker__separator" aria-hidden="true">·</span>
+    <p class="article-date"><time datetime="${escapeHtml(article.publishedAt)}">${escapeHtml(displayDate(article.publishedAt, localeKey))}</time></p>`;
+    assert.equal(normalizeMarkup(kickerMatches[0][1]), normalizeMarkup(expectedKicker), `${relativePath}: article publication kicker drift`);
+    assert.equal(countMatches(articleHeader, /<time\b/g), 1, `${relativePath}: article header must expose exactly one publication time`);
     assert.equal(countMatches(articleHeader, /class="primary-source"/g), 0, `${relativePath}: duplicate header source must not render`);
+    const expectedHeader = `<div class="article-kicker">${expectedKicker}</div>
+        <h1>${escapeHtml(copy.headline)}</h1>
+        <p class="dek">${escapeHtml(copy.dek)}</p>`;
+    assert.equal(normalizeMarkup(articleHeader), normalizeMarkup(expectedHeader), `${relativePath}: article header structure drift`);
+    assert.equal(countMatches(html, /property="article:published_time"/g), 1, `${relativePath}: expected one Open Graph publication time`);
+    assert(html.includes(`<meta property="article:published_time" content="${escapeHtml(article.publishedAt)}">`), `${relativePath}: Open Graph publication time drift`);
+    assert.equal(countMatches(html, /property="article:modified_time"/g), 1, `${relativePath}: expected one Open Graph modified time`);
+    assert(html.includes(`<meta property="article:modified_time" content="${escapeHtml(article.modifiedAt)}">`), `${relativePath}: Open Graph modified time drift`);
     const articleBodyMatches = [...main.matchAll(/<section class="article-body" aria-label="([^"]+)">[\s\S]*?<\/section>/g)];
     const summaryMatches = [...main.matchAll(/<section class="content-summary"[\s\S]*?<\/section>/g)];
     const faqMatches = [...main.matchAll(/<section class="faq"[\s\S]*?<\/section>/g)];
@@ -350,9 +360,9 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       : `${locale.sourceAuthorPrefix} ${article.sourceDocument.author}`;
     const expectedOriginalSource = `<span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
     <a href="${escapeHtml(primarySource.url)}" rel="noopener noreferrer">${escapeHtml(primarySource.label[localeKey])}</a>
-    <span>· ${escapeHtml(sourceByline)}</span>
-    <span>· <time datetime="${escapeHtml(article.sourceDocument.publishedAt)}">${escapeHtml(displayDate(article.sourceDocument.publishedAt, localeKey))}</time></span>`;
+    <span>· ${escapeHtml(sourceByline)}</span>`;
     assert.equal(normalizeMarkup(originalSourceMatches[0][1]), normalizeMarkup(expectedOriginalSource), `${relativePath}: original source reference drift`);
+    assert.equal(countMatches(originalSourceMatches[0][1], /<time\b/g), 0, `${relativePath}: original source date must not repeat below the header`);
     const bodyContentMatches = [...articleBodyHtml.matchAll(/<div class="article-body__content">([\s\S]*?)<\/div>/g)];
     assert.equal(bodyContentMatches.length, 1, `${relativePath}: expected one article body content container`);
     const expectedBodyContent = copy.bodyBlocks.map((block) => {
