@@ -434,9 +434,7 @@ function renderOriginalSource(article, localeKey) {
 }
 
 function renderArticleBody(article, copy, localeKey) {
-  const locale = site.locales[localeKey];
-  return `<section class="article-body" aria-labelledby="article-body-title">
-    <h2 id="article-body-title">${escapeHtml(locale.bodyTitle)}</h2>
+  return `<section class="article-body" aria-label="${escapeHtml(copy.headline)}">
     ${renderOriginalSource(article, localeKey)}
     <div class="article-body__content">
       ${copy.bodyBlocks.map(renderArticleBlock).join("\n      ")}
@@ -479,15 +477,6 @@ function resolvePrimarySource(article) {
   const matches = article.sources.filter((candidate) => candidate.url === article.primarySource);
   assertBuild(matches.length === 1, `${article.slug}: primarySource must match exactly one article source`);
   return matches[0];
-}
-
-function renderPrimarySource(article, localeKey) {
-  const locale = site.locales[localeKey];
-  const source = resolvePrimarySource(article);
-  return `<p class="primary-source">
-    <span class="primary-source__label">${escapeHtml(locale.sourcePrefix)}</span>
-    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.platform[localeKey])}</a>
-  </p>`;
 }
 
 function renderRelated(article, localeKey) {
@@ -570,7 +559,6 @@ function renderArticlePage(article, localeKey) {
         <div class="meta">
           ${metaItems}
         </div>
-        ${renderPrimarySource(article, localeKey)}
       </header>
       ${renderArticleBody(article, copy, localeKey)}
       ${renderSummary(copy.summaryItems, locale)}
@@ -725,12 +713,8 @@ export function validateBuildInput() {
     assertBuild(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     const sourceUrls = article.sources.map((source) => source.url);
     assertBuild(new Set(sourceUrls).size === sourceUrls.length, `${article.slug}: source URLs must be unique`);
-    const primarySource = resolvePrimarySource(article);
+    resolvePrimarySource(article);
     for (const [localeKey] of localeEntries) {
-      assertBuild(
-        typeof primarySource.platform?.[localeKey] === "string" && primarySource.platform[localeKey].length > 0,
-        `${article.slug}: primary source platform is required for ${localeKey}`
-      );
       const copy = article.translations?.[localeKey];
       assertBuild(copy && typeof copy === "object", `${article.slug}: translation is required for ${localeKey}`);
       assertBuild(
@@ -756,8 +740,6 @@ export function validateBuildInput() {
   for (const [localeKey, locale] of localeEntries) {
     assertBuild(/^[a-z]{2}(?:-[A-Z]{2})?$/.test(locale.htmlLang), `invalid htmlLang for ${localeKey}`);
     assertBuild(typeof locale.listDatePrefix === "string" && locale.listDatePrefix.length > 0, `listDatePrefix is required for ${localeKey}`);
-    assertBuild(typeof locale.sourcePrefix === "string" && locale.sourcePrefix.length > 0, `sourcePrefix is required for ${localeKey}`);
-    assertBuild(typeof locale.bodyTitle === "string" && locale.bodyTitle.length > 0, `bodyTitle is required for ${localeKey}`);
     assertBuild(typeof locale.originalSourcePrefix === "string" && locale.originalSourcePrefix.length > 0, `originalSourcePrefix is required for ${localeKey}`);
     assertBuild(typeof locale.sourceAuthorPrefix === "string" && locale.sourceAuthorPrefix.length > 0, `sourceAuthorPrefix is required for ${localeKey}`);
     assertBuild(typeof locale.summaryTitle === "string" && locale.summaryTitle.length > 0, `summaryTitle is required for ${localeKey}`);

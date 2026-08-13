@@ -37,12 +37,10 @@ export const site = {
       listDatePrefix: "Published",
       updatedPrefix: "Updated",
       bylinePrefix: "By",
-      bodyTitle: "Article",
       originalSourcePrefix: "Original source:",
       sourceAuthorPrefix: "By",
       summaryTitle: "Summary",
       faqTitle: "Frequently asked questions",
-      sourcePrefix: "Source:",
       sourcesTitle: "Sources",
       relatedTitle: "Related updates",
       aboutTurboFlow: {
@@ -112,12 +110,10 @@ export const site = {
       listDatePrefix: "发布时间",
       updatedPrefix: "更新于",
       bylinePrefix: "作者：",
-      bodyTitle: "正文",
       originalSourcePrefix: "原文：",
       sourceAuthorPrefix: "作者：",
       summaryTitle: "内容总结",
       faqTitle: "常见问题",
-      sourcePrefix: "来源：",
       sourcesTitle: "来源",
       relatedTitle: "相关动态",
       aboutTurboFlow: {
@@ -202,7 +198,6 @@ export const articles = [
     sources: [
       {
         url: fundingAnnouncementUrl,
-        platform: { en: "PR Newswire", zh: "PR Newswire" },
         label: {
           en: "TurboFlow: $6 Million Seed Round Announcement",
           zh: "TurboFlow：600 万美元种子轮融资公告"
@@ -349,7 +344,6 @@ export const articles = [
     sources: [
       {
         url: panteraUrl,
-        platform: { en: "Pantera Capital", zh: "Pantera Capital" },
         label: {
           en: "Pantera Capital: Investing in TurboFlow",
           zh: "Pantera Capital：《Investing in TurboFlow》"
@@ -534,7 +528,6 @@ export const articles = [
     sources: [
       {
         url: turboFlowChainlinkAnnouncementUrl,
-        platform: { en: "X", zh: "X" },
         label: {
           en: "TurboFlow official X announcement (June 11, 2026)",
           zh: "TurboFlow 官方 X 公告（2026 年 6 月 11 日）"
@@ -658,7 +651,6 @@ export const articles = [
     sources: [
       {
         url: chainCatcherPartnershipUrl,
-        platform: { en: "ChainCatcher", zh: "ChainCatcher" },
         label: {
           en: "ChainCatcher-hosted TurboFlow collaboration release (project wording, May 13, 2026)",
           zh: "ChainCatcher 收录的 TurboFlow 合作通稿（项目方表述，2026 年 5 月 13 日）"

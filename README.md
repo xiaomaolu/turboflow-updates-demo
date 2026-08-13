@@ -67,12 +67,12 @@ Add one object to `articles` in `content/articles.mjs`. Each article requires:
 - the original public release time of the news item as `publishedAt`, using a
   full timestamp and time-zone offset when a primary source exposes one;
 - the actual date of the latest substantive page revision as `modifiedAt`;
-- a `primarySource` URL that matches exactly one entry in `sources`; it is shown beneath
-  the article metadata and emitted as JSON-LD `isBasedOn`;
+- a `primarySource` URL that matches exactly one entry in `sources`; the full
+  source title, author, and date are shown once before the body, and the URL is
+  emitted as JSON-LD `isBasedOn`;
 - source-document author, publication time, and a reviewed `rightsMode`;
 - English and Chinese header copy, locked `bodyBlocks`, `summaryItems`, FAQs, and risk notices;
-- descriptive English and Chinese labels for every HTTPS source, plus a compact
-  localized platform name on the primary source for the article header;
+- descriptive English and Chinese labels for every HTTPS source;
 - an explicit `relatedSlugs` array (it may be empty).
 
 Material product, financing, partnership, infrastructure, and performance
