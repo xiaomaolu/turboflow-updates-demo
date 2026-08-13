@@ -6,7 +6,7 @@ Updates sitemap, and a scoped robots file from one reviewed article dataset.
 
 Live demo: <https://xiaomaolu.github.io/turboflow-updates-demo/>
 
-The generated pages use canonical URLs under `https://www.tf.xyz/updates/`.
+The generated pages use canonical URLs under `https://tf.xyz/updates/`.
 Deploy them at those paths before treating the canonical URLs as live.
 
 ## Requirements
@@ -69,7 +69,8 @@ Add one object to `articles` in `content/articles.mjs`. Each article requires:
 - the actual date of the latest substantive page revision as `modifiedAt`;
 - a `primarySource` URL that matches exactly one entry in `sources`; it is shown beneath
   the article metadata and emitted as JSON-LD `isBasedOn`;
-- English and Chinese header copy, `sourceBlocks`, `summaryItems`, FAQs, and risk notices;
+- source-document author, publication time, and a reviewed `rightsMode`;
+- English and Chinese header copy, locked `bodyBlocks`, `summaryItems`, FAQs, and risk notices;
 - descriptive English and Chinese labels for every HTTPS source, plus a compact
   localized platform name on the primary source for the article header;
 - an explicit `relatedSlugs` array (it may be empty).
@@ -77,12 +78,19 @@ Add one object to `articles` in `content/articles.mjs`. Each article requires:
 Material product, financing, partnership, infrastructure, and performance
 claims must be reviewed against current official or primary sources before the
 article is added. Keep Event Contracts and Turbo Perps mechanics separate.
-`sourceBlocks` must preserve the source's facts, attribution, and narrative
-order. They are faithful editorial adaptations, not verbatim reproductions.
-Editorial summaries and FAQs live in their own sections after the source-led
-body and must not introduce facts or causal claims that the cited sources do
-not support. The build rejects the retired `facts` and `blocks` fields, and the
-checker verifies that visible FAQ copy and `FAQPage` JSON-LD stay identical.
+`bodyBlocks` are the source-locked article body. GEO or SEO work must not rewrite
+that body; links, summaries, FAQs, risk copy, related updates, and the shared
+About TurboFlow module are maintained as separate sections. Use
+`owned-release` for TurboFlow-owned copy, `attributed-adaptation` for an
+independently worded account of a third-party source, and
+`licensed-republication` only when written republication rights are on file.
+Each language body has a reviewed SHA-256 value in `sourceDocument.bodyIntegrity`;
+an accidental body edit fails both the build and checker until the source is
+reviewed and that value is deliberately refreshed.
+Editorial summaries and FAQs must not introduce facts or causal claims that
+the cited sources do not support. The build rejects retired content fields and
+the checker verifies the body order, original-source reference, fixed brand
+module, visible FAQ copy, and `FAQPage` JSON-LD.
 
 ## Preview
 
