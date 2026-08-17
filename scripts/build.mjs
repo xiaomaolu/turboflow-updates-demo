@@ -442,7 +442,7 @@ function renderArticleKicker(article, copy, localeKey) {
 }
 
 function renderArticleBody(article, copy, localeKey) {
-  const bodyLanguage = article.format === "source-republication"
+  const bodyLanguage = article.format === "source-republication" && article.sourceDocument.localizedBodies !== true
     ? article.sourceDocument.language
     : site.locales[localeKey].htmlLang;
   return `<section class="article-body" aria-label="${escapeHtml(copy.headline)}">
@@ -724,6 +724,10 @@ export function validateBuildInput() {
       assertBuild(typeof article.sourceDocument.platform === "string" && article.sourceDocument.platform.length > 0, `${article.slug}: source platform is required`);
       assertBuild(/^[a-z]{2}(?:-[A-Z]{2})?$/.test(article.sourceDocument.language), `${article.slug}: source language is invalid`);
       assertBuild(
+        article.sourceDocument.localizedBodies === undefined || typeof article.sourceDocument.localizedBodies === "boolean",
+        `${article.slug}: localizedBodies must be boolean when provided`
+      );
+      assertBuild(
         article.sourceDocument.includesAboutTurboFlow === undefined || typeof article.sourceDocument.includesAboutTurboFlow === "boolean",
         `${article.slug}: includesAboutTurboFlow must be boolean when provided`
       );
@@ -748,8 +752,11 @@ export function validateBuildInput() {
         assertBuild(!Object.hasOwn(copy, "summaryItems"), `${article.slug}/${localeKey}: source republication must not add a summary section`);
         assertBuild(!Object.hasOwn(copy, "riskNotice"), `${article.slug}/${localeKey}: source republication must not add an editorial risk section`);
         if (article.sourceDocument.includesAboutTurboFlow) {
+          const expectedAboutHeading = article.sourceDocument.localizedBodies
+            ? site.locales[localeKey].aboutTurboFlow.title
+            : site.locales.en.aboutTurboFlow.title;
           assertBuild(
-            copy.bodyBlocks.some((block) => block.type === "heading" && block.text === "About TurboFlow"),
+            copy.bodyBlocks.some((block) => block.type === "heading" && block.text === expectedAboutHeading),
             `${article.slug}/${localeKey}: source body must contain the declared About TurboFlow heading`
           );
         }
@@ -769,10 +776,12 @@ export function validateBuildInput() {
       }
     }
     if (isSourceRepublication) {
-      assertBuild(
-        JSON.stringify(article.translations.en.bodyBlocks) === JSON.stringify(article.translations.zh.bodyBlocks),
-        `${article.slug}: source republication body must remain identical across language pages`
-      );
+      if (!article.sourceDocument.localizedBodies) {
+        assertBuild(
+          JSON.stringify(article.translations.en.bodyBlocks) === JSON.stringify(article.translations.zh.bodyBlocks),
+          `${article.slug}: source republication body must remain identical across language pages unless localizedBodies is enabled`
+        );
+      }
     }
   }
 

@@ -183,6 +183,10 @@ function validateEditorialData() {
       assert(article.sourceDocument.platform, `${article.slug}: source platform is required`);
       assert.match(article.sourceDocument.language, /^[a-z]{2}(?:-[A-Z]{2})?$/, `${article.slug}: source language is invalid`);
       assert(
+        article.sourceDocument.localizedBodies === undefined || typeof article.sourceDocument.localizedBodies === "boolean",
+        `${article.slug}: localizedBodies must be boolean when provided`
+      );
+      assert(
         article.sourceDocument.includesAboutTurboFlow === undefined || typeof article.sourceDocument.includesAboutTurboFlow === "boolean",
         `${article.slug}: includesAboutTurboFlow must be boolean when provided`
       );
@@ -230,8 +234,11 @@ function validateEditorialData() {
         assert(!Object.hasOwn(copy, "summaryItems"), `${article.slug}/${localeKey}: source republication must not add a summary section`);
         assert(!Object.hasOwn(copy, "riskNotice"), `${article.slug}/${localeKey}: source republication must not add an editorial risk section`);
         if (article.sourceDocument.includesAboutTurboFlow) {
+          const expectedAboutHeading = article.sourceDocument.localizedBodies
+            ? site.locales[localeKey].aboutTurboFlow.title
+            : site.locales.en.aboutTurboFlow.title;
           assert(
-            copy.bodyBlocks.some((block) => block.type === "heading" && block.text === "About TurboFlow"),
+            copy.bodyBlocks.some((block) => block.type === "heading" && block.text === expectedAboutHeading),
             `${article.slug}/${localeKey}: source body must contain the declared About TurboFlow heading`
           );
         }
@@ -280,11 +287,11 @@ function validateEditorialData() {
         }
       }
     }
-    if (isSourceRepublication) {
+    if (isSourceRepublication && !article.sourceDocument.localizedBodies) {
       assert.deepEqual(
         article.translations.en.bodyBlocks,
         article.translations.zh.bodyBlocks,
-        `${article.slug}: source republication body must remain identical across language pages`
+        `${article.slug}: source republication body must remain identical across language pages unless localizedBodies is enabled`
       );
     }
   }
@@ -429,7 +436,9 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     assert(!articleBodyHtml.includes('class="original-source"'), `${relativePath}: source reference must remain above the divider`);
     const bodyContentMatches = [...articleBodyHtml.matchAll(/<div class="article-body__content" lang="([^"]+)">([\s\S]*?)<\/div>/g)];
     assert.equal(bodyContentMatches.length, 1, `${relativePath}: expected one article body content container`);
-    const expectedBodyLanguage = isSourceRepublication ? article.sourceDocument.language : locale.htmlLang;
+    const expectedBodyLanguage = isSourceRepublication && !article.sourceDocument.localizedBodies
+      ? article.sourceDocument.language
+      : locale.htmlLang;
     assert.equal(bodyContentMatches[0][1], expectedBodyLanguage, `${relativePath}: article body language drift`);
     const expectedBodyContent = copy.bodyBlocks.map((block) => {
       const body = block.segments

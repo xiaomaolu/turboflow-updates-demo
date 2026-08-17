@@ -105,6 +105,10 @@ publication basis for third-party material before production deployment.
 If the supplied source already contains its own `About TurboFlow` section, set
 `sourceDocument.includesAboutTurboFlow: true`; the source body remains intact
 and the generator suppresses the otherwise duplicated shared brand module.
+When a reviewed full translation is available, set
+`sourceDocument.localizedBodies: true`. Each locale may then provide its own
+locked `bodyBlocks`, and the generated body receives that locale's language tag;
+without the flag, both locale pages must continue sharing the exact source body.
 
 ## Preview
 
