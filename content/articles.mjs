@@ -948,13 +948,13 @@ export const articles = [
     ],
     translations: {
       en: {
-        pageTitle: "Pantera Leads TurboFlow's Seed Round",
+        pageTitle: "Why Pantera Capital Invested in TurboFlow",
         pageDescription: "Pantera Capital said it is leading TurboFlow's $6 million seed round to bring institutional-grade perpetual-futures and prediction-market experiences to everyday traders across Asia.",
         socialDescription: "Pantera Capital's Investing in TurboFlow article, followed by five source-based questions and answers.",
-        twitterTitle: "Pantera Leads TurboFlow's Seed Round",
+        twitterTitle: "Why Pantera Capital Invested in TurboFlow",
         category: "Investor Perspective",
-        breadcrumbCurrent: "Pantera Leads TurboFlow's Seed Round",
-        headline: "Pantera Leads TurboFlow's Seed Round",
+        breadcrumbCurrent: "Why Pantera Invested in TurboFlow",
+        headline: "Why Pantera Capital Invested in TurboFlow",
         dek: "Pantera Capital said it is leading TurboFlow's $6 million seed round to help bring institutional-grade perpetual-futures and prediction-market experiences to everyday traders across Asia.",
         bodyBlocks: panteraInvestmentBodyEn,
         faqs: [
@@ -966,13 +966,13 @@ export const articles = [
         ]
       },
       zh: {
-        pageTitle: "Pantera 领投 TurboFlow 种子轮融资",
+        pageTitle: "Pantera Capital 为什么投资 TurboFlow？",
         pageDescription: "Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资，希望帮助 TurboFlow 把专业级永续合约与预测市场体验带给亚洲的日常交易者。",
         socialDescription: "Pantera Capital《Investing in TurboFlow》原文及五个基于原文的常见问题。",
-        twitterTitle: "Pantera 领投 TurboFlow 种子轮融资",
+        twitterTitle: "Pantera Capital 为什么投资 TurboFlow？",
         category: "投资方观点",
-        breadcrumbCurrent: "Pantera 领投 TurboFlow",
-        headline: "Pantera 领投 TurboFlow 种子轮融资",
+        breadcrumbCurrent: "Pantera 投资 TurboFlow 的逻辑",
+        headline: "Pantera Capital 为什么投资 TurboFlow？",
         dek: "Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资，希望帮助 TurboFlow 把专业级永续合约与预测市场体验带给亚洲的日常交易者。",
         bodyBlocks: panteraInvestmentBodyZh,
         faqs: [
