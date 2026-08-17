@@ -68,11 +68,11 @@ Add one object to `articles` in `content/articles.mjs`. Each article requires:
   full timestamp and time-zone offset when a primary source exposes one;
 - the actual date of the latest substantive page revision as `modifiedAt`;
 - a `primarySource` URL that matches exactly one entry in `sources`; its full
-  title and author are shown once before the body, while the original public
+  title and author are shown once below the description, while the original public
   release time appears once in the article header, and the URL is emitted as
   JSON-LD `isBasedOn`;
-- source-document author and a reviewed `rightsMode`;
-- English and Chinese header copy, locked `bodyBlocks`, `summaryItems`, FAQs, and risk notices;
+- source-document title, author (or platform when no person is credited), and a reviewed `rightsMode`;
+- English and Chinese header copy, locked `bodyBlocks`, and FAQs;
 - descriptive English and Chinese labels for every HTTPS source;
 - an explicit `relatedSlugs` array (it may be empty).
 
@@ -80,8 +80,8 @@ Material product, financing, partnership, infrastructure, and performance
 claims must be reviewed against current official or primary sources before the
 article is added. Keep Event Contracts and Turbo Perps mechanics separate.
 `bodyBlocks` are the source-locked article body. GEO or SEO work must not rewrite
-that body; links, summaries, FAQs, risk copy, related updates, and the shared
-About TurboFlow module are maintained as separate sections. Use
+that body; links, FAQs, related updates, and the shared About TurboFlow module
+are maintained as separate sections. Use
 `owned-release` for TurboFlow-owned copy, `attributed-adaptation` for an
 independently worded account of a third-party source, and
 `licensed-republication` only when written republication rights are on file.
@@ -92,6 +92,19 @@ Editorial summaries and FAQs must not introduce facts or causal claims that
 the cited sources do not support. The build rejects retired content fields and
 the checker verifies the body order, original-source reference, fixed brand
 module, visible FAQ copy, and `FAQPage` JSON-LD.
+
+For a source-led page that preserves a supplied source article verbatim, set
+`format: "source-republication"`, provide `sourceDocument.title`, `platform`,
+`language`, and use `rightsMode: "verbatim-republication"`. Both language URLs
+must use the exact same `bodyBlocks`; the build rejects translation or editorial
+changes. This format renders the source title and author in the header, a light
+divider, the original-language body with its registered inline links, exactly
+five FAQs, About TurboFlow, and related updates. It intentionally omits the
+summary card, editorial risk box, and duplicate bottom source list. Confirm the
+publication basis for third-party material before production deployment.
+If the supplied source already contains its own `About TurboFlow` section, set
+`sourceDocument.includesAboutTurboFlow: true`; the source body remains intact
+and the generator suppresses the otherwise duplicated shared brand module.
 
 ## Preview
 

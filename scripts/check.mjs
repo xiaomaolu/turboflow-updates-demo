@@ -154,6 +154,7 @@ function validateEditorialData() {
 
   const slugs = new Set();
   for (const article of articles) {
+    const isSourceRepublication = article.format === "source-republication";
     assert.match(article.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/, `invalid slug: ${article.slug}`);
     assert(!slugs.has(article.slug), `duplicate slug: ${article.slug}`);
     slugs.add(article.slug);
@@ -166,11 +167,26 @@ function validateEditorialData() {
     );
     assert(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     assert.match(article.primarySource, /^https:\/\//, `${article.slug}: primarySource must use HTTPS`);
-    assert(article.sourceDocument?.author, `${article.slug}: sourceDocument author is required`);
+    assert(article.format === undefined || isSourceRepublication, `${article.slug}: invalid article format`);
+    assert(article.sourceDocument && typeof article.sourceDocument === "object", `${article.slug}: sourceDocument is required`);
     assert(
-      ["owned-release", "attributed-adaptation", "licensed-republication"].includes(article.sourceDocument?.rightsMode),
+      [article.sourceDocument.author, article.sourceDocument.platform].some((value) => typeof value === "string" && value.length > 0),
+      `${article.slug}: sourceDocument author or platform is required`
+    );
+    assert(
+      ["owned-release", "attributed-adaptation", "licensed-republication", "verbatim-republication"].includes(article.sourceDocument?.rightsMode),
       `${article.slug}: sourceDocument rightsMode is invalid`
     );
+    if (isSourceRepublication) {
+      assert.equal(article.sourceDocument.rightsMode, "verbatim-republication", `${article.slug}: source republication rightsMode drift`);
+      assert(article.sourceDocument.title, `${article.slug}: source title is required`);
+      assert(article.sourceDocument.platform, `${article.slug}: source platform is required`);
+      assert.match(article.sourceDocument.language, /^[a-z]{2}(?:-[A-Z]{2})?$/, `${article.slug}: source language is invalid`);
+      assert(
+        article.sourceDocument.includesAboutTurboFlow === undefined || typeof article.sourceDocument.includesAboutTurboFlow === "boolean",
+        `${article.slug}: includesAboutTurboFlow must be boolean when provided`
+      );
+    }
     const sourceUrls = article.sources.map((source) => source.url);
     assert.equal(new Set(sourceUrls).size, sourceUrls.length, `${article.slug}: source URLs must be unique`);
     assert.equal(
@@ -203,15 +219,26 @@ function validateEditorialData() {
         "category",
         "breadcrumbCurrent",
         "headline",
-        "dek",
-        "riskNotice"
+        "dek"
       ]) {
         assert(copy[field], `${article.slug}/${localeKey}: missing ${field}`);
       }
       assert(!Object.hasOwn(copy, "facts"), `${article.slug}/${localeKey}: legacy facts are forbidden`);
       assert(!Object.hasOwn(copy, "blocks"), `${article.slug}/${localeKey}: legacy blocks are forbidden`);
       assert(!Object.hasOwn(copy, "sourceBlocks"), `${article.slug}/${localeKey}: legacy sourceBlocks are forbidden`);
-      assert(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
+      if (isSourceRepublication) {
+        assert(!Object.hasOwn(copy, "summaryItems"), `${article.slug}/${localeKey}: source republication must not add a summary section`);
+        assert(!Object.hasOwn(copy, "riskNotice"), `${article.slug}/${localeKey}: source republication must not add an editorial risk section`);
+        if (article.sourceDocument.includesAboutTurboFlow) {
+          assert(
+            copy.bodyBlocks.some((block) => block.type === "heading" && block.text === "About TurboFlow"),
+            `${article.slug}/${localeKey}: source body must contain the declared About TurboFlow heading`
+          );
+        }
+      } else {
+        assert(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
+        assert(copy.riskNotice, `${article.slug}/${localeKey}: riskNotice is required`);
+      }
       assert(Array.isArray(copy.bodyBlocks) && copy.bodyBlocks.length > 0, `${article.slug}/${localeKey}: bodyBlocks are required`);
       assert.equal(
         article.sourceDocument.bodyIntegrity?.[localeKey],
@@ -219,8 +246,11 @@ function validateEditorialData() {
         `${article.slug}/${localeKey}: locked body integrity mismatch`
       );
       assert(Array.isArray(copy.faqs) && copy.faqs.length > 0, `${article.slug}/${localeKey}: faqs are required`);
+      if (isSourceRepublication) {
+        assert.equal(copy.faqs.length, 5, `${article.slug}/${localeKey}: source republication requires exactly five FAQs`);
+      }
 
-      for (const item of copy.summaryItems) {
+      for (const item of copy.summaryItems || []) {
         assert(item.title && item.text, `${article.slug}/${localeKey}: summary items require title and text`);
       }
 
@@ -249,6 +279,13 @@ function validateEditorialData() {
           assert(!segment.href || sourceUrls.includes(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources`);
         }
       }
+    }
+    if (isSourceRepublication) {
+      assert.deepEqual(
+        article.translations.en.bodyBlocks,
+        article.translations.zh.bodyBlocks,
+        `${article.slug}: source republication body must remain identical across language pages`
+      );
     }
   }
 
@@ -289,6 +326,8 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
   if (slug) {
     const article = articles.find((candidate) => candidate.slug === slug);
     const copy = article.translations[localeKey];
+    const isSourceRepublication = article.format === "source-republication";
+    const sourceIncludesAboutTurboFlow = isSourceRepublication && article.sourceDocument.includesAboutTurboFlow === true;
     const mainMatch = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/);
     assert(mainMatch, `${relativePath}: missing main content`);
     const main = mainMatch[1];
@@ -306,10 +345,25 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     assert.equal(normalizeMarkup(kickerMatches[0][1]), normalizeMarkup(expectedKicker), `${relativePath}: article publication kicker drift`);
     assert.equal(countMatches(articleHeader, /<time\b/g), 1, `${relativePath}: article header must expose exactly one publication time`);
     assert.equal(countMatches(articleHeader, /class="primary-source"/g), 0, `${relativePath}: duplicate header source must not render`);
+    const primarySource = article.sources.find((source) => source.url === article.primarySource);
+    const sourceTitle = article.sourceDocument.title || primarySource.label[localeKey];
+    const sourceCredit = article.sourceDocument.author || article.sourceDocument.platform;
+    const sourceByline = localeKey === "zh"
+      ? `${locale.sourceAuthorPrefix}${sourceCredit}`
+      : `${locale.sourceAuthorPrefix} ${sourceCredit}`;
+    const expectedOriginalSource = `<span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
+    <a href="${escapeHtml(primarySource.url)}" rel="noopener noreferrer">${escapeHtml(sourceTitle)}</a>
+    <span>· ${escapeHtml(sourceByline)}</span>`;
+    const expectedOriginalSourceHtml = `<p class="original-source">${expectedOriginalSource}</p>`;
     const expectedHeader = `<div class="article-kicker">${expectedKicker}</div>
         <h1>${escapeHtml(copy.headline)}</h1>
-        <p class="dek">${escapeHtml(copy.dek)}</p>`;
+        <p class="dek">${escapeHtml(copy.dek)}</p>
+        ${expectedOriginalSourceHtml}`;
     assert.equal(normalizeMarkup(articleHeader), normalizeMarkup(expectedHeader), `${relativePath}: article header structure drift`);
+    const originalSourceMatches = [...articleHeader.matchAll(/<p class="original-source">([\s\S]*?)<\/p>/g)];
+    assert.equal(originalSourceMatches.length, 1, `${relativePath}: expected one original source reference in the header`);
+    assert.equal(normalizeMarkup(originalSourceMatches[0][1]), normalizeMarkup(expectedOriginalSource), `${relativePath}: original source reference drift`);
+    assert.equal(countMatches(main, /class="original-source"/g), 1, `${relativePath}: original source must render exactly once`);
     assert.equal(countMatches(html, /property="article:published_time"/g), 1, `${relativePath}: expected one Open Graph publication time`);
     assert(html.includes(`<meta property="article:published_time" content="${escapeHtml(article.publishedAt)}">`), `${relativePath}: Open Graph publication time drift`);
     assert.equal(countMatches(html, /property="article:modified_time"/g), 1, `${relativePath}: expected one Open Graph modified time`);
@@ -322,49 +376,61 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
     const aboutMatches = [...main.matchAll(/<section class="about-turboflow"[\s\S]*?<\/section>/g)];
     assert.equal(articleBodyMatches.length, 1, `${relativePath}: expected one article body`);
     assert.equal(articleBodyMatches[0][1], escapeHtml(copy.headline), `${relativePath}: article body accessible label drift`);
-    assert.equal(summaryMatches.length, 1, `${relativePath}: expected one content-summary section`);
     assert.equal(faqMatches.length, 1, `${relativePath}: expected one FAQ section`);
-    assert.equal(riskMatches.length, 1, `${relativePath}: expected one risk notice`);
-    assert.equal(riskMatches[0][1], escapeHtml(locale.riskAria), `${relativePath}: risk notice label drift`);
-    assert.equal(riskMatches[0][2], escapeHtml(locale.riskAria), `${relativePath}: visible risk notice label drift`);
-    assert.equal(riskMatches[0][3], escapeHtml(copy.riskNotice), `${relativePath}: risk notice drift`);
-    assert.equal(sourcesMatches.length, 1, `${relativePath}: expected one bottom sources section`);
-    assert.equal(aboutMatches.length, 1, `${relativePath}: expected one About TurboFlow section`);
-    assert(
-      main.indexOf('class="article-body"') < main.indexOf('class="content-summary"') &&
-        main.indexOf('class="content-summary"') < main.indexOf('class="faq"') &&
-        main.indexOf('class="faq"') < main.indexOf('class="risk-note"') &&
-        main.indexOf('class="risk-note"') < main.indexOf('class="sources"') &&
-        main.indexOf('class="sources"') < main.indexOf('class="about-turboflow"'),
-      `${relativePath}: editorial sections are out of order`
-    );
-    if (article.relatedSlugs.length) {
+    assert.equal(aboutMatches.length, sourceIncludesAboutTurboFlow ? 0 : 1, `${relativePath}: About TurboFlow section count drift`);
+    if (isSourceRepublication) {
+      assert.equal(summaryMatches.length, 0, `${relativePath}: source republication must not render a summary section`);
+      assert.equal(riskMatches.length, 0, `${relativePath}: source republication must not render an editorial risk section`);
+      assert.equal(sourcesMatches.length, 0, `${relativePath}: source republication must not repeat sources below the article`);
       assert(
-        main.indexOf('class="sources"') < main.indexOf('class="related-updates"') &&
-          main.indexOf('class="related-updates"') < main.indexOf('class="about-turboflow"'),
-        `${relativePath}: About TurboFlow must remain the final article section`
+        main.indexOf('class="article-body"') < main.indexOf('class="faq"'),
+        `${relativePath}: source republication sections are out of order`
       );
+      if (article.relatedSlugs.length) {
+        if (sourceIncludesAboutTurboFlow) {
+          assert(main.indexOf('class="faq"') < main.indexOf('class="related-updates"'), `${relativePath}: related updates must follow the FAQ`);
+        } else {
+          assert(
+            main.indexOf('class="faq"') < main.indexOf('class="about-turboflow"') &&
+              main.indexOf('class="about-turboflow"') < main.indexOf('class="related-updates"'),
+            `${relativePath}: related updates must follow About TurboFlow`
+          );
+        }
+      }
+    } else {
+      assert.equal(summaryMatches.length, 1, `${relativePath}: expected one content-summary section`);
+      assert.equal(riskMatches.length, 1, `${relativePath}: expected one risk notice`);
+      assert.equal(riskMatches[0][1], escapeHtml(locale.riskAria), `${relativePath}: risk notice label drift`);
+      assert.equal(riskMatches[0][2], escapeHtml(locale.riskAria), `${relativePath}: visible risk notice label drift`);
+      assert.equal(riskMatches[0][3], escapeHtml(copy.riskNotice), `${relativePath}: risk notice drift`);
+      assert.equal(sourcesMatches.length, 1, `${relativePath}: expected one bottom sources section`);
+      assert(
+        main.indexOf('class="article-body"') < main.indexOf('class="content-summary"') &&
+          main.indexOf('class="content-summary"') < main.indexOf('class="faq"') &&
+          main.indexOf('class="faq"') < main.indexOf('class="risk-note"') &&
+          main.indexOf('class="risk-note"') < main.indexOf('class="sources"') &&
+          main.indexOf('class="sources"') < main.indexOf('class="about-turboflow"'),
+        `${relativePath}: editorial sections are out of order`
+      );
+      if (article.relatedSlugs.length) {
+        assert(
+          main.indexOf('class="sources"') < main.indexOf('class="related-updates"') &&
+            main.indexOf('class="related-updates"') < main.indexOf('class="about-turboflow"'),
+          `${relativePath}: About TurboFlow must remain the final article section`
+        );
+      }
     }
     assert(!main.includes('class="fact-card"'), `${relativePath}: legacy fact card must not render`);
     assert(!main.includes('class="source-content__note"'), `${relativePath}: retired source disclosure must not render`);
     assert(!main.includes("This section preserves the source's facts"), `${relativePath}: retired English disclosure must not render`);
     assert(!main.includes("以下正文依照所链接来源的事实"), `${relativePath}: retired Chinese disclosure must not render`);
-    const sourcesHtml = sourcesMatches[0][0];
     const articleBodyHtml = articleBodyMatches[0][0];
     assert(!articleBodyHtml.includes('id="article-body-title"'), `${relativePath}: visible article body title must not render`);
-    const primarySource = article.sources.find((source) => source.url === article.primarySource);
-    const originalSourceMatches = [...articleBodyHtml.matchAll(/<p class="original-source">([\s\S]*?)<\/p>/g)];
-    assert.equal(originalSourceMatches.length, 1, `${relativePath}: expected one original source reference`);
-    const sourceByline = localeKey === "zh"
-      ? `${locale.sourceAuthorPrefix}${article.sourceDocument.author}`
-      : `${locale.sourceAuthorPrefix} ${article.sourceDocument.author}`;
-    const expectedOriginalSource = `<span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
-    <a href="${escapeHtml(primarySource.url)}" rel="noopener noreferrer">${escapeHtml(primarySource.label[localeKey])}</a>
-    <span>· ${escapeHtml(sourceByline)}</span>`;
-    assert.equal(normalizeMarkup(originalSourceMatches[0][1]), normalizeMarkup(expectedOriginalSource), `${relativePath}: original source reference drift`);
-    assert.equal(countMatches(originalSourceMatches[0][1], /<time\b/g), 0, `${relativePath}: original source date must not repeat below the header`);
-    const bodyContentMatches = [...articleBodyHtml.matchAll(/<div class="article-body__content">([\s\S]*?)<\/div>/g)];
+    assert(!articleBodyHtml.includes('class="original-source"'), `${relativePath}: source reference must remain above the divider`);
+    const bodyContentMatches = [...articleBodyHtml.matchAll(/<div class="article-body__content" lang="([^"]+)">([\s\S]*?)<\/div>/g)];
     assert.equal(bodyContentMatches.length, 1, `${relativePath}: expected one article body content container`);
+    const expectedBodyLanguage = isSourceRepublication ? article.sourceDocument.language : locale.htmlLang;
+    assert.equal(bodyContentMatches[0][1], expectedBodyLanguage, `${relativePath}: article body language drift`);
     const expectedBodyContent = copy.bodyBlocks.map((block) => {
       const body = block.segments
         ? block.segments.map((segment) => segment.href
@@ -376,15 +442,17 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       if (block.type === "callout") return `<aside class="callout"><p>${body}</p></aside>`;
       throw new Error(`${relativePath}: unsupported body block type ${block.type}`);
     }).join("\n      ");
-    assert.equal(normalizeMarkup(bodyContentMatches[0][1]), normalizeMarkup(expectedBodyContent), `${relativePath}: body block structure or order drift`);
-    const summaryHtml = summaryMatches[0][0];
-    const renderedSummaryItems = [...summaryHtml.matchAll(/<li><strong>([\s\S]*?)<\/strong><span>([\s\S]*?)<\/span><\/li>/g)]
-      .map((match) => ({ title: match[1], text: match[2] }));
-    assert.deepEqual(
-      renderedSummaryItems,
-      copy.summaryItems.map((item) => ({ title: escapeHtml(item.title), text: escapeHtml(item.text) })),
-      `${relativePath}: visible summary drift`
-    );
+    assert.equal(normalizeMarkup(bodyContentMatches[0][2]), normalizeMarkup(expectedBodyContent), `${relativePath}: body block structure or order drift`);
+    if (!isSourceRepublication) {
+      const summaryHtml = summaryMatches[0][0];
+      const renderedSummaryItems = [...summaryHtml.matchAll(/<li><strong>([\s\S]*?)<\/strong><span>([\s\S]*?)<\/span><\/li>/g)]
+        .map((match) => ({ title: match[1], text: match[2] }));
+      assert.deepEqual(
+        renderedSummaryItems,
+        copy.summaryItems.map((item) => ({ title: escapeHtml(item.title), text: escapeHtml(item.text) })),
+        `${relativePath}: visible summary drift`
+      );
+    }
     const faqHtml = faqMatches[0][0];
     const renderedFaqs = [...faqHtml.matchAll(/<article class="faq__item" aria-labelledby="faq-(\d+)">\s*<h3 id="faq-\1">([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>\s*<\/article>/g)]
       .map((match) => ({ question: match[2], answer: match[3] }));
@@ -393,22 +461,26 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       copy.faqs.map((faq) => ({ question: escapeHtml(faq.question), answer: escapeHtml(faq.answer) })),
       `${relativePath}: visible FAQ drift`
     );
-    const renderedSources = [...sourcesHtml.matchAll(/<li><a href="([^"]+)" rel="noopener noreferrer">([\s\S]*?)<\/a><\/li>/g)]
-      .map((match) => ({ url: match[1], label: match[2] }));
-    assert.deepEqual(
-      renderedSources,
-      article.sources.map((source) => ({ url: source.url, label: escapeHtml(source.label[localeKey]) })),
-      `${relativePath}: bottom sources drift`
-    );
-    const expectedSourcesHtml = `<section class="sources" aria-labelledby="sources-title">
+    if (!isSourceRepublication) {
+      const sourcesHtml = sourcesMatches[0][0];
+      const renderedSources = [...sourcesHtml.matchAll(/<li><a href="([^"]+)" rel="noopener noreferrer">([\s\S]*?)<\/a><\/li>/g)]
+        .map((match) => ({ url: match[1], label: match[2] }));
+      assert.deepEqual(
+        renderedSources,
+        article.sources.map((source) => ({ url: source.url, label: escapeHtml(source.label[localeKey]) })),
+        `${relativePath}: bottom sources drift`
+      );
+      const expectedSourcesHtml = `<section class="sources" aria-labelledby="sources-title">
     <h2 id="sources-title">${escapeHtml(locale.sourcesTitle)}</h2>
     <ul>
       ${article.sources.map((source) => `<li><a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a></li>`).join("\n      ")}
     </ul>
   </section>`;
-    assert.equal(normalizeMarkup(sourcesHtml), normalizeMarkup(expectedSourcesHtml), `${relativePath}: bottom sources markup drift`);
-    const about = locale.aboutTurboFlow;
-    const expectedAboutHtml = `<section class="about-turboflow" aria-labelledby="about-turboflow-title">
+      assert.equal(normalizeMarkup(sourcesHtml), normalizeMarkup(expectedSourcesHtml), `${relativePath}: bottom sources markup drift`);
+    }
+    if (!sourceIncludesAboutTurboFlow) {
+      const about = locale.aboutTurboFlow;
+      const expectedAboutHtml = `<section class="about-turboflow" aria-labelledby="about-turboflow-title">
     <h2 id="about-turboflow-title">${escapeHtml(about.title)}</h2>
     <p>${escapeHtml(about.body)}</p>
     <nav aria-label="${escapeHtml(about.title)}">
@@ -417,7 +489,8 @@ async function validateHtmlPage({ relativePath, localeKey, slug = "" }) {
       <a href="${escapeHtml(site.docsUrl)}" rel="noopener noreferrer">${escapeHtml(about.docsLabel)}</a>
     </nav>
   </section>`;
-    assert.equal(normalizeMarkup(aboutMatches[0][0]), normalizeMarkup(expectedAboutHtml), `${relativePath}: About TurboFlow markup drift`);
+      assert.equal(normalizeMarkup(aboutMatches[0][0]), normalizeMarkup(expectedAboutHtml), `${relativePath}: About TurboFlow markup drift`);
+    }
     for (const relatedSlug of article.relatedSlugs) {
       assert(main.includes(`../${relatedSlug}/`), `${relativePath}: visible related link missing: ${relatedSlug}`);
     }
@@ -488,7 +561,7 @@ async function validateFeeds() {
     assert(feed.includes(`<language>${locale.rssLanguage}</language>`), `${relativePath}: wrong feed language`);
     for (const article of articles) {
       assert(feed.includes(canonicalUrl(localeKey, article.slug)), `${relativePath}: missing ${article.slug}`);
-      assert(feed.includes(article.translations[localeKey].headline), `${relativePath}: missing translated title`);
+      assert(feed.includes(escapeHtml(article.translations[localeKey].headline)), `${relativePath}: missing translated title`);
     }
   }
 }

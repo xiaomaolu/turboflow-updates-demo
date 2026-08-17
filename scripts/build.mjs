@@ -421,12 +421,14 @@ function renderArticleBlock(block) {
 function renderOriginalSource(article, localeKey) {
   const locale = site.locales[localeKey];
   const source = resolvePrimarySource(article);
+  const sourceTitle = article.sourceDocument.title || source.label[localeKey];
+  const sourceCredit = article.sourceDocument.author || article.sourceDocument.platform;
   const sourceByline = localeKey === "zh"
-    ? `${locale.sourceAuthorPrefix}${article.sourceDocument.author}`
-    : `${locale.sourceAuthorPrefix} ${article.sourceDocument.author}`;
+    ? `${locale.sourceAuthorPrefix}${sourceCredit}`
+    : `${locale.sourceAuthorPrefix} ${sourceCredit}`;
   return `<p class="original-source">
     <span class="original-source__label">${escapeHtml(locale.originalSourcePrefix)}</span>
-    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(source.label[localeKey])}</a>
+    <a href="${escapeHtml(source.url)}" rel="noopener noreferrer">${escapeHtml(sourceTitle)}</a>
     <span>· ${escapeHtml(sourceByline)}</span>
   </p>`;
 }
@@ -440,9 +442,11 @@ function renderArticleKicker(article, copy, localeKey) {
 }
 
 function renderArticleBody(article, copy, localeKey) {
+  const bodyLanguage = article.format === "source-republication"
+    ? article.sourceDocument.language
+    : site.locales[localeKey].htmlLang;
   return `<section class="article-body" aria-label="${escapeHtml(copy.headline)}">
-    ${renderOriginalSource(article, localeKey)}
-    <div class="article-body__content">
+    <div class="article-body__content" lang="${escapeHtml(bodyLanguage)}">
       ${copy.bodyBlocks.map(renderArticleBlock).join("\n      ")}
     </div>
   </section>`;
@@ -518,6 +522,23 @@ function renderArticlePage(article, localeKey) {
   const copy = article.translations[localeKey];
   const paths = pagePaths(localeKey, article.slug);
   const canonical = canonicalUrl(localeKey, article.slug);
+  const isSourceRepublication = article.format === "source-republication";
+  const sourceIncludesAboutTurboFlow = isSourceRepublication && article.sourceDocument.includesAboutTurboFlow === true;
+  const sourceRepublicationSections = [
+    renderArticleBody(article, copy, localeKey),
+    renderFaq(copy.faqs, locale),
+    sourceIncludesAboutTurboFlow ? "" : renderAboutTurboFlow(localeKey),
+    renderRelated(article, localeKey)
+  ].filter(Boolean).join("\n      ");
+  const editorialSections = isSourceRepublication
+    ? sourceRepublicationSections
+    : `${renderArticleBody(article, copy, localeKey)}
+      ${renderSummary(copy.summaryItems, locale)}
+      ${renderFaq(copy.faqs, locale)}
+      <aside class="risk-note" aria-label="${escapeHtml(locale.riskAria)}"><strong>${escapeHtml(locale.riskAria)}</strong><span>${escapeHtml(copy.riskNotice)}</span></aside>
+      ${renderSources(article, localeKey)}
+      ${renderRelated(article, localeKey)}
+      ${renderAboutTurboFlow(localeKey)}`;
 
   return `${renderHead({
     localeKey,
@@ -548,14 +569,9 @@ function renderArticlePage(article, localeKey) {
         ${renderArticleKicker(article, copy, localeKey)}
         <h1>${escapeHtml(copy.headline)}</h1>
         <p class="dek">${escapeHtml(copy.dek)}</p>
+        ${renderOriginalSource(article, localeKey)}
       </header>
-      ${renderArticleBody(article, copy, localeKey)}
-      ${renderSummary(copy.summaryItems, locale)}
-      ${renderFaq(copy.faqs, locale)}
-      <aside class="risk-note" aria-label="${escapeHtml(locale.riskAria)}"><strong>${escapeHtml(locale.riskAria)}</strong><span>${escapeHtml(copy.riskNotice)}</span></aside>
-      ${renderSources(article, localeKey)}
-      ${renderRelated(article, localeKey)}
-      ${renderAboutTurboFlow(localeKey)}
+      ${editorialSections}
     </article>
   </main>
   ${renderFooter(localeKey)}
@@ -678,6 +694,7 @@ export function validateBuildInput() {
 
   const slugs = new Set();
   for (const article of articles) {
+    const isSourceRepublication = article.format === "source-republication";
     assertBuild(
       typeof article.slug === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug),
       `invalid article slug: ${article.slug}`
@@ -691,14 +708,26 @@ export function validateBuildInput() {
       typeof article.primarySource === "string" && /^https:\/\//.test(article.primarySource),
       `${article.slug}: primarySource must use HTTPS`
     );
+    assertBuild(article.format === undefined || isSourceRepublication, `${article.slug}: invalid article format`);
+    assertBuild(article.sourceDocument && typeof article.sourceDocument === "object", `${article.slug}: sourceDocument is required`);
     assertBuild(
-      article.sourceDocument && typeof article.sourceDocument.author === "string" && article.sourceDocument.author.length > 0,
-      `${article.slug}: sourceDocument author is required`
+      [article.sourceDocument.author, article.sourceDocument.platform].some((value) => typeof value === "string" && value.length > 0),
+      `${article.slug}: sourceDocument author or platform is required`
     );
     assertBuild(
-      ["owned-release", "attributed-adaptation", "licensed-republication"].includes(article.sourceDocument.rightsMode),
+      ["owned-release", "attributed-adaptation", "licensed-republication", "verbatim-republication"].includes(article.sourceDocument.rightsMode),
       `${article.slug}: invalid sourceDocument rightsMode`
     );
+    if (isSourceRepublication) {
+      assertBuild(article.sourceDocument.rightsMode === "verbatim-republication", `${article.slug}: source republication must use verbatim-republication rightsMode`);
+      assertBuild(typeof article.sourceDocument.title === "string" && article.sourceDocument.title.length > 0, `${article.slug}: source title is required`);
+      assertBuild(typeof article.sourceDocument.platform === "string" && article.sourceDocument.platform.length > 0, `${article.slug}: source platform is required`);
+      assertBuild(/^[a-z]{2}(?:-[A-Z]{2})?$/.test(article.sourceDocument.language), `${article.slug}: source language is invalid`);
+      assertBuild(
+        article.sourceDocument.includesAboutTurboFlow === undefined || typeof article.sourceDocument.includesAboutTurboFlow === "boolean",
+        `${article.slug}: includesAboutTurboFlow must be boolean when provided`
+      );
+    }
     assertBuild(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     const sourceUrls = article.sources.map((source) => source.url);
     assertBuild(new Set(sourceUrls).size === sourceUrls.length, `${article.slug}: source URLs must be unique`);
@@ -715,14 +744,35 @@ export function validateBuildInput() {
         article.sourceDocument.bodyIntegrity?.[localeKey] === bodyIntegrity(copy.bodyBlocks),
         `${article.slug}/${localeKey}: locked body changed; review the source and update bodyIntegrity deliberately`
       );
-      assertBuild(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
+      if (isSourceRepublication) {
+        assertBuild(!Object.hasOwn(copy, "summaryItems"), `${article.slug}/${localeKey}: source republication must not add a summary section`);
+        assertBuild(!Object.hasOwn(copy, "riskNotice"), `${article.slug}/${localeKey}: source republication must not add an editorial risk section`);
+        if (article.sourceDocument.includesAboutTurboFlow) {
+          assertBuild(
+            copy.bodyBlocks.some((block) => block.type === "heading" && block.text === "About TurboFlow"),
+            `${article.slug}/${localeKey}: source body must contain the declared About TurboFlow heading`
+          );
+        }
+      } else {
+        assertBuild(Array.isArray(copy.summaryItems) && copy.summaryItems.length > 0, `${article.slug}/${localeKey}: summaryItems are required`);
+        assertBuild(typeof copy.riskNotice === "string" && copy.riskNotice.length > 0, `${article.slug}/${localeKey}: riskNotice is required`);
+      }
       assertBuild(Array.isArray(copy.faqs) && copy.faqs.length > 0, `${article.slug}/${localeKey}: faqs are required`);
+      if (isSourceRepublication) {
+        assertBuild(copy.faqs.length === 5, `${article.slug}/${localeKey}: source republication requires exactly five FAQs`);
+      }
       for (const block of copy.bodyBlocks) {
         if (!Array.isArray(block.segments)) continue;
         for (const segment of block.segments) {
           assertBuild(!segment.href || sourceUrls.includes(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources`);
         }
       }
+    }
+    if (isSourceRepublication) {
+      assertBuild(
+        JSON.stringify(article.translations.en.bodyBlocks) === JSON.stringify(article.translations.zh.bodyBlocks),
+        `${article.slug}: source republication body must remain identical across language pages`
+      );
     }
   }
 

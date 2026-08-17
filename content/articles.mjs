@@ -164,16 +164,151 @@ export const site = {
 
 const panteraUrl = "https://panteracapital.com/investing-in-turboflow/";
 const fundingAnnouncementUrl = "https://www.prnewswire.com/news-releases/turboflow-raises-6-million-seed-led-by-pantera-capital-to-bring-institutional-trading-infrastructure-to-everyday-users-302806950.html";
-const chainCatcherPartnershipUrl = "https://www.chaincatcher.com/article/2264380";
+const susquehannaPartnershipUrl = "https://x.com/TurboFlow_xyz/status/2054487210691563718";
+const telegramXUrl = "https://x.com/@telegram";
 const chainlinkAnnouncementUrl = "https://x.com/chainlink/status/2065132282780774419";
 const turboFlowChainlinkAnnouncementUrl = "https://x.com/TurboFlow_xyz/status/2065131952802234386";
+const theBlockTurboFlowUrl = "https://www.theblock.co/post/405706/turboflow-funding-crypto-pantera-capital";
+const theBlockPredictionMarketsFundingUrl = "https://www.theblock.co/post/369737/why-crypto-vcs-betting-on-prediction-markets-funding";
+const theBlockPerpDexFundingUrl = "https://www.theblock.co/post/373464/the-funding-why-perp-dexs-getting-vc-attention-now";
+const theBlockPredictionMarketsDataUrl = "https://www.theblock.co/data/decentralized-finance/prediction-markets";
+
+const theBlockTurboFlowBody = [
+  {
+    type: "paragraph",
+    text: "TurboFlow, an onchain trading platform offering prediction markets and perpetual futures, has raised $6 million in a seed funding round."
+  },
+  {
+    type: "paragraph",
+    text: "Pantera Capital led the round, with Susquehanna Crypto and Digital Currency Group participating, TurboFlow said Monday. Those are the only three investors in the round, which closed in March after fundraising began earlier this year, founder Tony He, former co-founder and partner at Amber Group, told The Block. The round was structured as a simple agreement for future equity (SAFE) with token warrants, He said, declining to disclose valuation."
+  },
+  {
+    type: "paragraph",
+    segments: [
+      { text: "TurboFlow's fundraise comes as both " },
+      { text: "prediction markets", href: theBlockPredictionMarketsFundingUrl },
+      { text: " and " },
+      { text: "perpetual futures", href: theBlockPerpDexFundingUrl },
+      { text: " continue to grow and attract investor interest. Based in Hong Kong, the platform aims to become the \"Kalshi of APAC [Asia-Pacific].\" He said prediction markets have gained " },
+      { text: "significant traction", href: theBlockPredictionMarketsDataUrl },
+      { text: " through platforms such as Kalshi and Polymarket in Western markets, but remain largely underdeveloped across Asia. TurboFlow aims to fill that gap through localization and a stronger regional presence." }
+    ]
+  },
+  {
+    type: "paragraph",
+    text: "\"We see a large unfilled gap between Asian users and proper institutional-grade liquidity, and we’re striving to become that bridge,\" He said. \"People here are interested in different topics and assets to trade. It’s about staying close to users and being able to deliver the products they want, fast.\""
+  },
+  {
+    type: "paragraph",
+    text: "When asked what licenses TurboFlow holds or is pursuing, He said regulatory frameworks for prediction markets \"vary significantly across APAC and are still evolving,\" but TurboFlow is \"proactively building toward a compliant, legitimate setup\" and working with advisors to evaluate compliant paths with a market-by-market approach."
+  },
+  {
+    type: "paragraph",
+    text: "As for how TurboFlow plans to build liquidity, He pointed to relationships with firms including Susquehanna Crypto and his own background in market making. He also said the team has deep experience in user acquisition across Asia and plans to compete through liquidity, pricing, service quality, and trusted infrastructure."
+  },
+  {
+    type: "paragraph",
+    text: "TurboFlow said it has been running its beta for more than six months and has attracted over 15,000 registered beta users. The platform said it has processed more than $19 billion in trading volume to date."
+  },
+  {
+    type: "paragraph",
+    text: "\"Perps have traditionally been the most popular product among crypto users, but our fastest-growing segment is coming entirely from prediction markets — which proves to us that offering a genuinely new trading experience is what matters most,\" He said."
+  },
+  {
+    type: "paragraph",
+    text: "TurboFlow describes its approach as \"high-velocity event trading,\" allowing users to participate in markets with entry sizes as small as $2. Other claimed features include fast settlement infrastructure for short-duration contracts and a consumer-focused interface."
+  },
+  {
+    type: "paragraph",
+    text: "TurboFlow currently has more than 30 employees, with most of the core team based in Hong Kong. He said the firm plans to remain \"relatively lean\" as it looks to grow."
+  }
+];
+
+const susquehannaPartnershipBody = [
+  {
+    type: "paragraph",
+    text: "At TurboFlow, we believe everyone gets a seat at the table. Market access, trading tools, and execution quality should not be reserved for a small group of professionals. TurboFlow is built to make trading simple, accessible, and highly participatory for everyday users."
+  },
+  {
+    type: "paragraph",
+    text: "Today, TurboFlow announces a strategic partnership with Susquehanna Crypto, a leading global proprietary digital asset trading firm. Through this partnership, Susquehanna Crypto will support TurboFlow’s product lines as an on-chain liquidity provider, bringing institutional experience in professional trading, market structure, price discovery, and risk management into the TurboFlow ecosystem."
+  },
+  {
+    type: "paragraph",
+    text: "This partnership marks an important milestone in TurboFlow’s development. As TurboFlow continues to expand its product suite, including perpetual contracts and recently launched Event Contracts with trading cycles as short as 30 seconds, deeper liquidity, efficient price discovery, and market stability are becoming increasingly important to the user experience."
+  },
+  {
+    type: "paragraph",
+    text: "In particular, within the Event Contracts market, TurboFlow is moving beyond traditional fixed-odds mechanisms toward a more dynamic and market-driven odds structure. Dynamic odds will adjust based on real-time market conditions, liquidity depth, directional demand, volatility, and risk exposure, allowing Event Contracts pricing to better reflect real market structure."
+  },
+  {
+    type: "heading",
+    text: "Susquehanna Crypto’s Role: Strengthening TurboFlow’s Market Infrastructure"
+  },
+  {
+    type: "paragraph",
+    text: "As one of the world’s most established options and derivatives market makers, Susquehanna Crypto will support TurboFlow’s liquidity infrastructure and market-making capabilities."
+  },
+  {
+    type: "paragraph",
+    text: "For TurboFlow users, this means a stronger foundation behind the trading experience: deeper liquidity, improved market quality, more efficient price discovery, and a more reliable environment for both perpetual contracts, event contracts, and future product lines."
+  },
+  {
+    type: "paragraph",
+    text: "By introducing institutional market-making capabilities, TurboFlow is strengthening the core layer behind its products while keeping the user experience simple, accessible, and retail-friendly."
+  },
+  {
+    type: "heading",
+    text: "Future Vision: Trading, made simple."
+  },
+  {
+    type: "paragraph",
+    text: "Moving forward, TurboFlow plans to bring in more top-tier institutional market makers and build a diversified liquidity network. With this foundation, TurboFlow will continue expanding its product ecosystem across multiple trading verticals:"
+  },
+  {
+    type: "paragraph",
+    text: "Event Contracts: Currently built around major crypto assets such as BTC and ETH, with trading cycles as short as 30 seconds. TurboFlow aims to gradually expand into more global market assets such as oil and gold, while delivering a more market-driven pricing experience through dynamic odds."
+  },
+  {
+    type: "paragraph",
+    segments: [
+      { text: "Prediction Markets and " },
+      { text: "@telegram", href: telegramXUrl },
+      { text: " Mini App: Upcoming prediction-style products and mobile-first trading experiences built on TurboFlow’s expanding liquidity and pricing infrastructure." }
+    ]
+  },
+  {
+    type: "paragraph",
+    text: "Perpetual Contracts: High-leverage perpetual trading supported by deeper institutional liquidity."
+  },
+  {
+    type: "heading",
+    text: "About TurboFlow"
+  },
+  {
+    type: "paragraph",
+    text: "TurboFlow is an on-chain trading platform built to redefine the trading experience for everyday users. TurboFlow is committed to making trading a simple game within everyone’s reach, allowing retail users to truly lead the second half of the market."
+  },
+  {
+    type: "paragraph",
+    text: "The platform currently offers high-leverage perpetual contracts and Event Contracts, combining professional-grade trading infrastructure with a retail-friendly product experience."
+  },
+  {
+    type: "heading",
+    text: "About Susquehanna Crypto"
+  },
+  {
+    type: "paragraph",
+    text: "Susquehanna Crypto is a leading global proprietary digital asset trading firm, registered and headquartered in Nassau, Bahamas, with offices in London, Hong Kong, New York City, and Bala Cynwyd. Susquehanna Crypto draws on decades of experience to bridge the gap between traditional finance and digital assets, providing liquidity across the digital asset ecosystem through a range of complementary business lines, including digital asset derivatives, on-chain strategies (including on-chain prediction markets), early-stage venture investments, and token market-making."
+  }
+];
 
 export const articles = [
   {
     slug: "turboflow-raises-6m-seed-round",
     relatedSlugs: [
       "why-pantera-invested-in-turboflow",
-      "turboflow-chainlink-price-infrastructure",
+      "turboflow-kalshi-of-apac-seed-round",
       "turboflow-susquehanna-crypto-liquidity-collaboration"
     ],
     publishedAt: "2026-06-22T20:05:00-04:00",
@@ -314,21 +449,146 @@ export const articles = [
     }
   },
   {
-    slug: "why-pantera-invested-in-turboflow",
+    slug: "turboflow-kalshi-of-apac-seed-round",
+    format: "source-republication",
     relatedSlugs: [
       "turboflow-raises-6m-seed-round",
-      "turboflow-chainlink-price-infrastructure",
+      "why-pantera-invested-in-turboflow",
+      "turboflow-susquehanna-crypto-liquidity-collaboration"
+    ],
+    publishedAt: "2026-06-22T20:00:00-04:00",
+    modifiedAt: "2026-08-17",
+    primarySource: theBlockTurboFlowUrl,
+    sourceDocument: {
+      title: "TurboFlow, aiming to be the 'Kalshi of APAC,' raises $6 million seed led by Pantera Capital",
+      author: "Yogita Khatri",
+      platform: "The Block",
+      language: "en",
+      rightsMode: "verbatim-republication",
+      bodyIntegrity: {
+        en: "a6a3261f19adde84b88edb03a9b4d864346e84c6e94b9f4fb75561b2e67174da",
+        zh: "a6a3261f19adde84b88edb03a9b4d864346e84c6e94b9f4fb75561b2e67174da"
+      }
+    },
+    sources: [
+      {
+        url: theBlockTurboFlowUrl,
+        label: {
+          en: "The Block: TurboFlow, aiming to be the 'Kalshi of APAC,' raises $6 million seed led by Pantera Capital",
+          zh: "The Block：TurboFlow 目标成为“亚太版 Kalshi”，完成 600 万美元种子轮融资"
+        }
+      },
+      {
+        url: theBlockPredictionMarketsFundingUrl,
+        label: {
+          en: "The Block: Why crypto VCs are betting on prediction markets",
+          zh: "The Block：加密风投为何押注预测市场"
+        }
+      },
+      {
+        url: theBlockPerpDexFundingUrl,
+        label: {
+          en: "The Block: Why perp DEXs are getting VC attention",
+          zh: "The Block：永续合约 DEX 为何受到风投关注"
+        }
+      },
+      {
+        url: theBlockPredictionMarketsDataUrl,
+        label: {
+          en: "The Block Data: Prediction markets",
+          zh: "The Block 数据：预测市场"
+        }
+      }
+    ],
+    translations: {
+      en: {
+        pageTitle: "TurboFlow Raises $6 Million Seed Round, Aiming to Be the 'Kalshi of APAC'",
+        pageDescription: "The Block reported that TurboFlow raised a $6 million seed round led by Pantera Capital. Founder Tony He discussed APAC localization, liquidity, regulation, and growth plans.",
+        socialDescription: "The Block's report on TurboFlow's $6 million seed round and its APAC prediction-market strategy.",
+        twitterTitle: "TurboFlow Raises $6 Million, Aiming to Be the 'Kalshi of APAC'",
+        category: "Media Coverage",
+        breadcrumbCurrent: "The Block on TurboFlow's Seed Round",
+        headline: "TurboFlow Raises $6 Million Seed Round, Aiming to Be the 'Kalshi of APAC'",
+        dek: "The Block reported that TurboFlow raised a $6 million seed round led by Pantera Capital. Founder Tony He discussed the platform's APAC localization, liquidity strategy, regulatory approach, beta activity, and growth plans.",
+        bodyBlocks: theBlockTurboFlowBody,
+        faqs: [
+          {
+            question: "How much did TurboFlow raise, and who invested?",
+            answer: "The Block reported that TurboFlow raised $6 million in a seed round led by Pantera Capital, with Susquehanna Crypto and Digital Currency Group participating. Tony He said they were the round's only three investors."
+          },
+          {
+            question: "How was TurboFlow's seed round structured?",
+            answer: "Tony He told The Block that the round used a simple agreement for future equity (SAFE) with token warrants. He declined to disclose the valuation."
+          },
+          {
+            question: "Why does TurboFlow aim to be the 'Kalshi of APAC'?",
+            answer: "He told The Block that prediction markets had gained traction in Western markets but remained underdeveloped across Asia. TurboFlow aims to serve that regional gap through localization and a stronger local presence."
+          },
+          {
+            question: "What did Tony He say about TurboFlow's regulatory approach?",
+            answer: "He said prediction-market rules vary across APAC and are still evolving. According to the interview, TurboFlow is working with advisors to assess compliant paths market by market."
+          },
+          {
+            question: "What platform and team figures did The Block report?",
+            answer: "The article relayed TurboFlow's reported figures: more than six months in beta, over 15,000 registered beta users, more than $19 billion in trading volume, and a team of more than 30 employees. These figures were reported by the company."
+          }
+        ]
+      },
+      zh: {
+        pageTitle: "TurboFlow 完成 600 万美元种子轮融资，目标成为“亚太版 Kalshi”",
+        pageDescription: "The Block 报道，TurboFlow 完成由 Pantera Capital 领投的 600 万美元种子轮融资。创始人 Tony He 介绍了平台在亚太市场的本地化、流动性、合规与增长计划。",
+        socialDescription: "The Block 关于 TurboFlow 600 万美元种子轮融资与亚太预测市场战略的报道。",
+        twitterTitle: "TurboFlow 完成 600 万美元融资，目标成为“亚太版 Kalshi”",
+        category: "媒体报道",
+        breadcrumbCurrent: "The Block 报道 TurboFlow 融资",
+        headline: "TurboFlow 完成 600 万美元种子轮融资，目标成为“亚太版 Kalshi”",
+        dek: "The Block 报道，TurboFlow 完成由 Pantera Capital 领投的 600 万美元种子轮融资。创始人 Tony He 介绍了平台在亚太市场的本地化、流动性策略、合规路径、测试期数据与增长计划。",
+        bodyBlocks: theBlockTurboFlowBody,
+        faqs: [
+          {
+            question: "TurboFlow 本轮融资金额和投资方是什么？",
+            answer: "The Block 报道，TurboFlow 完成 600 万美元种子轮融资，由 Pantera Capital 领投，Susquehanna Crypto 与 Digital Currency Group 参投。Tony He 表示，本轮只有这三家投资方。"
+          },
+          {
+            question: "本轮融资采用了什么结构？",
+            answer: "Tony He 告诉 The Block，本轮采用附带代币认股权证的未来股权简单协议（SAFE），估值未公开。"
+          },
+          {
+            question: "TurboFlow 为什么提出“亚太版 Kalshi”的定位？",
+            answer: "Tony He 表示，预测市场在西方市场已获得较多采用，但亚洲仍存在市场空白；TurboFlow 希望通过本地化和更强的区域运营来服务亚洲用户。"
+          },
+          {
+            question: "TurboFlow 如何规划合规路径？",
+            answer: "Tony He 表示，亚太各市场的预测市场监管框架差异较大且仍在演变，团队正与顾问合作，按市场评估合规路径。"
+          },
+          {
+            question: "The Block 报道了哪些平台和团队数据？",
+            answer: "文章转述 TurboFlow 的披露：测试期超过六个月，注册测试用户超过 15,000 名，累计交易量超过 190 亿美元；团队超过 30 人。上述数字属于项目方披露。"
+          }
+        ]
+      }
+    }
+  },
+  {
+    slug: "why-pantera-invested-in-turboflow",
+    format: "source-republication",
+    relatedSlugs: [
+      "turboflow-raises-6m-seed-round",
+      "turboflow-kalshi-of-apac-seed-round",
       "turboflow-susquehanna-crypto-liquidity-collaboration"
     ],
     publishedAt: "2026-06-30T19:04:41-07:00",
-    modifiedAt: "2026-08-13",
+    modifiedAt: "2026-08-17",
     primarySource: panteraUrl,
     sourceDocument: {
+      title: "Investing in TurboFlow",
       author: "Jay Yu",
-      rightsMode: "attributed-adaptation",
+      platform: "Pantera Capital",
+      language: "en",
+      rightsMode: "verbatim-republication",
       bodyIntegrity: {
-        en: "695912f0c6721a205b1bcf9def5ada17802ca9a23afa3311bf92d47162b8dac5",
-        zh: "c3d8fcbed424064bbe072a048bd375261c0d3894bacf30f5cc86cb4223f6e031"
+        en: "1aa60e3f2d5aea7532ca493c7e0be5ec7d82c9934d25ceaee604f86a7f1fa099",
+        zh: "1aa60e3f2d5aea7532ca493c7e0be5ec7d82c9934d25ceaee604f86a7f1fa099"
       }
     },
     sources: [
@@ -338,160 +598,240 @@ export const articles = [
           en: "Pantera Capital: Investing in TurboFlow",
           zh: "Pantera Capital：《Investing in TurboFlow》"
         }
+      },
+      {
+        url: "https://www.pewresearch.org/short-reads/2026/05/27/trading-volume-on-prediction-markets-has-soared-in-recent-months/",
+        label: {
+          en: "Pew Research Center: Trading volume on prediction markets has soared in recent months",
+          zh: "Pew Research Center：预测市场交易量近期大幅增长"
+        }
+      },
+      {
+        url: "https://kalshi.com/category/crypto/frequency/fifteen_min",
+        label: {
+          en: "Kalshi: 15-minute crypto markets",
+          zh: "Kalshi：15 分钟加密市场"
+        }
+      },
+      {
+        url: "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets",
+        label: {
+          en: "Hyperliquid documentation: HIP-4 outcome markets",
+          zh: "Hyperliquid 文档：HIP-4 结果型市场"
+        }
+      },
+      {
+        url: "https://finance.yahoo.com/markets/crypto/articles/30-global-crypto-trading-coming-183552726.html",
+        label: {
+          en: "Yahoo Finance: South Korea's share of global crypto spot trading",
+          zh: "Yahoo Finance：韩国在全球加密现货交易中的占比"
+        }
+      },
+      {
+        url: "https://tf.xyz/",
+        label: {
+          en: "TurboFlow official website",
+          zh: "TurboFlow 官网"
+        }
+      },
+      {
+        url: "https://www.linkedin.com/in/tony-he-330b6559/",
+        label: {
+          en: "Tony He on LinkedIn",
+          zh: "Tony He 的 LinkedIn 主页"
+        }
       }
     ],
     translations: {
       en: {
-        pageTitle: "Pantera Capital Explains Why It Invested in TurboFlow",
-        pageDescription: "In its official Investing in TurboFlow article, Pantera Capital explained why it led TurboFlow's $6 million seed round.",
-        socialDescription: "Pantera Capital's published investment view on TurboFlow, summarized with source attribution.",
-        twitterTitle: "Why Pantera Capital Invested in TurboFlow",
+        pageTitle: "Pantera Leads TurboFlow's Seed Round",
+        pageDescription: "Pantera Capital said it is leading TurboFlow's $6 million seed round to bring institutional-grade perpetual-futures and prediction-market experiences to everyday traders across Asia.",
+        socialDescription: "Pantera Capital's Investing in TurboFlow article, followed by five source-based questions and answers.",
+        twitterTitle: "Pantera Leads TurboFlow's Seed Round",
         category: "Investor Perspective",
-        breadcrumbCurrent: "Pantera Investment Thesis",
-        headline: "Pantera Capital Explains Why It Invested in TurboFlow",
-        dek: "In its official Investing in TurboFlow article, Pantera Capital said it led TurboFlow's $6 million seed round, citing the convergence of perpetual futures and prediction markets, demand for locally relevant products across APAC, and the team's market-infrastructure experience.",
-        summaryItems: [
-          { title: "Pantera leads the round", text: "Pantera Capital said it was leading TurboFlow's $6 million seed round." },
-          { title: "Market thesis", text: "Pantera sees perpetual futures and prediction markets converging while APAC users require more locally relevant products." },
-          { title: "Team and beta activity", text: "Pantera described the team's market-infrastructure experience and reported 15,000+ registered users and more than $19 billion in six-month beta volume." }
-        ],
+        breadcrumbCurrent: "Pantera Leads TurboFlow's Seed Round",
+        headline: "Pantera Leads TurboFlow's Seed Round",
+        dek: "Pantera Capital said it is leading TurboFlow's $6 million seed round to help bring institutional-grade perpetual-futures and prediction-market experiences to everyday traders across Asia.",
         bodyBlocks: [
-          { type: "heading", text: "Pantera leads TurboFlow's seed round" },
           {
             type: "paragraph",
-            text: "Pantera Capital said it is leading TurboFlow's $6 million seed round to help bring institutional-grade perpetual-futures and prediction-market experiences to everyday traders across Asia."
-          },
-          { type: "heading", text: "Market growth and convergence" },
-          {
-            type: "paragraph",
-            text: "Pantera cited market data showing roughly $4 trillion in perpetual-futures volume and more than $15 billion in open interest over the preceding six months. It also said total prediction-market trading volume rose from under $5 billion in September 2025 to more than $24 billion in April 2026."
+            text: "We’re leading the $6M seed round in TurboFlow to bring institutional-grade trading experiences for perpetual futures and prediction markets to everyday traders across Asia."
           },
           {
             type: "paragraph",
-            text: "Pantera argues that perpetual futures and prediction markets are converging as near-term trading instruments. Its examples include short-duration crypto markets and perpetual-futures products from Kalshi and Polymarket, together with Hyperliquid's launch of HIP-4 outcome markets as a way to build prediction-market infrastructure."
+            segments: [
+              { text: "Over the last few years, perpetuals and prediction markets have been two of the largest growing DeFi primitives. In the last 6 months, perpetuals have seen $4 trillion USD in volume and over $15 billion in open interest, while prediction markets " },
+              { text: "total trading volume has soared", href: "https://www.pewresearch.org/short-reads/2026/05/27/trading-volume-on-prediction-markets-has-soared-in-recent-months/" },
+              { text: " from less than $5 billion in September 2025 to over $24 billion in April 2026." }
+            ]
           },
-          { type: "heading", text: "Why APAC localization matters" },
           {
             type: "paragraph",
-            text: "Pantera describes trading as an increasingly global activity with Asia leading adoption of many frontier products. It cites won-denominated trading in South Korea as roughly 30% of global crypto spot activity and notes that several major crypto exchanges have deep roots in APAC. Pantera's conclusion is that perpetual-futures and prediction-market platforms will increasingly need to localize around the users they serve."
+            segments: [
+              { text: "Today, these two DeFi primitives are now converging and evolving together, especially as near-term trading instruments. Prediction market platforms like Kalshi and Polymarket are not only offering short-term crypto markets (eg. " },
+              { text: "BTC 15min", href: "https://kalshi.com/category/crypto/frequency/fifteen_min" },
+              { text: "), but also actively launching perpetual futures as a product. Similarly, Hyperliquid, the leading perpetuals platform, has recently launched " },
+              { text: "HIP4 outcome markets", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets" },
+              { text: " as a way to create infrastructure for prediction markets." }
+            ]
+          },
+          {
+            type: "paragraph",
+            segments: [
+              { text: "At the same time, the user base for trading is increasingly a global phenomenon, with Asia leading the adoption curve on many of these frontier trading products. " },
+              { text: "30% of global crypto spot trading", href: "https://finance.yahoo.com/markets/crypto/articles/30-global-crypto-trading-coming-183552726.html" },
+              { text: ", for example, comes from South Korea with Won-denominated trades, while many of leading traditional cryptocurrency exchanges also have deep roots in the APAC region. We believe perps and prediction market platforms increasingly will need to localize and meet users where they are." }
+            ]
+          },
+          {
+            type: "paragraph",
+            text: "That’s the gap TurboFlow is built to close."
           },
           { type: "heading", text: "Enter TurboFlow" },
           {
             type: "paragraph",
-            text: "Pantera presents TurboFlow as an on-chain platform designed to close that gap by unifying perpetual futures and prediction markets in one venue. From one account and balance, users can take a leveraged view on an asset price or a position on a real-world event—such as an election, sports result, or macroeconomic release—through the same consumer-facing interface."
+            segments: [
+              { text: "TurboFlow", href: "https://tf.xyz/" },
+              { text: " is an onchain trading platform that unifies perpetual futures and prediction markets in a single venue. From one account, a user can take a leveraged view on an asset’s price or a position on a real-world event – an election, a sports result, a macro print –on the same balance and through the same consumer-grade interface." }
+            ]
           },
           {
             type: "paragraph",
-            text: "In its discussion of speed and accessibility, the article pairs entry sizes as low as $2 with fast settlement tuned for short-duration contracts, alongside institutional-grade liquidity, pricing, and risk management beneath a self-custodial application that minimizes visible blockchain complexity. Pantera says TurboFlow calls this experience high-velocity event trading."
+            text: "It’s built for speed and accessibility: entry sizes as small as $2, fast settlement tuned for short-duration contracts, and institutional-grade liquidity, pricing, and risk management running underneath a self-custodial app that hides the chain entirely. In effect, it’s like an institutional trading desk – the liquidity, the pricing, the risk engine – rebuilt as something anyone can open on their phone. TurboFlow calls the experience “high-velocity event trading”: the simplicity of a consumer app with the execution quality of a professional desk."
           },
           {
             type: "paragraph",
-            text: "Pantera reported that TurboFlow's six-month beta attracted more than 15,000 registered users and generated over $19 billion in cumulative trading volume before any public launch."
+            text: "In a six-month beta, that combination has done real volume – more than 15,000 registered users and over $19B in cumulative trading volume, ahead of any public launch."
           },
-          { type: "heading", text: "Team" },
+          { type: "heading", text: "Meet the Team" },
           {
             type: "paragraph",
-            text: "Pantera highlights founder Tony He as a co-founder and partner of Amber Group with a market-making background. It says he has spent his career building liquidity, pricing, and risk systems in institutional markets, supported by a team experienced in crypto exchanges and frontier markets."
+            segments: [
+              { text: "TurboFlow’s founder " },
+              { text: "Tony He", href: "https://www.linkedin.com/in/tony-he-330b6559/" },
+              { text: " is a co-founder and partner of Amber Group, one of Asia’s largest crypto trading institutions, and a market maker by background. He has spent his career on the institutional side of these exact markets, building the the liquidity, pricing, and risk systems that TurboFlow now puts in front of everyday users. He is supported by a team that has extensive experience building crypto exchanges and expertise in building frontier markets." }
+            ]
           },
-          { type: "heading", text: "Pantera's investment thesis" },
+          { type: "heading", text: "Our Thesis" },
           {
             type: "paragraph",
-            text: "Pantera believes the teams that stay closest to the assets, events, and markets users actually want to trade will win the next generation of trading platforms. It argues that major incumbents were primarily designed for Western audiences and that a trader in Seoul or Jakarta may not prioritize U.S. local elections or pop-culture references."
+            text: "We believe that the next generation of trading platforms will be won by the teams that meet users where they are – the ones closest to the assets, events, and markets a user actually wants to trade."
           },
           {
             type: "paragraph",
-            text: "Pantera says TurboFlow combines a founder with execution and liquidity-engine experience, a team that understands APAC users, and early grassroots interest. On that basis, it believes TurboFlow can become a next-generation trading platform for APAC and says it is proud to lead the seed round."
+            text: "Even while APAC remains one of the most sophisticated retail trading regions in crypto, today’s incumbents such as Kalshi, Polymarket, and Hyperliquid were primarily built for Western audiences. But a trader in Seoul or Jakarta may not necessarily care about a US local election or pop culture reference."
           },
-          { type: "heading", text: "Pantera's disclaimer" },
           {
             type: "paragraph",
-            text: "Pantera states that its article is for informational purposes only and does not constitute an investment recommendation, an offer of investment advisory services, an offer to sell securities, or a solicitation to buy them. It also says the information and opinions are not warranted as complete or accurate and may include subjective judgments, assumptions, forecasts, or incomplete information."
+            text: "TurboFlow has the unique combination of a founder that has first-hand experience building a world-class execution and liquidity engine, as well as a team that knows what users in APAC are excited about and want to see. And today, we’re already starting to see the grassroots traction and excitement for TurboFlow’s institutional-grade trading experience."
+          },
+          {
+            type: "paragraph",
+            text: "With the right team, the right product, and the right market, we believe TurboFlow can become the next-generation trading platform for APAC, and we’re proud to lead their $6M seed round to build the best-in-class markets for everyone."
           }
         ],
         faqs: [
-          { question: "What did Pantera Capital announce?", answer: "Pantera Capital announced that it was leading TurboFlow's $6 million seed round." },
-          { question: "Why did Pantera invest in TurboFlow?", answer: "Pantera cited the convergence of perpetual futures and prediction markets, the need for locally relevant products across APAC, and the team's market-infrastructure experience." },
-          { question: "How does Pantera describe TurboFlow?", answer: "Pantera describes TurboFlow as an on-chain platform that brings perpetual futures and prediction markets into one venue, account, balance, and consumer-facing interface." },
-          { question: "What did Pantera say about the TurboFlow team?", answer: "Pantera highlighted founder Tony He's market-making background and his role as a co-founder and partner of Amber Group, together with the wider team's experience building crypto exchanges and frontier-market products." },
-          { question: "What beta activity did Pantera report?", answer: "Pantera reported more than 15,000 registered users and over $19 billion in cumulative trading volume during a six-month beta before public launch." }
-        ],
-        riskNotice: "This article summarizes Pantera Capital's published investment thesis and does not constitute investment advice or independent verification of the investor's forecasts. Trading perpetual contracts and short-cycle event contracts involves substantial risk and may result in loss."
+          { question: "Why did Pantera Capital invest in TurboFlow?", answer: "Pantera cited the convergence of perpetual futures and prediction markets, demand for locally relevant products across APAC, and the TurboFlow team's experience with liquidity, pricing, and risk systems." },
+          { question: "How much is TurboFlow's seed round?", answer: "Pantera Capital said it is leading TurboFlow's $6 million seed round." },
+          { question: "How does Pantera describe TurboFlow's product?", answer: "Pantera describes TurboFlow as an onchain platform that brings perpetual futures and prediction markets into one venue, account, balance, and consumer-grade interface." },
+          { question: "What beta activity does the article report?", answer: "The Pantera article reports more than 15,000 registered users and over $19 billion in cumulative trading volume during a six-month beta before public launch." },
+          { question: "Where does Pantera see TurboFlow's regional opportunity?", answer: "Pantera focuses its thesis on APAC, arguing that trading platforms need to localize around the assets, events, and markets that users in the region want to trade." }
+        ]
       },
       zh: {
-        pageTitle: "Pantera Capital 发文解释为何投资 TurboFlow",
-        pageDescription: "Pantera Capital 在官方文章《Investing in TurboFlow》中解释其为何领投 TurboFlow 的 600 万美元种子轮融资。",
-        socialDescription: "忠实摘要 Pantera Capital 公开发布的 TurboFlow 投资观点，并保留来源归因。",
-        twitterTitle: "Pantera Capital 为什么投资 TurboFlow",
+        pageTitle: "Pantera 领投 TurboFlow 种子轮融资",
+        pageDescription: "Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资，希望帮助 TurboFlow 把专业级永续合约与预测市场体验带给亚洲的日常交易者。",
+        socialDescription: "Pantera Capital《Investing in TurboFlow》原文及五个基于原文的常见问题。",
+        twitterTitle: "Pantera 领投 TurboFlow 种子轮融资",
         category: "投资方观点",
-        breadcrumbCurrent: "Pantera 投资逻辑",
-        headline: "Pantera Capital 发文解释为何投资 TurboFlow",
-        dek: "Pantera Capital 在官方文章《Investing in TurboFlow》中表示，其领投了 TurboFlow 的 600 万美元种子轮融资。文章将投资判断归因于永续合约与预测市场的融合、亚太本地化需求，以及团队的市场基础设施经验。",
-        summaryItems: [
-          { title: "Pantera 领投", text: "Pantera Capital 表示，其领投了 TurboFlow 的 600 万美元种子轮融资。" },
-          { title: "市场判断", text: "Pantera 认为永续合约与预测市场正在融合，同时亚太用户需要更贴近当地需求的产品。" },
-          { title: "团队与测试期数据", text: "Pantera 介绍了团队的市场基础设施经验，并披露测试期注册用户超过 1.5 万、累计交易量超过 190 亿美元。" }
-        ],
+        breadcrumbCurrent: "Pantera 领投 TurboFlow",
+        headline: "Pantera 领投 TurboFlow 种子轮融资",
+        dek: "Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资，希望帮助 TurboFlow 把专业级永续合约与预测市场体验带给亚洲的日常交易者。",
         bodyBlocks: [
-          { type: "heading", text: "Pantera 领投 TurboFlow 种子轮融资" },
           {
             type: "paragraph",
-            text: "Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资，希望帮助 TurboFlow 把专业级永续合约与预测市场体验带给亚洲的日常交易者。"
-          },
-          { type: "heading", text: "市场增长与产品融合" },
-          {
-            type: "paragraph",
-            text: "Pantera 援引的市场数据称，过去六个月永续合约交易量约为 4 万亿美元，未平仓量超过 150 亿美元；预测市场总交易量则从 2025 年 9 月不足 50 亿美元，上升至 2026 年 4 月超过 240 亿美元。"
+            text: "We’re leading the $6M seed round in TurboFlow to bring institutional-grade trading experiences for perpetual futures and prediction markets to everyday traders across Asia."
           },
           {
             type: "paragraph",
-            text: "Pantera 认为，永续合约与预测市场正作为短周期交易工具逐渐融合。文章举例称，Kalshi 与 Polymarket 正在推出短周期加密市场和永续合约产品，Hyperliquid 则推出 HIP-4 结果型市场，以此构建预测市场基础设施。"
-          },
-          { type: "heading", text: "亚太本地化为什么重要" },
-          {
-            type: "paragraph",
-            text: "Pantera 将交易描述为日益全球化的活动，并认为亚洲在多类前沿产品的采用上处于领先位置。文章称，韩国以韩元计价的交易约占全球加密现货活动的 30%，多家主要加密交易平台也长期扎根亚太。因此，Pantera 认为永续合约与预测市场平台需要更贴近当地用户。"
-          },
-          { type: "heading", text: "TurboFlow" },
-          {
-            type: "paragraph",
-            text: "Pantera 将 TurboFlow 描述为一个为填补这一缺口而打造的链上平台，在同一场所整合永续合约与预测市场。用户可以通过同一账户、余额与消费级界面，对资产价格建立杠杆仓位，也可以围绕选举、体育赛果或宏观数据等现实事件建立仓位。"
+            segments: [
+              { text: "Over the last few years, perpetuals and prediction markets have been two of the largest growing DeFi primitives. In the last 6 months, perpetuals have seen $4 trillion USD in volume and over $15 billion in open interest, while prediction markets " },
+              { text: "total trading volume has soared", href: "https://www.pewresearch.org/short-reads/2026/05/27/trading-volume-on-prediction-markets-has-soared-in-recent-months/" },
+              { text: " from less than $5 billion in September 2025 to over $24 billion in April 2026." }
+            ]
           },
           {
             type: "paragraph",
-            text: "在速度与易用性的语境下，文章将“低至 2 美元的参与门槛”和短周期合约的快速结算放在一起，并同时提到自托管应用背后的专业级流动性、定价与风险管理系统。Pantera 表示，该应用尽量隐藏链上操作复杂度，并将 TurboFlow 所称的这一体验概括为“高速度事件交易”。"
+            segments: [
+              { text: "Today, these two DeFi primitives are now converging and evolving together, especially as near-term trading instruments. Prediction market platforms like Kalshi and Polymarket are not only offering short-term crypto markets (eg. " },
+              { text: "BTC 15min", href: "https://kalshi.com/category/crypto/frequency/fifteen_min" },
+              { text: "), but also actively launching perpetual futures as a product. Similarly, Hyperliquid, the leading perpetuals platform, has recently launched " },
+              { text: "HIP4 outcome markets", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets" },
+              { text: " as a way to create infrastructure for prediction markets." }
+            ]
           },
           {
             type: "paragraph",
-            text: "Pantera 披露，TurboFlow 在公开上线前的六个月测试期内获得超过 1.5 万名注册用户，累计交易量超过 190 亿美元。"
-          },
-          { type: "heading", text: "团队" },
-          {
-            type: "paragraph",
-            text: "Pantera 提到，创始人 Tony He 是 Amber Group 联合创始人及合伙人，拥有做市背景。文章称，他长期参与机构市场的流动性、定价与风险系统建设，团队其他成员也具备建设加密交易平台和前沿市场的经验。"
-          },
-          { type: "heading", text: "Pantera 的投资判断" },
-          {
-            type: "paragraph",
-            text: "Pantera 认为，在下一代交易平台竞争中，最贴近用户实际想交易的资产、事件与市场的团队将胜出。文章指出，主要现有平台更多面向西方用户，而首尔或雅加达的交易者未必同样关注美国地方选举或流行文化话题。"
+            segments: [
+              { text: "At the same time, the user base for trading is increasingly a global phenomenon, with Asia leading the adoption curve on many of these frontier trading products. " },
+              { text: "30% of global crypto spot trading", href: "https://finance.yahoo.com/markets/crypto/articles/30-global-crypto-trading-coming-183552726.html" },
+              { text: ", for example, comes from South Korea with Won-denominated trades, while many of leading traditional cryptocurrency exchanges also have deep roots in the APAC region. We believe perps and prediction market platforms increasingly will need to localize and meet users where they are." }
+            ]
           },
           {
             type: "paragraph",
-            text: "Pantera 表示，TurboFlow 结合了创始人的成交与流动性系统经验、团队对亚太用户的理解，以及早期用户关注度。基于这些判断，Pantera 认为 TurboFlow 有机会成为面向亚太的新一代交易平台，并表示很高兴领投本轮融资。"
+            text: "That’s the gap TurboFlow is built to close."
           },
-          { type: "heading", text: "Pantera 免责声明" },
+          { type: "heading", text: "Enter TurboFlow" },
           {
             type: "paragraph",
-            text: "Pantera 表示，其文章仅供信息参考，不构成投资推荐，也不构成提供投资顾问服务的要约、证券出售要约或购买邀约；文章中的信息与观点不附带完整性或准确性保证，也可能包含主观判断、假设、预测或不完整信息。"
+            segments: [
+              { text: "TurboFlow", href: "https://tf.xyz/" },
+              { text: " is an onchain trading platform that unifies perpetual futures and prediction markets in a single venue. From one account, a user can take a leveraged view on an asset’s price or a position on a real-world event – an election, a sports result, a macro print –on the same balance and through the same consumer-grade interface." }
+            ]
+          },
+          {
+            type: "paragraph",
+            text: "It’s built for speed and accessibility: entry sizes as small as $2, fast settlement tuned for short-duration contracts, and institutional-grade liquidity, pricing, and risk management running underneath a self-custodial app that hides the chain entirely. In effect, it’s like an institutional trading desk – the liquidity, the pricing, the risk engine – rebuilt as something anyone can open on their phone. TurboFlow calls the experience “high-velocity event trading”: the simplicity of a consumer app with the execution quality of a professional desk."
+          },
+          {
+            type: "paragraph",
+            text: "In a six-month beta, that combination has done real volume – more than 15,000 registered users and over $19B in cumulative trading volume, ahead of any public launch."
+          },
+          { type: "heading", text: "Meet the Team" },
+          {
+            type: "paragraph",
+            segments: [
+              { text: "TurboFlow’s founder " },
+              { text: "Tony He", href: "https://www.linkedin.com/in/tony-he-330b6559/" },
+              { text: " is a co-founder and partner of Amber Group, one of Asia’s largest crypto trading institutions, and a market maker by background. He has spent his career on the institutional side of these exact markets, building the the liquidity, pricing, and risk systems that TurboFlow now puts in front of everyday users. He is supported by a team that has extensive experience building crypto exchanges and expertise in building frontier markets." }
+            ]
+          },
+          { type: "heading", text: "Our Thesis" },
+          {
+            type: "paragraph",
+            text: "We believe that the next generation of trading platforms will be won by the teams that meet users where they are – the ones closest to the assets, events, and markets a user actually wants to trade."
+          },
+          {
+            type: "paragraph",
+            text: "Even while APAC remains one of the most sophisticated retail trading regions in crypto, today’s incumbents such as Kalshi, Polymarket, and Hyperliquid were primarily built for Western audiences. But a trader in Seoul or Jakarta may not necessarily care about a US local election or pop culture reference."
+          },
+          {
+            type: "paragraph",
+            text: "TurboFlow has the unique combination of a founder that has first-hand experience building a world-class execution and liquidity engine, as well as a team that knows what users in APAC are excited about and want to see. And today, we’re already starting to see the grassroots traction and excitement for TurboFlow’s institutional-grade trading experience."
+          },
+          {
+            type: "paragraph",
+            text: "With the right team, the right product, and the right market, we believe TurboFlow can become the next-generation trading platform for APAC, and we’re proud to lead their $6M seed round to build the best-in-class markets for everyone."
           }
         ],
         faqs: [
-          { question: "Pantera Capital 公布了什么投资事项？", answer: "Pantera Capital 表示，其领投了 TurboFlow 的 600 万美元种子轮融资。" },
-          { question: "Pantera 为什么投资 TurboFlow？", answer: "Pantera 提到了永续合约与预测市场的融合、亚太市场对本地化产品的需求，以及团队的市场基础设施经验。" },
-          { question: "Pantera 如何描述 TurboFlow？", answer: "Pantera 将 TurboFlow 描述为一个通过同一场所、账户、余额与消费级界面整合永续合约和预测市场的链上平台。" },
-          { question: "Pantera 如何评价 TurboFlow 团队？", answer: "Pantera 提到创始人 Tony He 的做市背景及其 Amber Group 联合创始人和合伙人经历，并表示团队具备建设加密交易平台与新兴市场产品的经验。" },
-          { question: "Pantera 披露了哪些测试期数据？", answer: "Pantera 披露，TurboFlow 在公开上线前的六个月测试期内获得超过 1.5 万名注册用户，累计交易量超过 190 亿美元。" }
-        ],
-        riskNotice: "本文总结 Pantera Capital 公开发布的投资观点，不构成投资建议，也不代表对其预测的独立验证。永续合约与短周期事件合约均具有较高风险，用户可能遭受损失。"
+          { question: "Pantera Capital 为什么投资 TurboFlow？", answer: "Pantera Capital 将投资逻辑归因于永续合约与预测市场的融合、亚太市场对本地化产品的需求，以及 TurboFlow 团队在流动性、定价与风险系统方面的经验。" },
+          { question: "TurboFlow 本轮种子轮融资金额是多少？", answer: "Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资。" },
+          { question: "Pantera 如何描述 TurboFlow 的产品？", answer: "Pantera 将 TurboFlow 描述为一个在同一平台整合永续合约与预测市场的链上交易平台，用户可使用同一账户、余额和消费级界面参与两类市场。" },
+          { question: "文章披露了哪些测试期数据？", answer: "Pantera 文章称，TurboFlow 六个月测试期内注册用户超过 15,000 名，累计交易量超过 190 亿美元；这些数字属于文章披露的项目数据。" },
+          { question: "Pantera 认为 TurboFlow 的区域机会在哪里？", answer: "Pantera 将投资机会聚焦于亚太地区，并认为交易平台需要围绕当地用户希望交易的资产、事件与市场进行本地化。" }
+        ]
       }
     }
   },
@@ -618,127 +958,78 @@ export const articles = [
   },
   {
     slug: "turboflow-susquehanna-crypto-liquidity-collaboration",
+    format: "source-republication",
     relatedSlugs: [
       "turboflow-chainlink-price-infrastructure",
       "turboflow-raises-6m-seed-round",
       "why-pantera-invested-in-turboflow"
     ],
-    publishedAt: "2026-05-13T10:00:00.000Z",
-    modifiedAt: "2026-08-13",
-    primarySource: chainCatcherPartnershipUrl,
+    publishedAt: "2026-05-13T09:01:36.212Z",
+    modifiedAt: "2026-08-17",
+    primarySource: susquehannaPartnershipUrl,
     sourceDocument: {
-      author: "TurboFlow",
-      rightsMode: "owned-release",
+      title: "TurboFlow Partners with Susquehanna Crypto to Bring Wall Street-Grade Liquidity Onchain",
+      platform: "TurboFlow",
+      language: "en",
+      rightsMode: "verbatim-republication",
+      includesAboutTurboFlow: true,
       bodyIntegrity: {
-        en: "68b2bb04f0799a971c68ac6dd001da12272853f7b5dfe60930ecb51fb96d9bcb",
-        zh: "636fadccbf8785c529f8824cddcc901c5df58258a416eb2117ea8e57a94a3e5c"
+        en: "c1a0dc574550b7984e6204a37575e3c4521e62b2adf1983df18c47a45aed45a6",
+        zh: "c1a0dc574550b7984e6204a37575e3c4521e62b2adf1983df18c47a45aed45a6"
       }
     },
     sources: [
       {
-        url: chainCatcherPartnershipUrl,
+        url: susquehannaPartnershipUrl,
         label: {
-          en: "ChainCatcher-hosted TurboFlow collaboration release (project wording)",
-          zh: "ChainCatcher 收录的 TurboFlow 合作通稿（项目方表述）"
+          en: "TurboFlow: Partnership with Susquehanna Crypto",
+          zh: "TurboFlow：与 Susquehanna Crypto 达成合作"
+        }
+      },
+      {
+        url: telegramXUrl,
+        label: {
+          en: "Telegram on X",
+          zh: "Telegram 的 X 账号"
         }
       }
     ],
     translations: {
       en: {
-        pageTitle: "TurboFlow Announces Strategic Liquidity Collaboration with Susquehanna Crypto",
-        pageDescription: "TurboFlow announced a strategic liquidity collaboration with Susquehanna Crypto focused on execution quality, liquidity depth, pricing efficiency, and market structure.",
-        socialDescription: "TurboFlow's announcement of a strategic liquidity collaboration with Susquehanna Crypto.",
-        twitterTitle: "TurboFlow and Susquehanna Crypto Liquidity Collaboration",
-        category: "Liquidity Update",
+        pageTitle: "TurboFlow Partners with Susquehanna Crypto to Bring Wall Street-Grade Liquidity Onchain",
+        pageDescription: "Susquehanna Crypto's support strengthens TurboFlow's liquidity infrastructure and helps power more dynamic, market-driven trading experiences across the platform.",
+        socialDescription: "TurboFlow's partnership announcement with Susquehanna Crypto, followed by five source-based questions and answers.",
+        twitterTitle: "TurboFlow Partners with Susquehanna Crypto",
+        category: "Strategic Partnership",
         breadcrumbCurrent: "Susquehanna Crypto Collaboration",
-        headline: "TurboFlow Announces Strategic Liquidity Collaboration with Susquehanna Crypto",
-        dek: "TurboFlow announced a strategic liquidity collaboration with Susquehanna Crypto. According to TurboFlow's release, Susquehanna Crypto would provide on-chain liquidity and market-making support across the platform's product line, with a focus on liquidity depth, price discovery, and risk management.",
-        summaryItems: [
-          { title: "Relationship", text: "TurboFlow announced a strategic collaboration with Susquehanna Crypto." },
-          { title: "Announced role", text: "TurboFlow said Susquehanna Crypto would provide on-chain liquidity and market-making support across its product line." },
-          { title: "Named products", text: "The TurboFlow release named perpetual contracts and Event Contracts." }
-        ],
-        bodyBlocks: [
-          {
-            type: "paragraph",
-            segments: [
-              { text: "On May 13, 2026, a " },
-              { text: "TurboFlow project release hosted by ChainCatcher", href: chainCatcherPartnershipUrl },
-              { text: " announced a strategic collaboration with Susquehanna Crypto. According to TurboFlow, Susquehanna Crypto would act as an on-chain liquidity provider for TurboFlow's product line and provide liquidity and market-making support." }
-            ]
-          },
-          { type: "heading", text: "The role described by TurboFlow" },
-          {
-            type: "paragraph",
-            text: "TurboFlow said Susquehanna Crypto would bring experience in professional trading, market structure, price discovery, and risk management. The release connected the collaboration with TurboFlow's focus on liquidity depth, efficient price discovery, market stability, and execution quality as the platform expanded its products."
-          },
-          { type: "heading", text: "Products named in the release" },
-          {
-            type: "paragraph",
-            text: "TurboFlow's release named perpetual contracts and recently launched Event Contracts, whose cycles it said could be as short as 30 seconds. TurboFlow also said Event Contracts were moving from fixed odds toward a more dynamic, market-driven odds structure responsive to real-time market conditions, liquidity depth, directional demand, volatility, and risk exposure."
-          },
-          { type: "heading", text: "Plans stated by TurboFlow" },
-          {
-            type: "paragraph",
-            text: "TurboFlow said it planned to add more institutional market makers and build a broader liquidity network. The release said Event Contracts were then focused mainly on BTC and ETH, with crude oil and gold among planned additions; it also described prediction products and a Telegram Mini App as forthcoming and said perpetual contracts would receive deeper institutional liquidity support."
-          }
-        ],
+        headline: "TurboFlow Partners with Susquehanna Crypto to Bring Wall Street-Grade Liquidity Onchain",
+        dek: "Susquehanna Crypto’s support strengthens TurboFlow’s liquidity infrastructure and helps power more dynamic, market-driven trading experiences across the platform.",
+        bodyBlocks: susquehannaPartnershipBody,
         faqs: [
-          { question: "What did TurboFlow announce about Susquehanna Crypto?", answer: "TurboFlow announced a strategic collaboration with Susquehanna Crypto in a project-side release hosted by ChainCatcher on May 13, 2026." },
-          { question: "What role did TurboFlow assign to Susquehanna Crypto?", answer: "TurboFlow said Susquehanna Crypto would act as an on-chain liquidity provider and provide liquidity and market-making support across TurboFlow's product line." },
-          { question: "Which TurboFlow products did the release name?", answer: "The release named perpetual contracts and Event Contracts. It described Event Contract cycles as being as short as 30 seconds." },
-          { question: "What did TurboFlow say would change about Event Contract odds?", answer: "TurboFlow said Event Contracts were moving from fixed odds toward a dynamic, market-driven structure responsive to market conditions, liquidity depth, directional demand, volatility, and risk exposure." },
-          { question: "What future plans did TurboFlow describe in the release?", answer: "TurboFlow said it planned to add more institutional market makers, expand Event Contracts beyond BTC and ETH to markets including crude oil and gold, and introduce prediction products and a Telegram Mini App. These were plans stated in the May 2026 release, not confirmed completed launches." }
-        ],
-        riskNotice: "Liquidity and market-making support do not guarantee execution quality, eliminate slippage, ensure uninterrupted markets, or prevent losses. Event Contracts can lose the stake; Turbo Perps add leverage, funding, margin, and liquidation risk."
+          { question: "What did TurboFlow announce with Susquehanna Crypto?", answer: "TurboFlow announced a strategic partnership in which Susquehanna Crypto would support TurboFlow's product lines as an on-chain liquidity provider." },
+          { question: "What role will Susquehanna Crypto play?", answer: "TurboFlow said Susquehanna Crypto would support liquidity infrastructure and market-making capabilities while contributing experience in market structure, price discovery, and risk management." },
+          { question: "What does the announcement say about Event Contracts?", answer: "The announcement says Event Contracts had cycles as short as 30 seconds and were moving from fixed odds toward dynamic odds informed by market conditions, liquidity, demand, volatility, and risk exposure." },
+          { question: "What future plans did TurboFlow describe?", answer: "TurboFlow said it planned to add more institutional market makers, expand Event Contracts toward assets such as oil and gold, introduce prediction-style products and a Telegram Mini App, and deepen liquidity for perpetual contracts." },
+          { question: "How does the announcement describe Susquehanna Crypto?", answer: "The announcement describes Susquehanna Crypto as a proprietary digital-asset trading firm headquartered in Nassau, with business lines spanning derivatives, on-chain strategies, early-stage investments, and token market making." }
+        ]
       },
       zh: {
-        pageTitle: "TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作",
-        pageDescription: "TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作，重点覆盖成交质量、流动性深度、定价效率与市场结构。",
-        socialDescription: "TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作。",
-        twitterTitle: "TurboFlow 与 Susquehanna Crypto 开展战略流动性合作",
-        category: "流动性更新",
+        pageTitle: "TurboFlow 与 Susquehanna Crypto 达成合作，将华尔街级流动性带到链上",
+        pageDescription: "Susquehanna Crypto 的支持将强化 TurboFlow 的流动性基础设施，并为平台更动态、更由市场驱动的交易体验提供支持。",
+        socialDescription: "TurboFlow 与 Susquehanna Crypto 合作公告原文及五个基于原文的常见问题。",
+        twitterTitle: "TurboFlow 与 Susquehanna Crypto 达成合作",
+        category: "战略合作",
         breadcrumbCurrent: "Susquehanna Crypto 合作",
-        headline: "TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作",
-        dek: "TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作。根据 TurboFlow 通稿，Susquehanna Crypto 将为平台产品线提供链上流动性与做市支持，重点覆盖流动性深度、价格发现与风险管理。",
-        summaryItems: [
-          { title: "合作关系", text: "TurboFlow 宣布与 Susquehanna Crypto 开展战略合作。" },
-          { title: "公告所述角色", text: "TurboFlow 表示，Susquehanna Crypto 将为其产品线提供链上流动性与做市支持。" },
-          { title: "点名产品", text: "TurboFlow 通稿点名永续合约与事件合约。" }
-        ],
-        bodyBlocks: [
-          {
-            type: "paragraph",
-            segments: [
-              { text: "2026 年 5 月 13 日，" },
-              { text: "ChainCatcher 收录的一篇 TurboFlow 项目方通稿", href: chainCatcherPartnershipUrl },
-              { text: "宣布 TurboFlow 与 Susquehanna Crypto 开展战略合作。TurboFlow 表示，Susquehanna Crypto 将作为链上流动性提供方，为 TurboFlow 产品线提供流动性与做市支持。" }
-            ]
-          },
-          { type: "heading", text: "TurboFlow 所述合作角色" },
-          {
-            type: "paragraph",
-            text: "TurboFlow 表示，Susquehanna Crypto 将带来专业交易、市场结构、价格发现与风险管理经验。随着平台扩展产品，通稿将这项合作与流动性深度、高效价格发现、市场稳定性和成交质量联系起来。"
-          },
-          { type: "heading", text: "通稿点名的产品" },
-          {
-            type: "paragraph",
-            text: "TurboFlow 通稿点名永续合约与近期上线、周期短至 30 秒的事件合约。TurboFlow 还表示，事件合约正从固定赔率转向更动态、更具市场驱动特征的赔率结构，可随实时市场状态、流动性深度、方向性需求、波动率与风险敞口调整。"
-          },
-          { type: "heading", text: "TurboFlow 公布的后续计划" },
-          {
-            type: "paragraph",
-            text: "TurboFlow 表示，计划引入更多机构做市商并构建更广泛的流动性网络。通稿称，当时事件合约主要围绕 BTC 与 ETH，后续计划增加原油与黄金等市场；预测类产品与 Telegram Mini App 被列为即将推出的方向，永续合约则计划获得更深的机构流动性支持。"
-          }
-        ],
+        headline: "TurboFlow 与 Susquehanna Crypto 达成合作，将华尔街级流动性带到链上",
+        dek: "Susquehanna Crypto 的支持将强化 TurboFlow 的流动性基础设施，并为平台更动态、更由市场驱动的交易体验提供支持。",
+        bodyBlocks: susquehannaPartnershipBody,
         faqs: [
-          { question: "TurboFlow 公布了与 Susquehanna Crypto 的什么合作？", answer: "TurboFlow 于 2026 年 5 月 13 日通过 ChainCatcher 收录的项目方通稿宣布与 Susquehanna Crypto 开展战略合作。" },
-          { question: "TurboFlow 在通稿中如何描述 Susquehanna Crypto 的角色？", answer: "TurboFlow 表示，Susquehanna Crypto 将作为链上流动性提供方，为 TurboFlow 产品线提供流动性与做市支持。" },
-          { question: "通稿点名了哪些 TurboFlow 产品？", answer: "通稿点名永续合约与事件合约，并将事件合约周期描述为短至 30 秒。" },
-          { question: "TurboFlow 表示事件合约赔率将如何变化？", answer: "TurboFlow 表示，事件合约正从固定赔率转向动态、市场驱动的结构，可随市场状态、流动性深度、方向性需求、波动率与风险敞口调整。" },
-          { question: "TurboFlow 在通稿中提出了哪些后续计划？", answer: "TurboFlow 表示，计划引入更多机构做市商，将事件合约从 BTC 与 ETH 扩展至原油、黄金等市场，并推出预测类产品与 Telegram Mini App。这些是 2026 年 5 月通稿中的规划，不代表已经完成上线。" }
-        ],
-        riskNotice: "流动性与做市支持不构成成交质量、零滑点、市场持续运行或避免损失的保证。事件合约可能损失投入金额；Turbo 永续合约还涉及杠杆、资金费、保证金与清算风险。"
+          { question: "TurboFlow 与 Susquehanna Crypto 公布了什么合作？", answer: "TurboFlow 宣布与 Susquehanna Crypto 达成战略合作；根据公告，Susquehanna Crypto 将作为链上流动性提供方，为 TurboFlow 产品线提供支持。" },
+          { question: "Susquehanna Crypto 将承担什么角色？", answer: "TurboFlow 表示，Susquehanna Crypto 将支持流动性基础设施与做市能力，并带来市场结构、价格发现和风险管理方面的经验。" },
+          { question: "公告如何描述事件合约的变化？", answer: "公告称，事件合约周期短至 30 秒，并正从固定赔率转向可参考市场状态、流动性、需求、波动率与风险敞口调整的动态赔率。" },
+          { question: "TurboFlow 公布了哪些后续计划？", answer: "TurboFlow 表示，计划引入更多机构做市商，将事件合约逐步扩展到原油、黄金等资产，推出预测类产品与 Telegram Mini App，并为永续合约增加更深的流动性支持。" },
+          { question: "公告如何介绍 Susquehanna Crypto？", answer: "公告将 Susquehanna Crypto 描述为总部位于拿骚的自营数字资产交易机构，业务覆盖数字资产衍生品、链上策略、早期投资与代币做市。" }
+        ]
       }
     }
   }

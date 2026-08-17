@@ -511,6 +511,7 @@ h1 {
 }
 
 .article-body {
+  padding-top: 42px;
   margin-bottom: 56px;
 }
 
@@ -518,7 +519,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 3px 8px;
-  margin: 28px 0 34px;
+  margin: 22px 0 0;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.65;

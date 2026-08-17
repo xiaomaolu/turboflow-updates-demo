@@ -5,14 +5,14 @@
     <link>https://tf.xyz/updates/zh/</link>
     <description>TurboFlow 公司公告与产品更新。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 17 Aug 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://tf.xyz/updates/zh/feed.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Pantera Capital 发文解释为何投资 TurboFlow</title>
+      <title>Pantera 领投 TurboFlow 种子轮融资</title>
       <link>https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</link>
       <guid isPermaLink="true">https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</guid>
       <pubDate>Wed, 01 Jul 2026 02:04:41 GMT</pubDate>
-      <description>Pantera Capital 在官方文章《Investing in TurboFlow》中解释其为何领投 TurboFlow 的 600 万美元种子轮融资。</description>
+      <description>Pantera Capital 表示，其领投 TurboFlow 的 600 万美元种子轮融资，希望帮助 TurboFlow 把专业级永续合约与预测市场体验带给亚洲的日常交易者。</description>
     </item>
     <item>
       <title>TurboFlow 完成 600 万美元种子轮融资，Pantera Capital 领投</title>
@@ -22,6 +22,13 @@
       <description>TurboFlow 完成 600 万美元种子轮融资，由 Pantera Capital 领投，Susquehanna Crypto 与 Digital Currency Group 参投。</description>
     </item>
     <item>
+      <title>TurboFlow 完成 600 万美元种子轮融资，目标成为“亚太版 Kalshi”</title>
+      <link>https://tf.xyz/updates/zh/turboflow-kalshi-of-apac-seed-round/</link>
+      <guid isPermaLink="true">https://tf.xyz/updates/zh/turboflow-kalshi-of-apac-seed-round/</guid>
+      <pubDate>Tue, 23 Jun 2026 00:00:00 GMT</pubDate>
+      <description>The Block 报道，TurboFlow 完成由 Pantera Capital 领投的 600 万美元种子轮融资。创始人 Tony He 介绍了平台在亚太市场的本地化、流动性、合规与增长计划。</description>
+    </item>
+    <item>
       <title>TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场</title>
       <link>https://tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</link>
       <guid isPermaLink="true">https://tf.xyz/updates/zh/turboflow-chainlink-price-infrastructure/</guid>
@@ -29,11 +36,11 @@
       <description>TurboFlow 与 Chainlink 宣布，TurboFlow 已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。</description>
     </item>
     <item>
-      <title>TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作</title>
+      <title>TurboFlow 与 Susquehanna Crypto 达成合作，将华尔街级流动性带到链上</title>
       <link>https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</link>
       <guid isPermaLink="true">https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</guid>
-      <pubDate>Wed, 13 May 2026 10:00:00 GMT</pubDate>
-      <description>TurboFlow 宣布与 Susquehanna Crypto 开展战略流动性合作，重点覆盖成交质量、流动性深度、定价效率与市场结构。</description>
+      <pubDate>Wed, 13 May 2026 09:01:36 GMT</pubDate>
+      <description>Susquehanna Crypto 的支持将强化 TurboFlow 的流动性基础设施，并为平台更动态、更由市场驱动的交易体验提供支持。</description>
     </item>
   </channel>
 </rss>

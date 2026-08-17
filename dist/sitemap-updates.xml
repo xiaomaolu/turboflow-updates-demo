@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://tf.xyz/updates/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/" />
@@ -15,8 +15,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/turboflow-raises-6m-seed-round/" />
   </url>
   <url>
+    <loc>https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/turboflow-kalshi-of-apac-seed-round/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/" />
+  </url>
+  <url>
     <loc>https://tf.xyz/updates/why-pantera-invested-in-turboflow/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/why-pantera-invested-in-turboflow/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/why-pantera-invested-in-turboflow/" />
@@ -30,14 +37,14 @@
   </url>
   <url>
     <loc>https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/" />
   </url>
   <url>
     <loc>https://tf.xyz/updates/zh/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/" />
@@ -50,8 +57,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/turboflow-raises-6m-seed-round/" />
   </url>
   <url>
+    <loc>https://tf.xyz/updates/zh/turboflow-kalshi-of-apac-seed-round/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/turboflow-kalshi-of-apac-seed-round/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/" />
+  </url>
+  <url>
     <loc>https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/why-pantera-invested-in-turboflow/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/why-pantera-invested-in-turboflow/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/why-pantera-invested-in-turboflow/" />
@@ -65,7 +79,7 @@
   </url>
   <url>
     <loc>https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tf.xyz/updates/zh/turboflow-susquehanna-crypto-liquidity-collaboration/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/" />

@@ -5,14 +5,14 @@
     <link>https://tf.xyz/updates/</link>
     <description>Company announcements and product updates from TurboFlow.</description>
     <language>en</language>
-    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 17 Aug 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://tf.xyz/updates/feed.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Pantera Capital Explains Why It Invested in TurboFlow</title>
+      <title>Pantera Leads TurboFlow&#39;s Seed Round</title>
       <link>https://tf.xyz/updates/why-pantera-invested-in-turboflow/</link>
       <guid isPermaLink="true">https://tf.xyz/updates/why-pantera-invested-in-turboflow/</guid>
       <pubDate>Wed, 01 Jul 2026 02:04:41 GMT</pubDate>
-      <description>In its official Investing in TurboFlow article, Pantera Capital explained why it led TurboFlow&#39;s $6 million seed round.</description>
+      <description>Pantera Capital said it is leading TurboFlow&#39;s $6 million seed round to bring institutional-grade perpetual-futures and prediction-market experiences to everyday traders across Asia.</description>
     </item>
     <item>
       <title>TurboFlow Raises $6 Million Seed Round Led by Pantera Capital</title>
@@ -22,6 +22,13 @@
       <description>TurboFlow has raised $6 million in seed funding led by Pantera Capital, with participation from Susquehanna Crypto and Digital Currency Group.</description>
     </item>
     <item>
+      <title>TurboFlow Raises $6 Million Seed Round, Aiming to Be the &#39;Kalshi of APAC&#39;</title>
+      <link>https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/</link>
+      <guid isPermaLink="true">https://tf.xyz/updates/turboflow-kalshi-of-apac-seed-round/</guid>
+      <pubDate>Tue, 23 Jun 2026 00:00:00 GMT</pubDate>
+      <description>The Block reported that TurboFlow raised a $6 million seed round led by Pantera Capital. Founder Tony He discussed APAC localization, liquidity, regulation, and growth plans.</description>
+    </item>
+    <item>
       <title>TurboFlow Adopts Chainlink for XAU, BTC, and ETH Continuous Prediction Markets</title>
       <link>https://tf.xyz/updates/turboflow-chainlink-price-infrastructure/</link>
       <guid isPermaLink="true">https://tf.xyz/updates/turboflow-chainlink-price-infrastructure/</guid>
@@ -29,11 +36,11 @@
       <description>TurboFlow and Chainlink announced that TurboFlow had adopted Chainlink to support continuous prediction markets for XAU, BTC, and ETH.</description>
     </item>
     <item>
-      <title>TurboFlow Announces Strategic Liquidity Collaboration with Susquehanna Crypto</title>
+      <title>TurboFlow Partners with Susquehanna Crypto to Bring Wall Street-Grade Liquidity Onchain</title>
       <link>https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/</link>
       <guid isPermaLink="true">https://tf.xyz/updates/turboflow-susquehanna-crypto-liquidity-collaboration/</guid>
-      <pubDate>Wed, 13 May 2026 10:00:00 GMT</pubDate>
-      <description>TurboFlow announced a strategic liquidity collaboration with Susquehanna Crypto focused on execution quality, liquidity depth, pricing efficiency, and market structure.</description>
+      <pubDate>Wed, 13 May 2026 09:01:36 GMT</pubDate>
+      <description>Susquehanna Crypto&#39;s support strengthens TurboFlow&#39;s liquidity infrastructure and helps power more dynamic, market-driven trading experiences across the platform.</description>
     </item>
   </channel>
 </rss>
