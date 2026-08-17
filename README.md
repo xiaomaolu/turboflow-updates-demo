@@ -74,6 +74,9 @@ Add one object to `articles` in `content/articles.mjs`. Each article requires:
 - source-document title, author (or platform when no person is credited), and a reviewed `rightsMode`;
 - English and Chinese header copy, locked `bodyBlocks`, and FAQs;
 - descriptive English and Chinese labels for every HTTPS source;
+- optional `bodyLinks` for navigational links preserved inside source copy (such
+  as social handles or cashtags); these links are validated but are not emitted
+  as Article citations;
 - an explicit `relatedSlugs` array (it may be empty).
 
 Material product, financing, partnership, infrastructure, and performance

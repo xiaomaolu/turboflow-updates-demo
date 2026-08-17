@@ -168,6 +168,11 @@ const susquehannaPartnershipUrl = "https://x.com/TurboFlow_xyz/status/2054487210
 const telegramXUrl = "https://x.com/@telegram";
 const chainlinkAnnouncementUrl = "https://x.com/chainlink/status/2065132282780774419";
 const turboFlowChainlinkAnnouncementUrl = "https://x.com/TurboFlow_xyz/status/2065131952802234386";
+const chainlinkXProfileUrl = "https://x.com/chainlink";
+const turboFlowXProfileUrl = "https://x.com/TurboFlow_xyz";
+const xauXSearchUrl = "https://x.com/search?q=%24XAU&src=cashtag_click";
+const btcXSearchUrl = "https://x.com/search?q=%24BTC&src=cashtag_click";
+const ethXSearchUrl = "https://x.com/search?q=%24ETH&src=cashtag_click";
 const theBlockTurboFlowUrl = "https://www.theblock.co/post/405706/turboflow-funding-crypto-pantera-capital";
 const theBlockPredictionMarketsFundingUrl = "https://www.theblock.co/post/369737/why-crypto-vcs-betting-on-prediction-markets-funding";
 const theBlockPerpDexFundingUrl = "https://www.theblock.co/post/373464/the-funding-why-perp-dexs-getting-vc-attention-now";
@@ -982,20 +987,24 @@ export const articles = [
   },
   {
     slug: "turboflow-chainlink-price-infrastructure",
+    format: "source-republication",
     relatedSlugs: [
       "turboflow-susquehanna-crypto-liquidity-collaboration",
       "why-pantera-invested-in-turboflow",
       "turboflow-raises-6m-seed-round"
     ],
     publishedAt: "2026-06-11T18:00:00.000Z",
-    modifiedAt: "2026-08-13",
+    modifiedAt: "2026-08-17",
     primarySource: turboFlowChainlinkAnnouncementUrl,
     sourceDocument: {
-      author: "TurboFlow",
-      rightsMode: "owned-release",
+      title: "Advanced markets required advanced infrastructure",
+      platform: "TurboFlow",
+      language: "en",
+      rightsMode: "verbatim-republication",
+      localizedBodies: true,
       bodyIntegrity: {
-        en: "4194c826b05d731c2609f6698aa0247cb1af8cf1189ff053c951a7edf5ee45b9",
-        zh: "9a4a98cfd9794dadb49aedbd1ee9d0edd778276f5d17509506c5fe96ce414537"
+        en: "2e62c627b43d4ed0e5ebd8bf9cfa4a762847650f2043ba8f645081970c10b360",
+        zh: "d3d445c6994378525b352a2ff6e75f5323780492b932b9630066722210782603"
       }
     },
     sources: [
@@ -1009,10 +1018,17 @@ export const articles = [
       {
         url: chainlinkAnnouncementUrl,
         label: {
-          en: "Chainlink official X confirmation (June 11, 2026)",
-          zh: "Chainlink 官方 X 确认（2026 年 6 月 11 日）"
+          en: "Chainlink official X announcement",
+          zh: "Chainlink 官方 X 公告"
         }
       }
+    ],
+    bodyLinks: [
+      chainlinkXProfileUrl,
+      turboFlowXProfileUrl,
+      xauXSearchUrl,
+      btcXSearchUrl,
+      ethXSearchUrl
     ],
     translations: {
       en: {
@@ -1023,39 +1039,53 @@ export const articles = [
         category: "Infrastructure Update",
         breadcrumbCurrent: "Chainlink Integration",
         headline: "TurboFlow Adopts Chainlink for XAU, BTC, and ETH Continuous Prediction Markets",
-        dek: "TurboFlow and Chainlink announced that TurboFlow had adopted Chainlink to support new continuous prediction markets for XAU, BTC, and ETH. The official posts confirm the integration and named markets without identifying a specific Chainlink service or deployment configuration.",
-        summaryItems: [
-          { title: "Integration", text: "TurboFlow adopted Chainlink." },
-          { title: "Market format", text: "The announcement uses the term continuous prediction markets." },
-          { title: "Named markets", text: "XAU, BTC, and ETH." }
-        ],
+        dek: "TurboFlow and Chainlink announced that TurboFlow had adopted Chainlink to power new continuous prediction markets for XAU, BTC, and ETH.",
         bodyBlocks: [
           {
+            type: "heading",
+            segments: [
+              { text: "TurboFlow official X post", href: turboFlowChainlinkAnnouncementUrl }
+            ]
+          },
+          { type: "paragraph", text: "Advanced markets required advanced infrastructure." },
+          {
             type: "paragraph",
             segments: [
-              { text: "On June 11, 2026, " },
-              { text: "TurboFlow said on its official X account", href: turboFlowChainlinkAnnouncementUrl },
-              { text: " that, with Chainlink, it was enabling fast, accurate, and continuous prediction markets intended for global retail participation." }
+              { text: "With " },
+              { text: "@chainlink", href: chainlinkXProfileUrl },
+              { text: ", TurboFlow is unlocking fast, accurate, continuous prediction markets for global retail participation." }
+            ]
+          },
+          { type: "paragraph", text: "Everyone gets a seat at TurboFlow." },
+          { type: "paragraph", text: "Predict the outcome today." },
+          {
+            type: "heading",
+            segments: [
+              { text: "Chainlink official X post", href: chainlinkAnnouncementUrl }
             ]
           },
           {
             type: "paragraph",
             segments: [
-              { text: "Chainlink then " },
-              { text: "confirmed through its official X account", href: chainlinkAnnouncementUrl },
-              { text: " that TurboFlow had adopted Chainlink to power new continuous prediction markets for XAU, BTC, and ETH." }
+              { text: "NOW: " },
+              { text: "@TurboFlow_xyz", href: turboFlowXProfileUrl },
+              { text: " adopts Chainlink to power new continuous prediction markets for " },
+              { text: "$XAU", href: xauXSearchUrl },
+              { text: ", " },
+              { text: "$BTC", href: btcXSearchUrl },
+              { text: ", and " },
+              { text: "$ETH", href: ethXSearchUrl },
+              { text: "." }
             ]
-          },
-          { type: "callout", text: "The two official posts confirm TurboFlow's adoption of Chainlink and name XAU, BTC, and ETH as the announced markets." }
+          }
         ],
         faqs: [
-          { question: "What did TurboFlow and Chainlink announce?", answer: "They announced that TurboFlow had adopted Chainlink to support new continuous prediction markets." },
-          { question: "When was the Chainlink integration announced?", answer: "TurboFlow and Chainlink published their official X posts on June 11, 2026." },
-          { question: "Which markets were named in the announcement?", answer: "Chainlink's official post named XAU, BTC, and ETH." },
-          { question: "Which Chainlink service did TurboFlow adopt?", answer: "The two official posts do not identify a specific Chainlink service, feed, or deployment configuration." },
-          { question: "Did the announcement explicitly name TurboFlow Event Contracts?", answer: "No. Both posts use the term continuous prediction markets; neither post explicitly names Event Contracts." }
-        ],
-        riskNotice: "The announcement concerns infrastructure support and does not guarantee price accuracy, uninterrupted operation, execution quality, or trading outcomes. Event Contracts are short-duration products, and an incorrect direction can result in loss of the stake."
+          { question: "What did TurboFlow and Chainlink announce?", answer: "They announced that TurboFlow had adopted Chainlink to power new continuous prediction markets." },
+          { question: "Which markets did Chainlink name?", answer: "Chainlink's official X post named XAU, BTC, and ETH." },
+          { question: "How did TurboFlow describe the prediction markets?", answer: "TurboFlow described them as fast, accurate, and continuous prediction markets." },
+          { question: "Who did TurboFlow say the markets were for?", answer: "TurboFlow said the markets were intended for global retail participation." },
+          { question: "When were the official posts published?", answer: "TurboFlow and Chainlink published the official X posts on June 11, 2026." }
+        ]
       },
       zh: {
         pageTitle: "TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场",
@@ -1065,39 +1095,53 @@ export const articles = [
         category: "基础设施更新",
         breadcrumbCurrent: "Chainlink 接入",
         headline: "TurboFlow 接入 Chainlink，支持 XAU、BTC 与 ETH 连续预测市场",
-        dek: "TurboFlow 与 Chainlink 宣布，TurboFlow 已接入 Chainlink，为 XAU、BTC 与 ETH 连续预测市场提供支持。双方官方公告确认了接入关系和覆盖市场，但没有点名具体 Chainlink 服务或部署配置。",
-        summaryItems: [
-          { title: "接入关系", text: "TurboFlow 采用 Chainlink。" },
-          { title: "市场形式", text: "公告使用“连续预测市场”这一表述。" },
-          { title: "覆盖市场", text: "XAU、BTC 与 ETH。" }
-        ],
+        dek: "TurboFlow 与 Chainlink 宣布，TurboFlow 已采用 Chainlink，为 XAU、BTC 与 ETH 推出新的连续预测市场。",
         bodyBlocks: [
           {
+            type: "heading",
+            segments: [
+              { text: "TurboFlow 官方 X 原文", href: turboFlowChainlinkAnnouncementUrl }
+            ]
+          },
+          { type: "paragraph", text: "高级市场需要高级基础设施。" },
+          {
             type: "paragraph",
             segments: [
-              { text: "2026 年 6 月 11 日，" },
-              { text: "TurboFlow 通过官方 X 账号表示", href: turboFlowChainlinkAnnouncementUrl },
-              { text: "，借助 Chainlink，TurboFlow 正在支持面向全球散户参与的快速、准确、连续预测市场。" }
+              { text: "借助 " },
+              { text: "@chainlink", href: chainlinkXProfileUrl },
+              { text: "，TurboFlow 正在开启快速、准确、连续的预测市场，推动全球散户参与。" }
+            ]
+          },
+          { type: "paragraph", text: "在 TurboFlow，人人皆可上桌。" },
+          { type: "paragraph", text: "今天就来预测结果。" },
+          {
+            type: "heading",
+            segments: [
+              { text: "Chainlink 官方 X 原文", href: chainlinkAnnouncementUrl }
             ]
           },
           {
             type: "paragraph",
             segments: [
-              { text: "随后，" },
-              { text: "Chainlink 通过官方 X 账号确认", href: chainlinkAnnouncementUrl },
-              { text: "，TurboFlow 已采用 Chainlink，为 XAU、BTC 与 ETH 推出新的连续预测市场。" }
+              { text: "最新动态：" },
+              { text: "@TurboFlow_xyz", href: turboFlowXProfileUrl },
+              { text: " 采用 Chainlink，为 " },
+              { text: "$XAU", href: xauXSearchUrl },
+              { text: "、" },
+              { text: "$BTC", href: btcXSearchUrl },
+              { text: " 与 " },
+              { text: "$ETH", href: ethXSearchUrl },
+              { text: " 推出新的连续预测市场。" }
             ]
-          },
-          { type: "callout", text: "双方官方公告确认 TurboFlow 采用 Chainlink，并将 XAU、BTC 与 ETH 列为本次公布的市场。" }
+          }
         ],
         faqs: [
           { question: "TurboFlow 与 Chainlink 公布了什么？", answer: "双方宣布 TurboFlow 已采用 Chainlink，为新的连续预测市场提供支持。" },
-          { question: "Chainlink 接入于何时公布？", answer: "TurboFlow 与 Chainlink 均于 2026 年 6 月 11 日发布官方 X 公告。" },
-          { question: "公告点名了哪些市场？", answer: "Chainlink 官方公告点名 XAU、BTC 与 ETH。" },
-          { question: "TurboFlow 采用了哪一项 Chainlink 服务？", answer: "双方官方公告未说明具体 Chainlink 服务、Feed 或部署配置。" },
-          { question: "公告是否直接点名 TurboFlow 事件合约？", answer: "没有。两则公告均使用“连续预测市场”这一表述，没有直接点名事件合约。" }
-        ],
-        riskNotice: "本次公告涉及基础设施支持，不构成价格准确性、系统持续运行、成交质量或交易结果的保证。事件合约属于短周期产品，方向判断错误可能导致投入金额损失。"
+          { question: "Chainlink 点名了哪些市场？", answer: "Chainlink 官方 X 公告点名 XAU、BTC 与 ETH。" },
+          { question: "TurboFlow 如何描述这些预测市场？", answer: "TurboFlow 将其描述为快速、准确、连续的预测市场。" },
+          { question: "TurboFlow 表示这些市场面向哪些参与者？", answer: "TurboFlow 表示，这些市场面向全球散户参与。" },
+          { question: "两则官方公告于何时发布？", answer: "TurboFlow 与 Chainlink 均于 2026 年 6 月 11 日发布官方 X 公告。" }
+        ]
       }
     }
   },

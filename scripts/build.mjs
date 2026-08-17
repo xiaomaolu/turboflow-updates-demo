@@ -406,7 +406,8 @@ function renderSegments(segments) {
 
 function renderArticleBlock(block) {
   if (block.type === "heading") {
-    return `<h2>${escapeHtml(block.text)}</h2>`;
+    const content = block.segments ? renderSegments(block.segments) : escapeHtml(block.text);
+    return `<h2>${content}</h2>`;
   }
   if (block.type === "callout") {
     return `<aside class="callout"><p>${escapeHtml(block.text)}</p></aside>`;
@@ -735,6 +736,12 @@ export function validateBuildInput() {
     assertBuild(Array.isArray(article.sources) && article.sources.length > 0, `${article.slug}: sources are required`);
     const sourceUrls = article.sources.map((source) => source.url);
     assertBuild(new Set(sourceUrls).size === sourceUrls.length, `${article.slug}: source URLs must be unique`);
+    const bodyLinks = article.bodyLinks || [];
+    assertBuild(Array.isArray(bodyLinks), `${article.slug}: bodyLinks must be an array when provided`);
+    assertBuild(bodyLinks.every((url) => typeof url === "string" && /^https:\/\//.test(url)), `${article.slug}: bodyLinks must use HTTPS`);
+    assertBuild(new Set(bodyLinks).size === bodyLinks.length, `${article.slug}: bodyLinks must be unique`);
+    assertBuild(bodyLinks.every((url) => !sourceUrls.includes(url)), `${article.slug}: bodyLinks must not duplicate citation sources`);
+    const allowedBodyLinks = new Set([...sourceUrls, ...bodyLinks]);
     resolvePrimarySource(article);
     for (const [localeKey] of localeEntries) {
       const copy = article.translations?.[localeKey];
@@ -771,7 +778,7 @@ export function validateBuildInput() {
       for (const block of copy.bodyBlocks) {
         if (!Array.isArray(block.segments)) continue;
         for (const segment of block.segments) {
-          assertBuild(!segment.href || sourceUrls.includes(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources`);
+          assertBuild(!segment.href || allowedBodyLinks.has(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources or bodyLinks`);
         }
       }
     }

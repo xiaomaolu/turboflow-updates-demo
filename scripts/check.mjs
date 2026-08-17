@@ -193,6 +193,12 @@ function validateEditorialData() {
     }
     const sourceUrls = article.sources.map((source) => source.url);
     assert.equal(new Set(sourceUrls).size, sourceUrls.length, `${article.slug}: source URLs must be unique`);
+    const bodyLinks = article.bodyLinks || [];
+    assert(Array.isArray(bodyLinks), `${article.slug}: bodyLinks must be an array when provided`);
+    assert(bodyLinks.every((url) => typeof url === "string" && /^https:\/\//.test(url)), `${article.slug}: bodyLinks must use HTTPS`);
+    assert.equal(new Set(bodyLinks).size, bodyLinks.length, `${article.slug}: bodyLinks must be unique`);
+    assert(bodyLinks.every((url) => !sourceUrls.includes(url)), `${article.slug}: bodyLinks must not duplicate citation sources`);
+    const allowedBodyLinks = new Set([...sourceUrls, ...bodyLinks]);
     assert.equal(
       article.sources.filter((source) => source.url === article.primarySource).length,
       1,
@@ -270,11 +276,11 @@ function validateEditorialData() {
 
       for (const block of copy.bodyBlocks) {
         assert(["paragraph", "heading", "callout"].includes(block.type), `${article.slug}/${localeKey}: unsupported block ${block.type}`);
-        if (block.type === "paragraph") {
+        if (block.type === "paragraph" || block.type === "heading") {
           assert(
             (typeof block.text === "string" && block.text.length > 0) ||
               (Array.isArray(block.segments) && block.segments.length > 0),
-            `${article.slug}/${localeKey}: empty paragraph block`
+            `${article.slug}/${localeKey}: empty ${block.type} block`
           );
         } else {
           assert(
@@ -283,7 +289,7 @@ function validateEditorialData() {
           );
         }
         for (const segment of block.segments || []) {
-          assert(!segment.href || sourceUrls.includes(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources`);
+          assert(!segment.href || allowedBodyLinks.has(segment.href), `${article.slug}/${localeKey}: body link must be registered in sources or bodyLinks`);
         }
       }
     }
